@@ -14,14 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix' => 'blog'], function () {
-    Route::resource('/posts', \App\Http\Controllers\Blog\PostController::class)
+    Route::resource('posts', \App\Http\Controllers\Blog\PostController::class)
         ->names('blog.posts');
 });
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
