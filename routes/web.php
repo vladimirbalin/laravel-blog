@@ -13,8 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::get('/', function () {
-//    return view('welcome');
-//});
-$router->get('/', [\App\Http\Controllers\DefaultController::class, 'default'])->name('deff');
-$router->get('/second/{id}', [\App\Http\Controllers\DefaultController::class, 'second']);
+Route::group(['prefix' => 'blog'], function () {
+    Route::resource('/posts', \App\Http\Controllers\Blog\PostController::class)
+        ->names('blog.posts');
+});
