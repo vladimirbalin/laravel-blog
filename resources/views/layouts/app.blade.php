@@ -36,6 +36,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('blog.posts.index') }}">{{ __('Posts') }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('blog.admin.categories.index') }}">{{ __('admin/categories') }}</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -77,7 +80,7 @@
             </div>
         </nav>
 
-        <main class="container">
+        <main>
             @yield('content')
         </main>
     </div>
