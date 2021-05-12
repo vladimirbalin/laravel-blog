@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Blog\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -59,11 +61,11 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param BlogCategoryUpdateRequest $request
      * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(BlogCategoryUpdateRequest $request, $id)
     {
         $model = BlogCategory::find($id);
         if (is_null($model)) {
@@ -71,13 +73,10 @@ class CategoryController extends Controller
                 ->withErrors(['msg' => "Category with [{$id}] id wasn't found"])
                 ->withInput();
         }
-
-        $input = $request->input();
-        $result = $model->fill($input)->save();
+        $result = $model->fill($request->all())->save();
 
         if ($result) {
-            return redirect()
-                ->route('blog.admin.categories.edit', $id)
+            return back()
                 ->with(['success' => 'Saved successfully']);
         } else {
             return back()->withInput()->withErrors(['msg' => 'Save fail']);

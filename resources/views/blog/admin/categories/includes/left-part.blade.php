@@ -2,29 +2,29 @@
     <div class="card-body">
         <div class="form-row">
             <div class="form-group col-md-12">
-                <label for="title">Category title</label>
+                <label for="title">*Category title</label>
                 <input
                     type="text"
                     class="form-control"
                     id="title"
                     name="title"
-                    placeholder="Заголовка нет..."
+                    placeholder="Please enter the title"
                     value="{{ old('title', $category->title) }}">
             </div>
             <div class="form-group col-md-12">
-                <label for="slug">Slug</label>
+                <label for="slug">Slug/Unique Identifier</label>
                 <input
                     type="text"
                     class="form-control"
                     id="slug"
                     name="slug"
-                    placeholder="Заголовка нет..."
+                    placeholder="Please enter the slug identifier"
                     value="{{ old('slug', $category->slug) }}">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-12">
-                <label for="parent_id">Parent category</label>
+                <label for="parent_id">*Parent category</label>
                 <select name="parent_id" id="parent_id" class="form-control">
                     @foreach($categoryList as $categoryItem)
                         @php /** @var \App\Models\BlogCategory $categoryItem */  @endphp
@@ -39,7 +39,7 @@
                 </select>
             </div>
             <div class="form-group col-md-12">
-                <label for="description">Description</label>
+                <label for="description">*Description</label>
                 <textarea
                     name="description"
                     id="description"
