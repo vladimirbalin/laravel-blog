@@ -22,18 +22,22 @@
             </div>
         @endif
 
-        <form method="post" action="{{ route('blog.admin.categories.update', $category->id) }}">
-            @method('PUT')
-            @csrf
-            <div class="row">
-                <div class="col-md-8 py-3">
-                    @include('blog.admin.categories.includes.left-part')
-                </div>
-                <div class="col-md-4 py-3">
-                    @include('blog.admin.categories.includes.right-part')
-                </div>
+        @if($category->exists)
+            <form method="post" action="{{ route('blog.admin.categories.update', $category->id) }}">
+                @method('PUT')
+        @else
+            <form method="post" action="{{ route('blog.admin.categories.store') }}">
+        @endif
+                @csrf
+                <div class="row">
+                    <div class="col-md-8 py-3">
+                        @include('blog.admin.categories.includes.left-part')
+                    </div>
+                    <div class="col-md-4 py-3">
+                        @include('blog.admin.categories.includes.right-part')
+                    </div>
 
-            </div>
-        </form>
+                </div>
+            </form>
     </div>
 @endsection

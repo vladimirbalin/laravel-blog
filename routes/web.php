@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Blog\Admin\CategoryController;
+use App\Http\Controllers\Blog\PostController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,12 +16,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix' => 'blog'], function () {
-    Route::resource('posts', \App\Http\Controllers\Blog\PostController::class)
+    Route::resource('posts', PostController::class)
         ->names('blog.posts');
 });
 Route::group(['prefix' => 'admin/blog'], function () {
     $methods = ['index', 'create', 'store', 'edit', 'update'];
-    Route::resource('categories', \App\Http\Controllers\Blog\Admin\CategoryController::class)
+    Route::resource('categories', CategoryController::class)
         ->only($methods)
         ->names('blog.admin.categories');
 });

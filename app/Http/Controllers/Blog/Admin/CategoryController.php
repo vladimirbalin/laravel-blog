@@ -2,78 +2,89 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\BlogCategoryCreateRequest;
 use App\Http\Requests\Admin\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class CategoryController extends BaseController
 {
+    protected $perPage = 5;
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function index()
     {
-        $paginator = BlogCategory::paginate(5);
-        return view('blog.admin.categories.index', compact('paginator'));
+        $paginator = BlogCategory::paginate($this->perPage);
+        return view('blog.admin.categories.index',
+            compact('paginator'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function create()
     {
-        dd(__METHOD__);
+        $category = new BlogCategory;
+        $categoryList = BlogCategory::all();
+        return view('blog.admin.categories.create',
+            compact('category', 'categoryList'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param BlogCategoryCreateRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(BlogCategoryCreateRequest $request)
     {
-        dd(__METHOD__);
+        $category = new BlogCategory;
+
+        $result = $category->fill($request->all())->save();
+        if ($result) {
+            $paginator = BlogCategory::paginate($this->perPage);
+            return redirect()->route('blog.admin.categories.index')
+                ->setTargetUrl('?page=' . $paginator->lastPage())
+                ->with('success', 'Category successfully saved.');
+        }
+        return back()->withInput()->withErrors(['msg' => 'Save fail']);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
-     * @return \Illuminate\Contracts\Foundation\Application|
-     * \Illuminate\Contracts\View\Factory|
-     * \Illuminate\Contracts\View\View|
-     * \Illuminate\Http\Response
+     * @param BlogCategory $category
+     * @return View
      */
-    public function edit($id)
+    public function edit(BlogCategory $category)
     {
-        $category = BlogCategory::findOrFail($id);
         $categoryList = BlogCategory::all();
-        return view('blog.admin.categories.edit', compact('category', 'categoryList'));
+        return view('blog.admin.categories.edit',
+            compact('category', 'categoryList'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param BlogCategoryUpdateRequest $request
-     * @param int $id
+     * @param BlogCategory $category
      * @return RedirectResponse
      */
-    public function update(BlogCategoryUpdateRequest $request, $id)
+    public function update(BlogCategoryUpdateRequest $request, BlogCategory $category)
     {
-        $model = BlogCategory::find($id);
-        if (is_null($model)) {
+        if (is_null($category)) {
             return back()
                 ->withErrors(['msg' => "Category with [{$id}] id wasn't found"])
                 ->withInput();
         }
-        $result = $model->fill($request->all())->save();
+        $result = $category->fill($request->all())->save();
 
         if ($result) {
             return back()
