@@ -79,11 +79,6 @@ class CategoryController extends BaseController
      */
     public function update(BlogCategoryUpdateRequest $request, BlogCategory $category)
     {
-        if (is_null($category)) {
-            return back()
-                ->withErrors(['msg' => "Category with [{$id}] id wasn't found"])
-                ->withInput();
-        }
         $result = $category->fill($request->all())->save();
 
         if ($result) {
