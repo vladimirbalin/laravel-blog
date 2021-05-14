@@ -31,7 +31,7 @@ class BlogPostFactory extends Factory
             ->format('Y-m-d H:i:s');
 
         return [
-            'category_id' => rand(1, 11),
+            'category_id' => rand(1, 10),
             'user_id' => (rand(1, 5) === 5) ? 1 : 2,
             'title' => $title,
             'slug' => Str::slug($title),
