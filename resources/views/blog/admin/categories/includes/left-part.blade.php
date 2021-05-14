@@ -26,13 +26,13 @@
             <div class="form-group col-md-12">
                 <label for="parent_id">*Parent category</label>
                 <select name="parent_id" id="parent_id" class="form-control">
-                    @foreach($categoryList as $categoryItem)
+                    @foreach($dropDownListCategories as $categoryItem)
                         @php /** @var \App\Models\BlogCategory $categoryItem */  @endphp
                         @if($categoryItem->id === $category->id) @else
                             <option
                                 value="{{$categoryItem->id}}"
                                 @if($categoryItem->id === $category->parent_id) selected @endif>
-                                {{"$categoryItem->id. $categoryItem->title"}}
+                                {{"$categoryItem->select_title"}}
                             </option>
                         @endif
                     @endforeach
@@ -46,8 +46,6 @@
                     class="form-control"
                     rows="3">{{ old('description', $category->description) }}</textarea>
             </div>
-
         </div>
-
     </div>
 </div>

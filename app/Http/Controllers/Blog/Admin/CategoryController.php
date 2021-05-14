@@ -5,12 +5,21 @@ namespace App\Http\Controllers\Blog\Admin;
 use App\Http\Requests\Admin\BlogCategoryCreateRequest;
 use App\Http\Requests\Admin\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
+use App\Repositories\BlogCategoryRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 
 class CategoryController extends BaseController
 {
+    protected $repository;
     protected $perPage = 5;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->repository = app(BlogCategoryRepository::class);
+    }
 
     /**
      * Display a listing of the resource.
@@ -19,7 +28,8 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $paginator = BlogCategory::paginate($this->perPage);
+        $paginator = $this->repository->getAllWithPagination($this->perPage);
+
         return view('blog.admin.categories.index',
             compact('paginator'));
     }
@@ -32,9 +42,10 @@ class CategoryController extends BaseController
     public function create()
     {
         $category = new BlogCategory;
-        $categoryList = BlogCategory::all();
+        $dropDownListCategories = $this->repository->getDropDownList();
+
         return view('blog.admin.categories.create',
-            compact('category', 'categoryList'));
+            compact('category', 'dropDownListCategories'));
     }
 
     /**
@@ -47,27 +58,31 @@ class CategoryController extends BaseController
     {
         $category = new BlogCategory;
 
-        $result = $category->fill($request->all())->save();
+        $result = $category->fill($request->input())->save();
         if ($result) {
             $paginator = BlogCategory::paginate($this->perPage);
             return redirect()->route('blog.admin.categories.index')
                 ->setTargetUrl('?page=' . $paginator->lastPage())
                 ->with('success', 'Category successfully saved.');
         }
+
         return back()->withInput()->withErrors(['msg' => 'Save fail']);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param BlogCategory $category
+     * @param $id
      * @return View
      */
-    public function edit(BlogCategory $category)
+    public function edit($id)
     {
-        $categoryList = BlogCategory::all();
+        $category = $this->repository->getEdit($id);
+        if (empty($category)) abort(404);
+        $dropDownListCategories = $this->repository->getDropDownList();
+
         return view('blog.admin.categories.edit',
-            compact('category', 'categoryList'));
+            compact('category', 'dropDownListCategories'));
     }
 
     /**
@@ -79,7 +94,7 @@ class CategoryController extends BaseController
      */
     public function update(BlogCategoryUpdateRequest $request, BlogCategory $category)
     {
-        $result = $category->fill($request->all())->save();
+        $result = $category->fill($request->input())->save();
 
         if ($result) {
             return back()
