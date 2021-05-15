@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 class CategoryController extends BaseController
 {
     protected $repository;
+    protected $perPage = 5;
 
     public function __construct()
     {
@@ -27,8 +28,7 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $perPage = 5;
-        $paginator = $this->repository->getAllWithPagination($perPage);
+        $paginator = $this->repository->getAllWithPagination($this->perPage);
 
         return view('blog.admin.categories.index',
             compact('paginator'));

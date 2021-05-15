@@ -33,6 +33,9 @@ Route::group(['prefix' => 'admin/blog'], function () {
     Route::resource('categories', CategoryController::class)
         ->only($methods)
         ->names('blog.admin.categories');
+    Route::resource('posts', AdminPostController::class)
+        ->only($methods)
+        ->names('blog.admin.posts');
 });
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
