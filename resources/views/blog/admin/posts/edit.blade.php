@@ -4,8 +4,8 @@
     <div class="container">
         @include('blog.includes.session-msg')
 
-        @if($post->exists)
-            <form method="post" action="{{ route('blog.admin.posts.update', $post->id) }}">
+        @if($item->exists)
+            <form method="post" action="{{ route('blog.admin.posts.update', $item->id) }}">
                 @method('PUT')
         @else
             <form method="post" action="{{ route('blog.admin.posts.store') }}">
@@ -24,7 +24,7 @@
                                             id="title"
                                             name="title"
                                             placeholder="Please enter the title"
-                                            value="{{ old('title', $post->title) }}">
+                                            value="{{ old('title', $item->title) }}">
                                     </div>
                                     <div class="form-group col-md-12">
                                         <label for="slug">Slug/Unique Identifier</label>
@@ -34,7 +34,7 @@
                                             id="slug"
                                             name="slug"
                                             placeholder="Please enter the slug identifier"
-                                            value="{{ old('slug', $post->slug) }}">
+                                            value="{{ old('slug', $item->slug) }}">
                                     </div>
                                     <div class="form-group col-md-12">
                                         <label for="slug">Post body</label>
@@ -42,20 +42,19 @@
                                             class="form-control"
                                             name="content_html"
                                             id="content_html"
-                                            rows="3">{{ old('content_html', $post->content_html) }}</textarea>
+                                            rows="3">{{ old('content_html', $item->content_html) }}</textarea>
                                     </div>
                                 </div>
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary">Save
-                                </button>
-                                <form action="{{ route('blog.admin.posts.destroy', $post->id) }}" method="POST">
+                                <form action="{{ route('blog.admin.posts.destroy', $item->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-danger btn-sm" title="Delete">Delete</button>
                                 </form>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-4 py-3">
+                        @include('blog.includes.right-part')
                     </div>
                 </div>
             </form>

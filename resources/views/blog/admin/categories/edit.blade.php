@@ -1,10 +1,10 @@
 @extends('layouts.app')
 @section('content')
-    @php /** @var \App\Models\BlogCategory $category */ @endphp
+    @php /** @var \App\Models\BlogCategory $item */ @endphp
     <div class="container">
         @include('blog.includes.session-msg')
-        @if($category->exists)
-            <form method="post" action="{{ route('blog.admin.categories.update', $category->id) }}">
+        @if($item->exists)
+            <form method="post" action="{{ route('blog.admin.categories.update', $item->id) }}">
                 @method('PUT')
                 @else
             <form method="post" action="{{ route('blog.admin.categories.store') }}">

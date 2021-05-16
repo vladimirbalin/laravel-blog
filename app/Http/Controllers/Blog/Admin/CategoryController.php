@@ -41,11 +41,11 @@ class CategoryController extends BaseController
      */
     public function create()
     {
-        $category = new BlogCategory;
+        $item = new BlogCategory;
         $dropDownListCategories = $this->repository->getDropDownList();
 
         return view('blog.admin.categories.create',
-            compact('category', 'dropDownListCategories'));
+            compact('item', 'dropDownListCategories'));
     }
 
     /**
@@ -77,12 +77,12 @@ class CategoryController extends BaseController
      */
     public function edit($id)
     {
-        $category = $this->repository->getEdit($id);
-        if (empty($category)) abort(404);
+        $item = $this->repository->getEdit($id);
+        if (empty($item)) abort(404);
         $dropDownListCategories = $this->repository->getDropDownList();
 
         return view('blog.admin.categories.edit',
-            compact('category', 'dropDownListCategories'));
+            compact('item', 'dropDownListCategories'));
     }
 
     /**
