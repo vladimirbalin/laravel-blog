@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    @php /** @var \App\Models\BlogPost $post */ @endphp
+    @php /** @var \App\Models\BlogPost $item */ @endphp
     <div class="container">
         @include('blog.includes.session-msg')
 
@@ -17,7 +17,7 @@
                             <div class="card-body">
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
-                                        <label for="title">*Post title</label>
+                                        <label for="title"><strong>Post title</strong></label>
                                         <input
                                             type="text"
                                             class="form-control"
@@ -27,7 +27,7 @@
                                             value="{{ old('title', $item->title) }}">
                                     </div>
                                     <div class="form-group col-md-12">
-                                        <label for="slug">Slug/Unique Identifier</label>
+                                        <label for="slug"><strong>Slug/Unique Identifier</strong></label>
                                         <input
                                             type="text"
                                             class="form-control"
@@ -37,19 +37,56 @@
                                             value="{{ old('slug', $item->slug) }}">
                                     </div>
                                     <div class="form-group col-md-12">
-                                        <label for="slug">Post body</label>
+                                        <label for="content_raw"><strong>Post body</strong></label>
                                         <textarea
                                             class="form-control"
                                             name="content_html"
-                                            id="content_html"
-                                            rows="3">{{ old('content_html', $item->content_html) }}</textarea>
+                                            id="content_raw"
+                                            rows="8">{{ old('content_raw', $item->content_raw) }}</textarea>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <label for="excerpt">Excerpt</label>
+                                        <textarea
+                                            class="form-control"
+                                            name="excerpt"
+                                            id="excerpt"
+                                            rows="2">{{ old('content_html', $item->excerpt) }}</textarea>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="category"><strong>Category</strong></label>
+                                        <select
+                                            class="form-control"
+                                            name="category"
+                                            id="category">
+                                            @foreach($categoryList as $category)
+                                                @php /** @var $category \App\Models\BlogCategory */ @endphp
+                                                <option
+                                                    @if($category->id === $item->category_id) selected @endif>
+                                                    {{ $category->select_title }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6 align-self-end published">
+                                        <input type="hidden" name="published" value="0">
+                                        <input type="checkbox"
+                                               name="published"
+                                               id="published"
+                                               class="pt-2"
+                                               value="1"
+                                               @if($item->is_published) checked="checked" @endif>
+                                        <label for="published">
+                                            <strong>Published</strong>
+                                        </label>
+
                                     </div>
                                 </div>
-                                <form action="{{ route('blog.admin.posts.destroy', $item->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm" title="Delete">Delete</button>
-                                </form>
+                                <a href="{{ route('blog.admin.posts.destroy', $item->id)  }}"
+                                   onclick="event.preventDefault();
+                               document.getElementById('destroy-post-form').submit();"
+                                   class="btn btn-outline-danger">
+                                    Delete post
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -59,4 +96,11 @@
                 </div>
             </form>
     </div>
+
+    <form action="{{ route('blog.admin.posts.destroy', $item->id) }}"
+          method="POST"
+          id="destroy-post-form">
+        @method('DELETE')
+        @csrf
+    </form>
 @endsection

@@ -6,7 +6,7 @@
             <thead>
             <tr style="background-color: #afc2e8">
                 <th>#</th>
-                <th>Author Id</th>
+                <th>Author</th>
                 <th>Category</th>
                 <th>Title</th>
                 <th>Is published</th>
@@ -19,8 +19,8 @@
                 @php /** @var \App\Models\BlogCategory $post */ @endphp
                 <tr @if(!$post->is_published) style="background-color: #ececec" @endif>
                     <td>{{ $post->id }}</td>
-                    <td>{{ $post->user->id }}</td>
-                    <td>{{ $post->category->id }}</td>
+                    <td>{{ $post->user->name }}</td>
+                    <td>{{ $post->category->title }}</td>
                     <td>
                         <a href="{{ route('blog.admin.posts.edit', $post->id) }}">
                             {{ $post->title }}

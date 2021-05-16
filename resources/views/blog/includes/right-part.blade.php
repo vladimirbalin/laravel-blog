@@ -7,22 +7,29 @@
     <div class="card my-2">
         <div class="card-body">
             <p>
-                ID: {{$item->id}}
+                ID: <strong>{{$item->id}}</strong>
+            </p>
+        </div>
+        @if($item->user_id)
+            <div class="card-body">
+                <p>
+                    Author: <strong>{{$item->user->name}}</strong>
+                </p>
+            </div>
+        @endif
+        <div class="card-body">
+            <p>
+                Created at: <strong>{{$item->created_at}}</strong>
             </p>
         </div>
         <div class="card-body">
             <p>
-                Created at: {{$item->created_at}}
+                Updated at: <strong>{{$item->updated_at}}</strong>
             </p>
         </div>
         <div class="card-body">
             <p>
-                Updated at: {{$item->updated_at}}
-            </p>
-        </div>
-        <div class="card-body">
-            <p>
-                Deleted at: {{$item->deleted_at}}
+                Deleted at: <strong>{{$item->deleted_at}}</strong>
             </p>
         </div>
     </div>

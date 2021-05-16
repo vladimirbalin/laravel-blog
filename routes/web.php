@@ -34,7 +34,7 @@ Route::group(['prefix' => 'admin/blog'], function () {
         ->only($methods)
         ->names('blog.admin.categories');
     Route::resource('posts', AdminPostController::class)
-        ->only($methods)
+        ->except('show')
         ->names('blog.admin.posts');
 });
 

@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\BlogPost;
+use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
 use Illuminate\Http\Request;
 
 class PostController extends BaseController
 {
-    private $repository;
+    private $postRepository;
+    private $categoryRepository;
+
     public function __construct()
     {
         parent::__construct();
-        $this->repository = app(BlogPostRepository::class);
+        $this->postRepository = app(BlogPostRepository::class);
+        $this->categoryRepository = app(BlogCategoryRepository::class);
     }
 
     /**
@@ -24,7 +26,7 @@ class PostController extends BaseController
     public function index()
     {
         $perPage = 25;
-        $paginator = $this->repository->getAllWithPaginator($perPage);
+        $paginator = $this->postRepository->getAllWithPaginator($perPage);
         return view('blog.admin.posts.index', compact('paginator'));
     }
 
@@ -41,7 +43,7 @@ class PostController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -50,43 +52,36 @@ class PostController extends BaseController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        return view('blog.admin.posts.edit', ['post' => $this->repository->getEdit($id)]);
+        $item = $this->postRepository->getEdit($id);
+        if (empty($item)) abort(404);
+        $categoryList = $this->categoryRepository->getDropDownList();
+
+        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
+        dd($request->input());
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
