@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Blog\Admin\Auth;
+namespace App\Http\Controllers\Blog\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -38,9 +38,10 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
     public function showLoginForm()
     {
-        return view('auth.admin-login');
+        return view('auth.login');
     }
 
     /**
@@ -65,4 +66,5 @@ class LoginController extends Controller
             ? new JsonResponse([], 204)
             : redirect('/blog/login');
     }
+
 }
