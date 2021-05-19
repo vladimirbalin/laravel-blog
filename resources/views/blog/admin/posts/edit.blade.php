@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('content')
     @php /** @var \App\Models\BlogPost $item */ @endphp
     <div class="container">
@@ -53,29 +53,30 @@
                                             rows="2">{{ old('content_html', $item->excerpt) }}</textarea>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label for="category"><strong>Category</strong></label>
+                                        <label for="category_id"><strong>Category</strong></label>
                                         <select
                                             class="form-control"
-                                            name="category"
-                                            id="category">
+                                            name="category_id"
+                                            id="category_id">
                                             @foreach($categoryList as $category)
                                                 @php /** @var $category \App\Models\BlogCategory */ @endphp
                                                 <option
+                                                    value="{{$category->id}}"
                                                     @if($category->id === $item->category_id) selected @endif>
                                                     {{ $category->select_title }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-6 align-self-end published">
-                                        <input type="hidden" name="published" value="0">
+                                    <div class="form-group col-md-6 align-self-end is_published">
+                                        <input type="hidden" name="is_published" value="0">
                                         <input type="checkbox"
-                                               name="published"
-                                               id="published"
+                                               name="is_published"
+                                               id="is_published"
                                                class="pt-2"
                                                value="1"
                                                @if($item->is_published) checked="checked" @endif>
-                                        <label for="published">
+                                        <label for="is_published">
                                             <strong>Published</strong>
                                         </label>
 

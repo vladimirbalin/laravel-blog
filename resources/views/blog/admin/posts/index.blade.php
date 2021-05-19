@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
     <div class="container content">
@@ -11,6 +11,7 @@
                 <th>Title</th>
                 <th>Is published</th>
                 <th>Published at</th>
+                <th></th>
                 <th></th>
             </tr>
             </thead>
@@ -26,7 +27,17 @@
                             {{ $post->title }}
                         </a>
                     </td>
-                    <td>@if($post->is_published) &check; @endif</td>
+                    <td>
+                        <input type="hidden" name="is_published" value="0">
+                        <input type="checkbox"
+                               name="is_published"
+                               class="pt-2 is_published"
+                               data-route="{{ route('blog.admin.posts.update', $post->id) }}"
+                               value="1"
+                               @if($post->is_published) checked="checked" @endif>
+                        <label for="is_published">
+                        </label>
+                    </td>
                     <td>{{ \Illuminate\Support\Carbon::parse($post->published_at)->format('d M H:m') }}</td>
                     <td class="d-flex">
                         <a href="{{ route('blog.admin.posts.edit', $post->id) }}"
@@ -39,7 +50,7 @@
                         </a>
                         <a href="{{ route('blog.admin.posts.destroy', $post->id)  }}"
                            onclick="event.preventDefault();
-                               document.getElementById('destroy-post-form').submit();"
+                               document.getElementById('destroy-post-form-{{$post->id}}').submit();"
                            class="btn btn-danger btn-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-trash" viewBox="0 0 16 16">
@@ -51,7 +62,7 @@
                         </a>
                         <form action="{{ route('blog.admin.posts.destroy', $post->id) }}"
                               method="POST"
-                              id="destroy-post-form">
+                              id="destroy-post-form-{{ $post->id }}">
                             @method('DELETE')
                             @csrf
                         </form>

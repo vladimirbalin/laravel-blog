@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('content')
     @php /** @var \App\Models\BlogCategory $item */ @endphp
     <div class="container">

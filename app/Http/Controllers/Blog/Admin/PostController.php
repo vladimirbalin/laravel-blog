@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
+use App\Http\Requests\Admin\BlogPostUpdateRequest;
+use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PostController extends BaseController
 {
@@ -21,7 +26,7 @@ class PostController extends BaseController
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function index()
     {
@@ -33,7 +38,7 @@ class PostController extends BaseController
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -43,8 +48,8 @@ class PostController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -55,7 +60,7 @@ class PostController extends BaseController
      * Show the form for editing the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function edit($id)
     {
@@ -69,24 +74,36 @@ class PostController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param BlogPostUpdateRequest $request
+     * @param BlogPost $post
+     * @return RedirectResponse|void
      */
-    public function update(Request $request, $id)
+    public function update(BlogPostUpdateRequest $request, BlogPost $post)
     {
-        dd($request->input());
+        $result = $post->fill($request->input())->save();
+        if ($request->ajax()) {
+            return;
+        }
+
+        if ($result) {
+            return back()
+                ->with(['success' => 'Successfully saved']);
+        } else {
+            return back()
+                ->withInput()
+                ->withErrors(['msg' => 'Save fail']);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
-        dd(__METHOD__, $id);
+        return $id;
 //        BlogPost::find($id)->delete();
     }
 }
