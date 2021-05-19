@@ -79,14 +79,13 @@
                                         <label for="is_published">
                                             <strong>Published</strong>
                                         </label>
-
                                     </div>
                                 </div>
-                                <a href="{{ route('blog.admin.posts.destroy', $item->id)  }}"
-                                   onclick="event.preventDefault();
-                               document.getElementById('destroy-post-form').submit();"
-                                   class="btn btn-outline-danger">
-                                    Delete post
+                                <a type="button"
+                                   class="btn btn-outline-danger"
+                                   data-toggle="modal"
+                                   data-target="#exampleModal">
+                                    Delete
                                 </a>
                             </div>
                         </div>
@@ -97,11 +96,35 @@
                 </div>
             </form>
     </div>
-
+    <!-- Delete post form -->
     <form action="{{ route('blog.admin.posts.destroy', $item->id) }}"
           method="POST"
           id="destroy-post-form">
         @method('DELETE')
         @csrf
     </form>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure?
+                </div>
+                <div class="modal-footer">
+                    <a onclick="event.preventDefault();
+                               document.getElementById('destroy-post-form').submit();"
+                               href="{{ route('blog.admin.posts.destroy', $item->id)  }}"
+                       class="btn btn-secondary"
+                       data-dismiss="modal">Delete post</a>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
