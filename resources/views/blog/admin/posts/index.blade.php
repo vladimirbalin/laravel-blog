@@ -18,7 +18,7 @@
             <tbody>
             @foreach($paginator as $post)
                 @php /** @var \App\Models\BlogCategory $post */ @endphp
-                <tr @if(!$post->is_published) style="background-color: #ececec" @endif>
+                <tr data-id="{{$post->id}}" @if(!$post->is_published) style="background-color: #ececec" @endif>
                     <td>{{ $post->id }}</td>
                     <td>{{ $post->user->name }}</td>
                     <td>{{ $post->category->title }}</td>

@@ -37,10 +37,10 @@
                                             value="{{ old('slug', $item->slug) }}">
                                     </div>
                                     <div class="form-group col-md-12">
-                                        <label for="content_raw"><strong>Post body</strong></label>
+                                        <label for="content_raw"><strong>Post body|Content_raw</strong></label>
                                         <textarea
                                             class="form-control"
-                                            name="content_html"
+                                            name="content_raw"
                                             id="content_raw"
                                             rows="8">{{ old('content_raw', $item->content_raw) }}</textarea>
                                     </div>
@@ -50,7 +50,7 @@
                                             class="form-control"
                                             name="excerpt"
                                             id="excerpt"
-                                            rows="2">{{ old('content_html', $item->excerpt) }}</textarea>
+                                            rows="2">{{ old('excerpt', $item->excerpt) }}</textarea>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="category_id"><strong>Category</strong></label>
@@ -62,7 +62,8 @@
                                                 @php /** @var $category \App\Models\BlogCategory */ @endphp
                                                 <option
                                                     value="{{$category->id}}"
-                                                    @if($category->id === $item->category_id) selected @endif>
+                                                    @if($category->id === (int)(old('category_id', $item->category_id))) selected @endif
+                                                >
                                                     {{ $category->select_title }}
                                                 </option>
                                             @endforeach

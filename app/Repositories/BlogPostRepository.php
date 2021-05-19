@@ -24,7 +24,7 @@ class BlogPostRepository extends Repository
         return $result;
     }
 
-    public function getEdit($id)
+    public function getExactPost($id)
     {
         $result = $this->start()
             ->find($id);
@@ -38,7 +38,7 @@ class BlogPostRepository extends Repository
         $result = $this->start()
             ->select($columns)
             ->with(['user:id,name', 'category:id,title'])
-            ->orderBy('id', 'DESC')
+            ->latest('id')
             ->paginate($perPage);
 
         return $result;

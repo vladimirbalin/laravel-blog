@@ -80,7 +80,7 @@ class PostController extends BaseController
      */
     public function update(BlogPostUpdateRequest $request, BlogPost $post)
     {
-        $result = $post->fill($request->input())->save();
+        $result = $post->update($request->all());
         if ($request->ajax()) {
             return;
         }
