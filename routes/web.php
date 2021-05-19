@@ -18,12 +18,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(['middleware' => 'auth'], function () {
     Route::domain('laravel-playground.local')
+        ->middleware(['middleware' => 'auth'])
         ->get('/', [App\Http\Controllers\HomeController::class, 'index']);
     Route::domain('admin.laravel-playground.local')
+        ->middleware(['middleware' => 'auth.admin'])
         ->get('/', [App\Http\Controllers\HomeController::class, 'adminIndex']);
-});
 
 Route::group([
     'domain' => 'laravel-playground.local',

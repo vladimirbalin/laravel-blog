@@ -18,8 +18,10 @@ class BlogPostRepository extends Repository
 
     public function getAll()
     {
-        return $this->start()
+        $result = $this->start()
             ->all();
+
+        return $result;
     }
 
     public function getEdit($id)

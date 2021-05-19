@@ -15,4 +15,10 @@ class HomeController extends Controller
     {
         return view('welcome');
     }
+
+    public function adminIndex()
+    {
+        return view('blog.admin.welcome');
+
+    }
 }
