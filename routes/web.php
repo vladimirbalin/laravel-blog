@@ -56,6 +56,7 @@ Route::group([
         Route::resource('posts', AdminPostController::class)
             ->except('show')
             ->names('blog.admin.posts');
+        Route::put('/posts/{post}',[AdminPostController::class, 'updateAjax'])->name('blog.admin.posts.updateAjax');
     });
 
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.login');

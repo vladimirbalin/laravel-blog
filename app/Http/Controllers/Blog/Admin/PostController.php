@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
+use App\Http\Requests\Admin\BlogPostUpdateIsPublishedRequest;
 use App\Http\Requests\Admin\BlogPostUpdateRequest;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
@@ -10,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 
 class PostController extends BaseController
 {
@@ -81,10 +83,6 @@ class PostController extends BaseController
     public function update(BlogPostUpdateRequest $request, BlogPost $post)
     {
         $result = $post->update($request->all());
-        if ($request->ajax()) {
-            return;
-        }
-
         if ($result) {
             return back()
                 ->with(['success' => 'Successfully saved']);
@@ -93,6 +91,15 @@ class PostController extends BaseController
                 ->withInput()
                 ->withErrors(['msg' => 'Save fail']);
         }
+    }
+
+    public function updateAjax(BlogPostUpdateIsPublishedRequest $request, BlogPost $post)
+    {
+        if ($request->ajax()) {
+            $post->update($request->all());
+            return ['success' => true];
+        }
+        throw new MethodNotAllowedException();
     }
 
     /**
