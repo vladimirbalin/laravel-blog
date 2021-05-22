@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Admin\BlogCategoryRequest;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class BlogCategoryUpdateRequest extends FormRequest
+class BlogCategoryCreateRequest extends BlogCategoryBaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -36,14 +34,5 @@ class BlogCategoryUpdateRequest extends FormRequest
             'parent_id' => 'required|integer|exists:blog_categories,id',
             'description' => 'required|min:10|max:500'
         ];
-    }
-
-    protected function prepareForValidation()
-    {
-        if (!$this->slug) {
-            $this->merge([
-                'slug' => Str::slug($this->title)
-            ]);
-        }
     }
 }

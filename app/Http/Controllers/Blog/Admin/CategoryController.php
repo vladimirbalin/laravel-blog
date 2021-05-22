@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
-use App\Http\Requests\Admin\BlogCategoryCreateRequest;
-use App\Http\Requests\Admin\BlogCategoryUpdateRequest;
+use App\Http\Requests\Admin\BlogCategoryRequest\BlogCategoryCreateRequest;
+use App\Http\Requests\Admin\BlogCategoryRequest\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
 use App\Repositories\BlogCategoryRepository;
 use Illuminate\Contracts\View\View;

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
-use App\Http\Requests\Admin\BlogPostUpdateIsPublishedRequest;
-use App\Http\Requests\Admin\BlogPostUpdateRequest;
+use App\Http\Requests\Admin\BlogCategoryRequest\BlogCategoryRequest\BlogPostUpdateIsPublishedRequest;
+use App\Http\Requests\Admin\BlogCategoryRequest\BlogCategoryRequest\BlogPostUpdateRequest;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
