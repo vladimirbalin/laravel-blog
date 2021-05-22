@@ -6,7 +6,7 @@
 
         @if($item->exists)
             <form method="post" action="{{ route('blog.admin.posts.update', $item->id) }}">
-                @method('PUT')
+                @method('PATCH')
         @else
             <form method="post" action="{{ route('blog.admin.posts.store') }}">
         @endif

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
-use App\Http\Requests\Admin\BlogCategoryRequest\BlogCategoryRequest\BlogPostUpdateIsPublishedRequest;
-use App\Http\Requests\Admin\BlogCategoryRequest\BlogCategoryRequest\BlogPostUpdateRequest;
+use App\Http\Requests\Admin\BlogPostRequest\BlogPostUpdateIsPublishedRequest;
+use App\Http\Requests\Admin\BlogPostRequest\BlogPostUpdateRequest;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
@@ -11,7 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class PostController extends BaseController
 {
@@ -66,7 +66,7 @@ class PostController extends BaseController
      */
     public function edit($id)
     {
-        $item = $this->postRepository->getEdit($id);
+        $item = $this->postRepository->getExactPost($id);
         if (empty($item)) abort(404);
         $categoryList = $this->categoryRepository->getDropDownList();
 
@@ -99,7 +99,7 @@ class PostController extends BaseController
             $post->update($request->all());
             return ['success' => true];
         }
-        throw new MethodNotAllowedException();
+        throw new BadRequestException('You can only make ajax requests to this route');
     }
 
     /**

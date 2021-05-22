@@ -18,12 +18,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-    Route::domain('laravel-playground.local')
-        ->middleware(['middleware' => 'auth'])
-        ->get('/', [App\Http\Controllers\HomeController::class, 'index']);
-    Route::domain('admin.laravel-playground.local')
-        ->middleware(['middleware' => 'auth.admin'])
-        ->get('/', [App\Http\Controllers\HomeController::class, 'adminIndex']);
+Route::domain('laravel-playground.local')
+    ->middleware(['middleware' => 'auth'])
+    ->get('/', [App\Http\Controllers\HomeController::class, 'index']);
+Route::domain('admin.laravel-playground.local')
+    ->middleware(['middleware' => 'auth.admin'])
+    ->get('/', [App\Http\Controllers\HomeController::class, 'adminIndex']);
 
 Route::group([
     'domain' => 'laravel-playground.local',
@@ -56,7 +56,8 @@ Route::group([
         Route::resource('posts', AdminPostController::class)
             ->except('show')
             ->names('blog.admin.posts');
-        Route::put('/posts/{post}',[AdminPostController::class, 'updateAjax'])->name('blog.admin.posts.updateAjax');
+        Route::match(['patch', 'put'], '/posts/ajax/{post}', [AdminPostController::class, 'updateAjax'])
+            ->name('blog.admin.posts.updateAjax');
     });
 
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
