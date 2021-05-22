@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
+use App\Http\Requests\Admin\BlogPostRequest\BlogPostCreateRequest;
 use App\Http\Requests\Admin\BlogPostRequest\BlogPostUpdateIsPublishedRequest;
 use App\Http\Requests\Admin\BlogPostRequest\BlogPostUpdateRequest;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class PostController extends BaseController
@@ -40,22 +42,34 @@ class PostController extends BaseController
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return View
      */
     public function create()
     {
-        //
+        $item = new BlogPost();
+        $categoryList = $this->categoryRepository->getDropDownList();
+        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return Response
+     * @param BlogPostCreateRequest $request
+     * @return View|RedirectResponse
      */
-    public function store(Request $request)
+    public function store(BlogPostCreateRequest $request)
     {
-        //
+        $attributes = Arr::collapse([$request->all()]);
+        $result = (new BlogPost())->create($attributes);
+
+        if ($result) {
+            return back()
+                ->with(['success' => 'Saved successfully']);
+        } else {
+            return back()
+                ->withErrors(['Save fail'])
+                ->withInput();
+        }
     }
 
     /**

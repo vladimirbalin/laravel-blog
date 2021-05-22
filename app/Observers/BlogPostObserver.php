@@ -7,6 +7,13 @@ use Illuminate\Support\Carbon;
 
 class BlogPostObserver
 {
+    public function creating(BlogPost $blogPost)
+    {
+//      TODO::markdown
+        $this->setHtmlFromRaw($blogPost);
+        $this->setPublishedAtFromNow($blogPost);
+    }
+
     /**
      * Handle the BlogPost "created" event.
      *
@@ -36,9 +43,16 @@ class BlogPostObserver
 
     public function setPublishedAtFromNow(BlogPost $blogPost)
     {
-        $needToSet = empty($blogPost['published_at']) && $blogPost['is_published'];
+        $needToSet = empty($blogPost->published_at) && $blogPost->is_published;
         if ($needToSet) {
-            $blogPost['published_at'] = Carbon::now();
+            $blogPost->published_at = Carbon::now();
+        }
+    }
+
+    public function setHtmlFromRaw(BlogPost $blogPost)
+    {
+        if ($blogPost->isDirty('content_raw')) {
+            $blogPost->content_html = $blogPost->content_raw;
         }
     }
 

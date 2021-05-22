@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="container content">
+        <a href="{{ route('blog.admin.posts.create') }}" class="btn btn-outline-primary">Create post</a>
         <table class="table table-sm table-hover">
             <thead>
             <tr style="background-color: #afc2e8">
@@ -24,7 +25,7 @@
                     <td>{{ $post->category->title }}</td>
                     <td>
                         <a href="{{ route('blog.admin.posts.edit', $post->id) }}">
-                            {{ $post->title }}
+                            {{ \Illuminate\Support\Str::limit($post->title, 30) }}
                         </a>
                     </td>
                     <td>

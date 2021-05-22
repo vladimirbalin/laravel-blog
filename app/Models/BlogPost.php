@@ -55,7 +55,8 @@ class BlogPost extends Model
         'excerpt',
         'content_raw',
         'content_html',
-        'is_published'
+        'is_published',
+        'user_id'
     ];
 
     public function category()

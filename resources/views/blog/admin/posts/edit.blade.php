@@ -82,12 +82,14 @@
                                         </label>
                                     </div>
                                 </div>
-                                <a type="button"
-                                   class="btn btn-outline-danger"
-                                   data-toggle="modal"
-                                   data-target="#exampleModal">
-                                    Delete
-                                </a>
+                                @if($item->exists)
+                                    <a type="button"
+                                       class="btn btn-outline-danger"
+                                       data-toggle="modal"
+                                       data-target="#exampleModal">
+                                        Delete
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -97,13 +99,14 @@
                 </div>
             </form>
     </div>
-    <!-- Delete post form -->
-    <form action="{{ route('blog.admin.posts.destroy', $item->id) }}"
-          method="POST"
-          id="destroy-post-form">
-        @method('DELETE')
-        @csrf
-    </form>
+    @if($item->exists)
+            <!-- Delete post form -->
+        <form action="{{ route('blog.admin.posts.destroy', $item->id) }}"
+              method="POST"
+              id="destroy-post-form">
+            @method('DELETE')
+            @csrf
+        </form>
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -128,4 +131,5 @@
             </div>
         </div>
     </div>
+    @endif
 @endsection
