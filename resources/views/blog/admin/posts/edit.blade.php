@@ -61,8 +61,8 @@
                                             @foreach($categoryList as $category)
                                                 @php /** @var $category \App\Models\BlogCategory */ @endphp
                                                 <option
-                                                    value="{{$category->id}}"
-                                                    @if($category->id === (int)(old('category_id', $item->category_id))) selected @endif
+                                                    value="{{ $category->id }}"
+                                                    @if($category->id === (int)old('category_id', $item->category_id)) selected @endif
                                                 >
                                                     {{ $category->select_title }}
                                                 </option>

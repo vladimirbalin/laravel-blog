@@ -3,14 +3,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show my-4" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endif
+               @include('blog.includes.session-msg')
                 <nav class="navbar navbar-toggleable-md navbar-light bg-faded justify-content-end">
                     <a href="{{ route('blog.admin.categories.create') }}" class="btn btn-primary">Добавить</a>
                 </nav>
@@ -33,7 +26,7 @@
                                         {{ $category->title }}
                                     </a>
                                 </td>
-                                <td>@if($category->parent_id < 2) no category @else{{ $category->parent_id }}@endif</td>
+                                <td>@if($category->parent_id < 2) no category @else{{ $category->parentCategory->title }}@endif</td>
                             </tr>
                         @endforeach
                         </tbody>

@@ -48,9 +48,10 @@ class BlogCategoryRepository extends Repository
      */
     public function getAllWithPagination($perPage)
     {
-        $columns = ['id', 'title', 'parent_id'];
+        $columns = ['id', 'title', 'parent_id', 'created_at'];
         $result = $this->start()
             ->select($columns)
+            ->with(['parentCategory:id,title'])
             ->paginate($perPage);
         return $result;
     }

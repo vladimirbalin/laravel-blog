@@ -59,6 +59,12 @@ class BlogPost extends Model
         'user_id'
     ];
 
+    protected $casts = [
+        'category_id' => 'integer',
+        'is_published' => 'boolean',
+        'user_id' => 'integer'
+    ];
+
     public function category()
     {
         return $this->belongsTo(BlogCategory::class);

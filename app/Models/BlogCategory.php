@@ -40,4 +40,14 @@ class BlogCategory extends Model
         'slug',
         'description'
     ];
+
+    protected $casts = [
+        'id' => 'integer',
+        'category_id' => 'integer',
+        'parent_id' => 'integer'
+    ];
+    public function parentCategory()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
 }
