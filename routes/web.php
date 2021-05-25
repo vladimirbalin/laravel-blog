@@ -58,6 +58,8 @@ Route::group([
             ->names('blog.admin.posts');
         Route::match(['patch', 'put'], '/posts/ajax/{post}', [AdminPostController::class, 'updateAjax'])
             ->name('blog.admin.posts.updateAjax');
+        Route::patch('/posts/restore/{post}', [AdminPostController::class, 'restore'])
+            ->name('blog.admin.posts.restore');
     });
 
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.login');

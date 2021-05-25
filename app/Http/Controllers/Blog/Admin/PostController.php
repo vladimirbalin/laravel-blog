@@ -9,9 +9,7 @@ use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
@@ -119,12 +117,38 @@ class PostController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return Response
+     * @param $id
+     * @return RedirectResponse
      */
     public function destroy($id)
     {
-        return $id;
-//        BlogPost::find($id)->delete();
+        $result = BlogPost::destroy($id);
+
+        if ($result) {
+            return redirect()
+                ->route('blog.admin.posts.index')
+                ->with(['toRestore' => "Post with id [$id] deleted successfully",
+                    'post_id' => $id]);
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Delete failed']);
+        }
+    }
+
+    public function restore($id)
+    {
+        $result = BlogPost::withTrashed()
+            ->where(['id' => $id])
+            ->restore();
+        
+        if ($result) {
+            return redirect()
+                ->route('blog.admin.posts.index')
+                ->with(['success' => "Post with id [$id] restored successfully"]);
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Restore failed']);
+        }
+
     }
 }

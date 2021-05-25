@@ -2,7 +2,8 @@
 
 @section('content')
     <div class="container content">
-        <a href="{{ route('blog.admin.posts.create') }}" class="btn btn-outline-primary">Create post</a>
+        @include('blog.includes.session-msg')
+        <a href="{{ route('blog.admin.posts.create') }}" class="btn btn-primary m-3">Create post</a>
         <table class="table table-sm table-hover">
             <thead>
             <tr style="background-color: #afc2e8">
