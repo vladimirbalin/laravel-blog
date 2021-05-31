@@ -1,13 +1,12 @@
 <?php
 
+namespace App\Http\Requests\Posts;
 
-namespace App\Http\Requests\Admin\BlogPostRequest;
-
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
-class BlogPostCreateRequest extends BlogPostBaseRequest
+class BlogPostUpdateRequest extends BlogPostBaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,8 +15,9 @@ class BlogPostCreateRequest extends BlogPostBaseRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::check();
     }
+
     /**
      * Get the validation rules that apply to the request.
      *

@@ -1,15 +1,12 @@
 <?php
 
-
-namespace App\Http\Requests\Admin\BlogPostRequest;
-
+namespace App\Http\Requests\Posts;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
 class BlogPostBaseRequest extends FormRequest
 {
-
     protected function prepareForValidation()
     {
         $this->setSlugFromTitle();

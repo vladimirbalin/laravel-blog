@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Http\Requests\Admin\BlogCategoryRequest;
+namespace App\Http\Requests\Admin\BlogCategory;
 
 
 use Illuminate\Foundation\Http\FormRequest;

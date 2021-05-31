@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 @section('content')
-    @php /** @var \App\Models\BlogCategory $item */ @endphp
+    @php /** @var \App\Models\BlogCategory $category */ @endphp
     <div class="container">
         @include('blog.includes.session-msg')
-        @if($item->exists)
-            <form method="post" action="{{ route('blog.admin.categories.update', $item->id) }}">
+        @if($category->exists)
+            <form method="post" action="{{ route('blog.admin.categories.update', $category->id) }}">
                 @method('PUT')
                 @else
             <form method="post" action="{{ route('blog.admin.categories.store') }}">
@@ -12,7 +12,7 @@
                 @csrf
                 <div class="row">
                     <div class="col-md-8 py-3">
-                        @include('blog.includes.left-part')
+                        @include('blog.includes.left-part-category')
                     </div>
                     <div class="col-md-4 py-3">
                         @include('blog.includes.right-part')

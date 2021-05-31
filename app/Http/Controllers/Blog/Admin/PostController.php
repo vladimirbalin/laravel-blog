@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
-use App\Http\Requests\Admin\BlogPostRequest\BlogPostCreateRequest;
-use App\Http\Requests\Admin\BlogPostRequest\BlogPostUpdateIsPublishedRequest;
-use App\Http\Requests\Admin\BlogPostRequest\BlogPostUpdateRequest;
+use App\Http\Requests\Admin\BlogPost\BlogPostCreateRequest;
+use App\Http\Requests\Admin\BlogPost\BlogPostUpdateIsPublishedRequest;
+use App\Http\Requests\Admin\BlogPost\BlogPostUpdateRequest;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
@@ -42,11 +42,10 @@ class PostController extends BaseController
      *
      * @return View
      */
-    public function create()
+    public function create(BlogPost $post)
     {
-        $item = new BlogPost();
         $categoryList = $this->categoryRepository->getDropDownList();
-        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
+        return view('blog.admin.posts.edit', compact('post', 'categoryList'));
     }
 
     /**
@@ -61,7 +60,8 @@ class PostController extends BaseController
         $result = (new BlogPost())->create($attributes);
 
         if ($result) {
-            return back()
+            return redirect()
+                ->route('blog.admin.posts.index')
                 ->with(['success' => 'Saved successfully']);
         } else {
             return back()
@@ -73,16 +73,14 @@ class PostController extends BaseController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param BlogPost $post
      * @return View
      */
-    public function edit($id)
+    public function edit(BlogPost $post)
     {
-        $item = $this->postRepository->getExactPost($id);
-        if (empty($item)) abort(404);
         $categoryList = $this->categoryRepository->getDropDownList();
 
-        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
+        return view('blog.admin.posts.edit', compact('post', 'categoryList'));
     }
 
     /**
@@ -96,7 +94,8 @@ class PostController extends BaseController
     {
         $result = $post->update($request->all());
         if ($result) {
-            return back()
+            return redirect()
+                ->route('blog.admin.posts.edit', compact('post'))
                 ->with(['success' => 'Successfully saved']);
         } else {
             return back()
@@ -140,7 +139,7 @@ class PostController extends BaseController
         $result = BlogPost::withTrashed()
             ->where(['id' => $id])
             ->restore();
-        
+
         if ($result) {
             return redirect()
                 ->route('blog.admin.posts.index')

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
-use App\Http\Requests\Admin\BlogCategoryRequest\BlogCategoryCreateRequest;
-use App\Http\Requests\Admin\BlogCategoryRequest\BlogCategoryUpdateRequest;
+use App\Http\Requests\Admin\BlogCategory\BlogCategoryCreateRequest;
+use App\Http\Requests\Admin\BlogCategory\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
 use App\Repositories\BlogCategoryRepository;
 use Illuminate\Contracts\View\View;
@@ -75,14 +75,12 @@ class CategoryController extends BaseController
      * @param $id
      * @return View
      */
-    public function edit($id)
+    public function edit(BlogCategory $category)
     {
-        $item = $this->repository->getEdit($id);
-        if (empty($item)) abort(404);
         $dropDownListCategories = $this->repository->getDropDownList();
 
         return view('blog.admin.categories.edit',
-            compact('item', 'dropDownListCategories'));
+            compact('category', 'dropDownListCategories'));
     }
 
     /**

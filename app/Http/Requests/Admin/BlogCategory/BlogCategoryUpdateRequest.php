@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin\BlogCategoryRequest;
+namespace App\Http\Requests\Admin\BlogCategory;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;

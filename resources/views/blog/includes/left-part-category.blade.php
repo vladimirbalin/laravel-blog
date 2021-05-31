@@ -9,7 +9,7 @@
                     id="title"
                     name="title"
                     placeholder="Please enter the title"
-                    value="{{ old('title', $item->title) }}">
+                    value="{{ old('title', $category->title) }}">
             </div>
             <div class="form-group col-md-12">
                 <label for="slug">Slug/Unique Identifier</label>
@@ -19,7 +19,7 @@
                     id="slug"
                     name="slug"
                     placeholder="Please enter the slug identifier"
-                    value="{{ old('slug', $item->slug) }}">
+                    value="{{ old('slug', $category->slug) }}">
             </div>
         </div>
         <div class="form-row">
@@ -28,10 +28,10 @@
                 <select name="parent_id" id="parent_id" class="form-control">
                     @foreach($dropDownListCategories as $categoryItem)
                         @php /** @var \App\Models\BlogCategory $categoryItem */  @endphp
-                        @if($categoryItem->id === $item->id) @else
+                        @if($categoryItem->id === $category->id) @else
                             <option
                                 value="{{$categoryItem->id}}"
-                                @if($categoryItem->id === $item->parent_id) selected @endif>
+                                @if($categoryItem->id === $category->parent_id) selected @endif>
                                 {{"$categoryItem->select_title"}}
                             </option>
                         @endif
@@ -44,7 +44,7 @@
                     name="description"
                     id="description"
                     class="form-control"
-                    rows="3">{{ old('description', $item->description) }}</textarea>
+                    rows="3">{{ old('description', $category->description) }}</textarea>
             </div>
         </div>
     </div>

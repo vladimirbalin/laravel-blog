@@ -3,6 +3,8 @@
         <button class="btn btn-primary" type="submit">Save</button>
     </div>
 </div>
+@php $item = !empty($post) ? $post : $category; @endphp
+
 @if($item->exists)
     <div class="card my-2">
         <div class="card-body">

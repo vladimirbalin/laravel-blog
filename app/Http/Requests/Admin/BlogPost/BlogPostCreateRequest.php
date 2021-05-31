@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Http\Requests\Admin\BlogPostRequest;
 
-use Illuminate\Foundation\Http\FormRequest;
+namespace App\Http\Requests\Admin\BlogPost;
+
+
+use App\Http\Requests\Posts\BlogPostBaseRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
-class BlogPostUpdateRequest extends BlogPostBaseRequest
+class BlogPostCreateRequest extends BlogPostBaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,9 +18,8 @@ class BlogPostUpdateRequest extends BlogPostBaseRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::check() && Auth::user()->is_admin;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
