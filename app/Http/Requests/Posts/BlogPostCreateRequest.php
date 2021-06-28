@@ -4,6 +4,8 @@ namespace App\Http\Requests\Posts;
 
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Rule;
 
 class BlogPostCreateRequest extends BlogPostBaseRequest
 {
@@ -20,12 +22,18 @@ class BlogPostCreateRequest extends BlogPostBaseRequest
     public function rules()
     {
         return [
-            'title' => 'required|min:5|max:255',
+            'title' => [
+                'required',
+                'min:5',
+                'max:255',
+                'unique' => Rule::unique('blog_posts')->ignore(Route::current()->parameter('post'))
+            ],
             'excerpt' => 'max:500',
             'content_raw' => 'required|string|max:10000',
-            'category_id' => 'required|integer|exists:blog_categories,id'
+            'category_id' => 'required|integer|exists:blog_categories,id',
         ];
     }
+
     protected function prepareForValidation()
     {
         parent::prepareForValidation();

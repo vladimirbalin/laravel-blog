@@ -4,14 +4,30 @@ namespace App\Observers;
 
 use App\Models\BlogPost;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class BlogPostObserver
 {
     public function creating(BlogPost $blogPost)
     {
+        $user = auth()->user();
+        if ( auth()->check() && !$user->is_admin) {
+            $this->setSlugFromTitle($blogPost);
+        }
 //      TODO::markdown
         $this->setHtmlFromRaw($blogPost);
         $this->setPublishedAtFromNow($blogPost);
+        $this->setUserId($blogPost);
+    }
+
+    protected function setSlugFromTitle(BlogPost $blogPost)
+    {
+        $titleShouldBeConverted =
+            $blogPost->title && !$blogPost->slug;
+
+        if ($titleShouldBeConverted) {
+            $blogPost->slug = Str::slug($blogPost->title);
+        }
     }
 
     /**
@@ -22,7 +38,6 @@ class BlogPostObserver
      */
     public function created(BlogPost $blogPost)
     {
-        //
     }
 
     /**
@@ -53,6 +68,13 @@ class BlogPostObserver
     {
         if ($blogPost->isDirty('content_raw')) {
             $blogPost->content_html = $blogPost->content_raw;
+        }
+    }
+
+    public function setUserId(BlogPost $blogPost)
+    {
+        if(auth()->check()){
+            $blogPost->user_id = auth()->user()->id;
         }
     }
 

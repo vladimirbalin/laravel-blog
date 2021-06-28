@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Blog;
 
 use App\Http\Requests\Posts\BlogPostUpdateRequest;
 use App\Http\Requests\Posts\BlogPostCreateRequest;
+use App\Jobs\PostCreatedJob;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
@@ -57,6 +59,7 @@ class PostController extends BaseController
     {
         $result = BlogPost::create($request->input());
         if ($result) {
+            PostCreatedJob::dispatch($result, Auth::user())->delay(now()->addSeconds(20));
             return back()
                 ->with(['success' => 'Post created']);
         } else {

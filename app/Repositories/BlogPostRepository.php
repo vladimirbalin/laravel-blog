@@ -43,4 +43,18 @@ class BlogPostRepository extends Repository
 
         return $result;
     }
+
+    public function getAllPublishedWithPaginator($perPage)
+    {
+        $columns = ['id', 'category_id', 'user_id', 'title', 'published_at'];
+
+        $result = $this->start()
+            ->select($columns)
+            ->where('is_published', '=', true)
+            ->with(['user:id,name', 'category:id,title'])
+            ->latest('id')
+            ->paginate($perPage);
+
+        return $result;
+    }
 }
