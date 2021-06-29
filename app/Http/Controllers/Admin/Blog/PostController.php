@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Blog\Admin;
+namespace App\Http\Controllers\Admin\Blog;
 
+use App\Http\Controllers\Admin\BaseController;
 use App\Http\Requests\Admin\BlogPost\BlogPostCreateRequest;
 use App\Http\Requests\Admin\BlogPost\BlogPostUpdateIsPublishedRequest;
 use App\Http\Requests\Admin\BlogPost\BlogPostUpdateRequest;
@@ -34,7 +35,7 @@ class PostController extends BaseController
     {
         $perPage = 25;
         $paginator = $this->postRepository->getAllWithPaginator($perPage);
-        return view('blog.admin.posts.index', compact('paginator'));
+        return view('admin.blog.posts.index', compact('paginator'));
     }
 
     /**
@@ -45,7 +46,7 @@ class PostController extends BaseController
     public function create(BlogPost $post)
     {
         $categoryList = $this->categoryRepository->getDropDownList();
-        return view('blog.admin.posts.edit', compact('post', 'categoryList'));
+        return view('admin.blog.posts.edit', compact('post', 'categoryList'));
     }
 
     /**
@@ -61,7 +62,7 @@ class PostController extends BaseController
 
         if ($result) {
             return redirect()
-                ->route('blog.admin.posts.index')
+                ->route('admin.blog.posts.index')
                 ->with(['success' => 'Saved successfully']);
         } else {
             return back()
@@ -80,7 +81,7 @@ class PostController extends BaseController
     {
         $categoryList = $this->categoryRepository->getDropDownList();
 
-        return view('blog.admin.posts.edit', compact('post', 'categoryList'));
+        return view('admin.blog.posts.edit', compact('post', 'categoryList'));
     }
 
     /**
@@ -95,7 +96,7 @@ class PostController extends BaseController
         $result = $post->update($request->all());
         if ($result) {
             return redirect()
-                ->route('blog.admin.posts.edit', compact('post'))
+                ->route('admin.blog.posts.edit', compact('post'))
                 ->with(['success' => 'Successfully saved']);
         } else {
             return back()
@@ -125,7 +126,7 @@ class PostController extends BaseController
 
         if ($result) {
             return redirect()
-                ->route('blog.admin.posts.index')
+                ->route('admin.blog.posts.index')
                 ->with(['toRestore' => "Post with id [$id] deleted successfully",
                     'post_id' => $id]);
         } else {
@@ -142,7 +143,7 @@ class PostController extends BaseController
 
         if ($result) {
             return redirect()
-                ->route('blog.admin.posts.index')
+                ->route('admin.blog.posts.index')
                 ->with(['success' => "Post with id [$id] restored successfully"]);
         } else {
             return back()

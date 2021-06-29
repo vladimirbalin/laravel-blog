@@ -2,20 +2,20 @@
 @section('content')
     @php /** @var \App\Models\BlogCategory $category */ @endphp
     <div class="container">
-        @include('blog.includes.session-msg')
+        @include('web.blog.includes.session-msg')
         @if($category->exists)
-            <form method="post" action="{{ route('blog.admin.categories.update', $category->id) }}">
+            <form method="post" action="{{ route('admin.blog.categories.update', $category->id) }}">
                 @method('PUT')
                 @else
-            <form method="post" action="{{ route('blog.admin.categories.store') }}">
+            <form method="post" action="{{ route('admin.blog.categories.store') }}">
                 @endif
                 @csrf
                 <div class="row">
                     <div class="col-md-8 py-3">
-                        @include('blog.includes.left-part-category')
+                        @include('web.blog.includes.left-part-category')
                     </div>
                     <div class="col-md-4 py-3">
-                        @include('blog.includes.right-part')
+                        @include('web.blog.includes.right-part')
                     </div>
 
                 </div>

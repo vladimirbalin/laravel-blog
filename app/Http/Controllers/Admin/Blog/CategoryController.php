@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Blog\Admin;
+namespace App\Http\Controllers\Admin\Blog;
 
+use App\Http\Controllers\Admin\BaseController;
 use App\Http\Requests\Admin\BlogCategory\BlogCategoryCreateRequest;
 use App\Http\Requests\Admin\BlogCategory\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
@@ -30,7 +31,7 @@ class CategoryController extends BaseController
     {
         $paginator = $this->repository->getAllWithPagination($this->perPage);
 
-        return view('blog.admin.categories.index',
+        return view('admin.blog.categories.index',
             compact('paginator'));
     }
 
@@ -44,7 +45,7 @@ class CategoryController extends BaseController
         $item = new BlogCategory;
         $dropDownListCategories = $this->repository->getDropDownList();
 
-        return view('blog.admin.categories.create',
+        return view('admin.blog.categories.create',
             compact('item', 'dropDownListCategories'));
     }
 
@@ -61,7 +62,7 @@ class CategoryController extends BaseController
         $result = $category->fill($request->input())->save();
         if ($result) {
             $paginator = BlogCategory::paginate($this->perPage);
-            return redirect()->route('blog.admin.categories.index')
+            return redirect()->route('admin.blog.categories.index')
                 ->setTargetUrl('?page=' . $paginator->lastPage())
                 ->with('success', 'Category successfully saved.');
         }
@@ -79,7 +80,7 @@ class CategoryController extends BaseController
     {
         $dropDownListCategories = $this->repository->getDropDownList();
 
-        return view('blog.admin.categories.edit',
+        return view('admin.blog.categories.edit',
             compact('category', 'dropDownListCategories'));
     }
 

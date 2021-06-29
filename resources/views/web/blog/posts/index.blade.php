@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container content">
-        @include('blog.includes.session-msg')
+        @include('web.blog.includes.session-msg')
         <a href="{{ route('blog.posts.create') }}" class="btn btn-primary m-3">Create post</a>
         <table class="table table-sm table-hover">
             <thead>

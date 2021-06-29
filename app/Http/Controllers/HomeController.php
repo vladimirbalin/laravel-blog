@@ -13,12 +13,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('welcome');
+        return view('home');
     }
 
     public function adminIndex()
     {
-        return view('blog.admin.welcome');
+        return view('admin.welcome');
 
     }
 }

@@ -3,9 +3,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-               @include('blog.includes.session-msg')
+               @include('web.blog.includes.session-msg')
                 <nav class="navbar navbar-toggleable-md navbar-light bg-faded justify-content-end">
-                    <a href="{{ route('blog.admin.categories.create') }}" class="btn btn-primary">Добавить</a>
+                    <a href="{{ route('admin.blog.categories.create') }}" class="btn btn-primary">Добавить</a>
                 </nav>
                 <div class="col-md-12">
                     <table class="table table-hover">
@@ -22,7 +22,7 @@
                             <tr>
                                 <td>{{ $category->id }}</td>
                                 <td>
-                                    <a href="{{ route('blog.admin.categories.edit', $category->id) }}">
+                                    <a href="{{ route('admin.blog.categories.edit', $category->id) }}">
                                         {{ $category->title }}
                                     </a>
                                 </td>

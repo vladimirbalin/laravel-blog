@@ -37,10 +37,10 @@
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="{{ route('blog.admin.categories.index') }}">{{ __('admin/categories') }}</a>
+                           href="{{ route('admin.blog.categories.index') }}">{{ __('admin/categories') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('blog.admin.posts.index') }}">{{ __('admin/posts') }}</a>
+                        <a class="nav-link" href="{{ route('admin.blog.posts.index') }}">{{ __('admin/posts') }}</a>
                     </li>
                 </ul>
 

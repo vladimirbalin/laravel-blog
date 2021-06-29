@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Blog\Admin\Auth;
+namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -34,6 +34,6 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        return view('auth.admin-login');
+        return view('web.auth.login');
     }
 }

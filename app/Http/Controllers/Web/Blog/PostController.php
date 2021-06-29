@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Blog;
+namespace App\Http\Controllers\Web\Blog;
 
+use App\Http\Controllers\Web\BaseController;
 use App\Http\Requests\Posts\BlogPostUpdateRequest;
 use App\Http\Requests\Posts\BlogPostCreateRequest;
 use App\Jobs\PostCreatedJob;
@@ -34,7 +35,7 @@ class PostController extends BaseController
     {
         $paginator = $this->blogPostRepository->getAllPublishedWithPaginator(15);
 
-        return view('blog.posts.index', compact('paginator'));
+        return view('web.blog.posts.index', compact('paginator'));
     }
 
     /**
@@ -46,7 +47,7 @@ class PostController extends BaseController
     {
         $categoryList = $this->blogCategoryRepository->getDropDownList();
 
-        return view('blog.posts.edit', compact('post', 'categoryList'));
+        return view('web.blog.posts.edit', compact('post', 'categoryList'));
     }
 
     /**
@@ -93,7 +94,7 @@ class PostController extends BaseController
 
         if($userId === $post->user_id)
         {
-            return view('blog.posts.edit', compact('post', 'categoryList'));
+            return view('web.blog.posts.edit', compact('post', 'categoryList'));
         }
         abort(401);
     }

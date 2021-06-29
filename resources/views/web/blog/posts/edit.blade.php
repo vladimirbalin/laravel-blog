@@ -1,14 +1,14 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 @section('content')
     @php /** @var \App\Models\BlogPost $post */ @endphp
     <div class="container">
-        @include('blog.includes.session-msg')
+        @include('web.blog.includes.session-msg')
 
         @if($post->exists)
-            <form method="post" action="{{ route('blog.admin.posts.update', $post->id) }}">
+            <form method="post" action="{{ route('blog.posts.update', $post->id) }}">
                 @method('PATCH')
         @else
-            <form method="post" action="{{ route('blog.admin.posts.store') }}">
+            <form method="post" action="{{ route('blog.posts.store') }}">
         @endif
                 @csrf
                 <div class="row">
@@ -25,15 +25,11 @@
                                             name="title"
                                             placeholder="Please enter the title"
                                             value="{{ old('title', $post->title) }}">
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <label for="slug"><strong>Slug/Unique Identifier</strong></label>
                                         <input
-                                            type="text"
+                                            type="hidden"
                                             class="form-control"
                                             id="slug"
                                             name="slug"
-                                            placeholder="Please enter the slug identifier"
                                             value="{{ old('slug', $post->slug) }}">
                                     </div>
                                     <div class="form-group col-md-12">
@@ -69,18 +65,6 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-6 align-self-end is_published">
-                                        <input type="hidden" name="is_published" value="0">
-                                        <input type="checkbox"
-                                               name="is_published"
-                                               id="is_published"
-                                               class="pt-2"
-                                               value="1"
-                                               @if($post->is_published) checked="checked" @endif>
-                                        <label for="is_published">
-                                            <strong>Published</strong>
-                                        </label>
-                                    </div>
                                 </div>
                                 @if($post->exists)
                                     <a type="button"
@@ -94,42 +78,9 @@
                         </div>
                     </div>
                     <div class="col-md-4 py-3">
-                        @include('blog.includes.right-part')
+                        @include('web.blog.includes.right-part')
                     </div>
                 </div>
             </form>
     </div>
-    @if($post->exists)
-            <!-- Delete post form -->
-        <form action="{{ route('blog.admin.posts.destroy', $post->id) }}"
-              method="POST"
-              id="destroy-post-form">
-            @method('DELETE')
-            @csrf
-        </form>
-
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Delete confirmation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Are you sure?
-                </div>
-                <div class="modal-footer">
-                    <a onclick="event.preventDefault();
-                               document.getElementById('destroy-post-form').submit();"
-                               href="{{ route('blog.admin.posts.destroy', $post->id)  }}"
-                       class="btn btn-secondary"
-                       data-dismiss="modal">Delete post</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    @endif
 @endsection

@@ -1,15 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\Blog\Auth;
+namespace App\Http\Controllers\Web\Auth;
 
-use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
