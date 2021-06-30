@@ -20,20 +20,16 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = 'blog/';
-
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
-    }
-
     public function showLoginForm()
     {
         return view('web.auth.login');
     }
+
+    public function authenticated()
+    {
+        return redirect()
+            ->route('home')
+            ->with(['status' => 'You are logged in!']);
+    }
+
 }

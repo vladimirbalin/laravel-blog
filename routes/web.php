@@ -21,11 +21,11 @@ use Illuminate\Support\Facades\Route;
 
 //domains split
 Route::domain('laravel-playground.local')
-    ->middleware(['middleware' => 'auth'])
+    ->middleware('auth')
     ->get('/', [App\Http\Controllers\HomeController::class, 'index'])
     ->name('home');
 Route::domain('admin.laravel-playground.local')
-    ->middleware(['middleware' => 'auth.admin'])
+    ->middleware('auth:admin')
     ->get('/', [App\Http\Controllers\HomeController::class, 'adminIndex'])
     ->name('admin.home');
 
@@ -34,15 +34,16 @@ Route::group([
     'domain' => 'laravel-playground.local',
     'prefix' => 'blog'
 ], function () {
-    Route::group(['middleware' => ['auth']], function () {
-        Route::resource('/posts', PostController::class)->names('blog.posts');
-        Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::group(['middleware' => ['guest']], function () {
+        Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [LoginController::class, 'login'])->name('login-post');
+        Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+        Route::post('/register', [RegisterController::class, 'register'])->name('register-post');
     });
-
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login'])->name('login-post');
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register'])->name('register-post');
+    Route::group(['middleware' => ['auth']], function () {
+        Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+        Route::resource('/posts', PostController::class)->names('blog.posts');
+    });
 });
 
 //admin part
@@ -50,12 +51,10 @@ Route::group([
     'domain' => 'admin.laravel-playground.local',
     'prefix' => '/blog',
 ], function () {
-    Route::group(['middleware' => ['auth.admin']], function () {
+    Route::group(['middleware' => ['auth:admin']], function () {
         Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
-
-        $methods = ['index', 'create', 'store', 'edit', 'update'];
         Route::resource('categories', CategoryController::class)
-            ->only($methods)
+            ->except('show')
             ->names('admin.blog.categories');
         Route::resource('posts', AdminPostController::class)
             ->except('show')
@@ -66,7 +65,9 @@ Route::group([
             ->name('admin.blog.posts.restore');
     });
 
-    Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('/login', [AdminLoginController::class, 'login'])->name('admin.login-post');
+    Route::group(['middleware' => ['guest:admin']], function () {
+        Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+        Route::post('/login', [AdminLoginController::class, 'login'])->name('admin.login-post');
+    });
 });
 
