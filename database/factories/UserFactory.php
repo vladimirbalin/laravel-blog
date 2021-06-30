@@ -45,18 +45,4 @@ class UserFactory extends Factory
             ];
         });
     }
-
-    public function adminAccount()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'name' => 'admin',
-                'email' => 'admin@admin.com',
-                'email_verified_at' => now(),
-                'password' => Hash::make('12345678'),
-                'remember_token' => Str::random(10),
-                'is_admin' => 1,
-            ];
-        });
-    }
 }

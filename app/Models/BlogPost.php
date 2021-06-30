@@ -43,6 +43,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|BlogPost withTrashed()
  * @method static \Illuminate\Database\Query\Builder|BlogPost withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \App\Models\BlogCategory $category
+ * @property-read \App\Models\User $user
  */
 class BlogPost extends Model
 {
