@@ -42,11 +42,11 @@ class CategoryController extends BaseController
      */
     public function create()
     {
-        $item = new BlogCategory;
+        $category = new BlogCategory;
         $dropDownListCategories = $this->repository->getDropDownList();
 
         return view('admin.blog.categories.create',
-            compact('item', 'dropDownListCategories'));
+            compact('category', 'dropDownListCategories'));
     }
 
     /**
