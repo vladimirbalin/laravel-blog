@@ -16,7 +16,7 @@ class BlogPostUpdateRequest extends BlogPostBaseRequest
      */
     public function authorize()
     {
-        return Auth::check() && Auth::user()->is_admin;
+        return Auth::guard('admin')->check();
     }
 
     /**

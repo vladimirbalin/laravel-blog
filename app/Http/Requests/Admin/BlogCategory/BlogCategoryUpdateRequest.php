@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin\BlogCategory;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
@@ -14,7 +15,7 @@ class BlogCategoryUpdateRequest extends BlogCategoryBaseRequest
      */
     public function authorize()
     {
-        return true;
+        return Auth::guard('admin')->check();
     }
 
     /**
