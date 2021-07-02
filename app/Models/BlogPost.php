@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\BlogPost
@@ -75,5 +77,19 @@ class BlogPost extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function isAuthor()
+    {
+        return $this->user->id === Auth::user()->id;
+    }
+
+    public function createdAtRelatedTime()
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s',$this->created_at)->diffForHumans();
+    }
+    public function updatedAtRelatedTime()
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s',$this->updated_at)->diffForHumans();
     }
 }

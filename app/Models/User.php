@@ -66,9 +66,4 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public function getIsAdminProperty()
-    {
-        return $this->is_admin;
-    }
 }

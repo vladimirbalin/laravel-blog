@@ -73,12 +73,12 @@ class PostController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param BlogPost $post
+     * @return View
      */
-    public function show($id)
+    public function show(BlogPost $post)
     {
-        //
+        return view('web.blog.posts.show', compact('post'));
     }
 
     /**

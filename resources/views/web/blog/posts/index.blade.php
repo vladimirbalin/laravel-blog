@@ -23,7 +23,7 @@
                     <td>{{ $post->user->name }}</td>
                     <td>{{ $post->category->title }}</td>
                     <td>
-                        <a href="{{ route('blog.posts.edit', $post->id) }}">
+                        <a href="{{ route('blog.posts.show', $post->id) }}">
                             {{ \Illuminate\Support\Str::limit($post->title, 30) }}
                         </a>
                     </td>

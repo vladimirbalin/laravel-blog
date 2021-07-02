@@ -94,6 +94,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 py-3">
+                        @include('web.blog.includes.save-button')
                         @include('web.blog.includes.right-part')
                     </div>
                 </div>
