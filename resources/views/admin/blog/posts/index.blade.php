@@ -14,7 +14,6 @@
                 <th>Is published</th>
                 <th>Published at</th>
                 <th></th>
-                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -41,7 +40,7 @@
                         </label>
                     </td>
                     <td>{{ \Illuminate\Support\Carbon::parse($post->published_at)->format('d M H:m') }}</td>
-                    <td class="d-flex">
+                    <td class="">
                         <a href="{{ route('admin.blog.posts.edit', $post->id) }}"
                            class="btn btn-outline-dark btn-sm mx-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

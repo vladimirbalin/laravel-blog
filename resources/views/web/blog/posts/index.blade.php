@@ -13,7 +13,6 @@
                 <th>Title</th>
                 <th>Published at</th>
                 <th></th>
-                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -29,8 +28,8 @@
                         </a>
                     </td>
                     <td>{{ \Illuminate\Support\Carbon::parse($post->published_at)->format('d M H:m') }}</td>
-                    @if($post->user_id == auth()->user()->id)
-                        <td class="d-flex">
+                    <td class="">
+                        @if($post->user_id == auth()->user()->id)
                             <a href="{{ route('blog.posts.edit', $post->id) }}"
                                class="btn btn-outline-dark btn-sm mx-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -57,8 +56,8 @@
                                 @method('DELETE')
                                 @csrf
                             </form>
-                        </td>
                         @endif
+                    </td>
                 </tr>
             @endforeach
             </tbody>

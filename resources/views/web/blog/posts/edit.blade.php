@@ -83,4 +83,38 @@
                 </div>
             </form>
     </div>
+
+    @if($post->exists)
+        <!-- Delete post form -->
+        <form action="{{ route('blog.posts.destroy', $post->id) }}"
+              method="POST"
+              id="destroy-post-form">
+            @method('DELETE')
+            @csrf
+        </form>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete confirmation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure?
+                    </div>
+                    <div class="modal-footer">
+                        <a onclick="event.preventDefault();
+                               document.getElementById('destroy-post-form').submit();"
+                           href="{{ route('blog.posts.destroy', $post->id)  }}"
+                           class="btn btn-secondary"
+                           data-dismiss="modal">Delete post</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection

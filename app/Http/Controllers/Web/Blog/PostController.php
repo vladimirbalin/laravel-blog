@@ -126,9 +126,16 @@ class PostController extends BaseController
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(BlogPost $post)
     {
-        DB::table('blog_posts')->where('id', '=', $id)->delete();
-        return 'delete successfully';
+        $result = $post->delete();
+        if ($result) {
+            return redirect()->route('blog.posts.index')
+                ->with(['success' => 'Post successfully removed!']);
+        } else {
+            return back()
+                ->withInput()
+                ->withErrors(['msg' => 'Save fail']);
+        }
     }
 }

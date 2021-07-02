@@ -24,14 +24,14 @@
         {{ session('toRestore') }}
         <a onclick="event.preventDefault();
                                document.getElementById('restore-post-form').submit();"
-           href="{{ route('blog.admin.posts.restore', session('post_id'))  }}"
+           href="{{ route('admin.blog.posts.restore', session('post_id'))  }}"
            class="btn btn-secondary"
            data-dismiss="modal">Restore?</a>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <form action="{{ route('blog.admin.posts.restore', session('post_id')) }}"
+    <form action="{{ route('admin.blog.posts.restore', session('post_id')) }}"
           method="POST"
           id="restore-post-form">
         @method('PATCH')
