@@ -10,8 +10,7 @@ class BlogPostObserver
 {
     public function creating(BlogPost $blogPost)
     {
-        $user = auth()->user();
-        if ( auth()->check() && !$user->is_admin) {
+        if ( !auth()->guard('admin')->check() ) {
             $this->setSlugFromTitle($blogPost);
         }
 //      TODO::markdown

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class PostCreatedJob implements ShouldQueue
@@ -19,6 +19,7 @@ class PostCreatedJob implements ShouldQueue
 
     private $post;
     private $user;
+
     /**
      * Create a new job instance.
      *
@@ -37,7 +38,11 @@ class PostCreatedJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->user)
-            ->send(new PostCreatedMail($this->post));
+        try {
+            Mail::to($this->user)
+                ->send(new PostCreatedMail($this->post));
+        } catch (\Exception $e) {
+            Log::channel('single')->error($e);
+        }
     }
 }
