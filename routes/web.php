@@ -43,6 +43,8 @@ Route::group([
     Route::group(['middleware' => ['auth']], function () {
         Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
         Route::resource('/posts', PostController::class)->names('blog.posts');
+        Route::match(['patch', 'put'], '/posts/likeAjax/{post}', [PostController::class, 'likePostAjax'])
+            ->name('blog.posts.likePostAjax');
     });
 });
 

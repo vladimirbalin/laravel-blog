@@ -47,6 +47,8 @@ use Illuminate\Support\Facades\Auth;
  * @mixin \Eloquent
  * @property-read \App\Models\BlogCategory $category
  * @property-read \App\Models\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $likedUsers
+ * @property-read int|null $liked_users_count
  */
 class BlogPost extends Model
 {
@@ -79,6 +81,21 @@ class BlogPost extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function likedUsers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'blog_users_to_liked_posts',
+            'post_id',
+            'user_id'
+        );
+    }
+
+    public function likesCount()
+    {
+        return $this->likedUsers()->count();
+    }
+
     public function isAuthor()
     {
         return $this->user->id === Auth::user()->id;
@@ -86,10 +103,11 @@ class BlogPost extends Model
 
     public function createdAtRelatedTime()
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s',$this->created_at)->diffForHumans();
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->diffForHumans();
     }
+
     public function updatedAtRelatedTime()
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s',$this->updated_at)->diffForHumans();
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->updated_at)->diffForHumans();
     }
 }

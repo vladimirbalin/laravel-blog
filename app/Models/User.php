@@ -32,6 +32,10 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogPost[] $posts
+ * @property-read int|null $posts_count
  */
 class User extends Authenticatable
 {
@@ -66,4 +70,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function posts()
+    {
+        return $this->hasMany(BlogPost::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(BlogComment::class);
+    }
 }

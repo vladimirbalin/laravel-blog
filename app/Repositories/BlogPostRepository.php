@@ -37,12 +37,18 @@ class BlogPostRepository extends Repository
 
         $result = $this->start()
             ->select($columns)
-            ->with(['user:id,name', 'category:id,title'])
+            ->with(['user:id,name', 'category:id,title', 'likedUsers'])
             ->latest('id')
             ->paginate($perPage);
 
         return $result;
     }
+
+//    public function likesCount()
+//    {
+//        $result = $this->start()
+//            ->likedUsers
+//    }
 
     public function getAllPublishedWithPaginator($perPage)
     {

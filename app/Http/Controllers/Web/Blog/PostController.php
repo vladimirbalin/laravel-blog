@@ -7,12 +7,14 @@ use App\Http\Requests\Web\BlogPost\BlogPostCreateRequest;
 use App\Http\Requests\Web\BlogPost\BlogPostUpdateRequest;
 use App\Jobs\PostCreatedJob;
 use App\Models\BlogPost;
+use App\Models\BlogUsersToLikedPosts;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class PostController extends BaseController
 {
@@ -92,8 +94,7 @@ class PostController extends BaseController
         $userId = \Auth::id();
         $categoryList = $this->blogCategoryRepository->getDropDownList();
 
-        if($userId === $post->user_id)
-        {
+        if ($userId === $post->user_id) {
             return view('web.blog.posts.edit', compact('post', 'categoryList'));
         }
         abort(401);
@@ -123,8 +124,8 @@ class PostController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param BlogPost $post
+     * @return RedirectResponse
      */
     public function destroy(BlogPost $post)
     {
@@ -137,5 +138,23 @@ class PostController extends BaseController
                 ->withInput()
                 ->withErrors(['msg' => 'Save fail']);
         }
+    }
+
+    public function likePostAjax(Request $request, BlogPost $post)
+    {
+        $userId = Auth::user()->id;
+        $postId = $post->id;
+        $current = ['user_id' => $userId, 'post_id' => $post->id];
+
+        if ($request->ajax()) {
+            $row = BlogUsersToLikedPosts::where([['post_id', '=', $postId], ['user_id', '=', $userId]])->get();
+            if ($row->isNotEmpty()){
+                BlogUsersToLikedPosts::destroy($row);
+            } else {
+                BlogUsersToLikedPosts::create($current);
+            }
+            return ['success' => true];
+        }
+        throw new BadRequestException('You can only make ajax requests to this route');
     }
 }
