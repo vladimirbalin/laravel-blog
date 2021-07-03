@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory(2)->create();
+        User::factory(4)->create();
         $this->call(AdminUserSeeder::class);
 
         $this->call(BlogRootCategorySeeder::class);

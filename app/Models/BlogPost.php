@@ -93,7 +93,7 @@ class BlogPost extends Model
 
     public function likesCount()
     {
-        return $this->likedUsers()->count();
+        return $this->likedUsers->count();
     }
 
     public function isAuthor()

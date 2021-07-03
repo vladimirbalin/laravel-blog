@@ -21,24 +21,26 @@ $('.like_btn').click(function (event) {
 
     const $this = $(event.target);
     const route = $this.closest('button').attr('data-route');
+    const id = $this.closest('button').attr('data-id');
     const $svg = $this.closest('button').find('svg');
-    const $counter = $('#likes-count')[0];
+    const $counter = $(`.likes-count[data-id=${id}]`)[0] ||
+        $('#likes-count')[0];
 
-    function plusCounter() {
-        if ($counter) $counter.textContent = parseInt($counter.textContent) + 1;
+    function plusCounter(responseCount) {
+        if ($counter) $counter.textContent = responseCount;
     }
 
-    function minusCounter() {
-        if ($counter) $counter.textContent = parseInt($counter.textContent) - 1;
+    function minusCounter(responseCount) {
+        if ($counter) $counter.textContent = responseCount;
     }
 
     axios.patch(route, {}).then(function (res) {
         $svg.attr('fill', function (index, attr) {
             if (attr === 'red') {
-                minusCounter()
+                minusCounter(res.data.count)
                 return 'white';
             } else {
-                plusCounter()
+                plusCounter(res.data.count)
                 return 'red';
             }
         })

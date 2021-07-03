@@ -148,12 +148,12 @@ class PostController extends BaseController
 
         if ($request->ajax()) {
             $row = BlogUsersToLikedPosts::where([['post_id', '=', $postId], ['user_id', '=', $userId]])->get();
-            if ($row->isNotEmpty()){
+            if ($row->isNotEmpty()) {
                 BlogUsersToLikedPosts::destroy($row);
             } else {
                 BlogUsersToLikedPosts::create($current);
             }
-            return ['success' => true];
+            return ['success' => true, 'count' => $post->likedUsers->count()];
         }
         throw new BadRequestException('You can only make ajax requests to this route');
     }
