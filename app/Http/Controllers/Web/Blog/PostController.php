@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Web\Blog;
 
 use App\Http\Controllers\Web\BaseController;
-use App\Http\Requests\Posts\BlogPostUpdateRequest;
-use App\Http\Requests\Posts\BlogPostCreateRequest;
+use App\Http\Requests\Web\BlogPost\BlogPostCreateRequest;
+use App\Http\Requests\Web\BlogPost\BlogPostUpdateRequest;
 use App\Jobs\PostCreatedJob;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Posts;
+namespace App\Http\Requests\Web\BlogPost;
 
+use App\Http\Requests\BaseRequests\BlogPostBaseRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Admin\BlogPost;
 
-use App\Http\Requests\Posts\BlogPostBaseRequest;
+use App\Http\Requests\BaseRequests\BlogPostBaseRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
