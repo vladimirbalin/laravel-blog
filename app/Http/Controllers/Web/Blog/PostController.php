@@ -144,10 +144,14 @@ class PostController extends BaseController
     {
         $userId = Auth::user()->id;
         $postId = $post->id;
-        $current = ['user_id' => $userId, 'post_id' => $post->id];
+        $current = ['user_id' => $userId, 'post_id' => $postId];
 
         if ($request->ajax()) {
-            $row = BlogUsersToLikedPosts::where([['post_id', '=', $postId], ['user_id', '=', $userId]])->get();
+            $row = BlogUsersToLikedPosts::where([
+                ['post_id', '=', $postId],
+                ['user_id', '=', $userId]
+            ])->get();
+
             if ($row->isNotEmpty()) {
                 BlogUsersToLikedPosts::destroy($row);
             } else {
