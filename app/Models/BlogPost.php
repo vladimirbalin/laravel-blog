@@ -90,6 +90,29 @@ class BlogPost extends Model
             'user_id'
         );
     }
+    public function toggleLike()
+    {
+        if ($this->isLiked()) {
+            $this->dislike();
+        } else {
+            $this->like();
+        }
+    }
+    public function like()
+    {
+        BlogUsersToLikedPosts::create([
+            'post_id' => $this->id,
+            'user_id' => auth()->id()
+        ]);
+    }
+
+    public function dislike()
+    {
+        BlogUsersToLikedPosts::where([
+            'post_id' => $this->id,
+            'user_id' => auth()->id()
+        ])->delete();
+    }
 
     public function comments()
     {
@@ -98,7 +121,7 @@ class BlogPost extends Model
 
     public function likesCount()
     {
-        return $this->likedUsers->count();
+        return $this->likedUsers()->count();
     }
 
     public function isLiked()

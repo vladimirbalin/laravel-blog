@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Blog\CategoryController;
 use App\Http\Controllers\Admin\Blog\PostController as AdminPostController;
 use App\Http\Controllers\Web\Auth\LoginController;
 use App\Http\Controllers\Web\Auth\RegisterController;
+use App\Http\Controllers\Web\Blog\CommentController;
 use App\Http\Controllers\Web\Blog\PostController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,7 +46,7 @@ Route::group([
         Route::resource('/posts', PostController::class)->names('blog.posts');
         Route::match(['patch', 'put'], '/posts/likeAjax/{post}', [PostController::class, 'likePostAjax'])
             ->name('blog.posts.likePostAjax');
-        Route::match(['delete'], '/comments/delete/{comment}', [\App\Http\Controllers\Web\Blog\CommentController::class, 'destroy'])
+        Route::match(['delete'], '/comments/delete/{comment}', [CommentController::class, 'destroy'])
             ->name('blog.comments.delete');
     });
 });

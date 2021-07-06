@@ -143,27 +143,11 @@ class PostController extends BaseController
     public function likePostAjax(Request $request, BlogPost $post)
     {
         if ($request->ajax()) {
-            $this->toggleLike($post);
-            return ['success' => true, 'count' => $post->likedUsers->count()];
+            $post->toggleLike($post);
+            return ['success' => true, 'count' => $post->likesCount()];
         }
         throw new BadRequestException('You can only make ajax requests to this route');
     }
 
-    public function toggleLike(BlogPost $post)
-    {
-        $userId = Auth::user()->id;
-        $postId = $post->id;
-        $current = ['user_id' => $userId, 'post_id' => $postId];
 
-        $row = BlogUsersToLikedPosts::where([
-            ['post_id', '=', $postId],
-            ['user_id', '=', $userId]
-        ])->get();
-
-        if ($row->isNotEmpty()) {
-            BlogUsersToLikedPosts::destroy($row);
-        } else {
-            BlogUsersToLikedPosts::create($current);
-        }
-    }
 }
