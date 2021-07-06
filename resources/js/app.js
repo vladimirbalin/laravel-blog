@@ -16,34 +16,17 @@ $('.is_published').click(function (event) {
     })
 })
 
-$('.like_btn').click(function (event) {
+$('.like').click(function (event) {
     event.preventDefault();
 
-    const $this = $(event.target);
-    const route = $this.closest('button').attr('data-route');
-    const id = $this.closest('button').attr('data-id');
-    const $svg = $this.closest('button').find('svg');
-    const $counter = $(`.likes-count[data-id=${id}]`)[0] ||
-        $('#likes-count')[0];
-
-    function plusCounter(responseCount) {
-        if ($counter) $counter.textContent = responseCount;
-    }
-
-    function minusCounter(responseCount) {
-        if ($counter) $counter.textContent = responseCount;
-    }
+    let $this = $(this),
+        count = $this.attr('data-count'),
+        active = $this.hasClass('active'),
+        route = $this.closest('button').attr('data-route');
 
     axios.patch(route, {}).then(function (res) {
-        $svg.attr('fill', function (index, attr) {
-            if (attr === 'red') {
-                minusCounter(res.data.count)
-                return 'white';
-            } else {
-                plusCounter(res.data.count)
-                return 'red';
-            }
-        })
+        $this.attr('data-count', res.data.count);
+        $this.toggleClass('active');
     }).catch(function (e) {
         console.log(e)
     })

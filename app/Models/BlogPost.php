@@ -91,9 +91,19 @@ class BlogPost extends Model
         );
     }
 
+    public function comments()
+    {
+        return $this->hasMany(BlogComment::class, 'post_id');
+    }
+
     public function likesCount()
     {
         return $this->likedUsers->count();
+    }
+
+    public function isLiked()
+    {
+        return $this->likedUsers->contains(Auth::user());
     }
 
     public function isAuthor()
@@ -101,13 +111,4 @@ class BlogPost extends Model
         return $this->user->id === Auth::user()->id;
     }
 
-    public function createdAtRelatedTime()
-    {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->created_at)->diffForHumans();
-    }
-
-    public function updatedAtRelatedTime()
-    {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->updated_at)->diffForHumans();
-    }
 }

@@ -2,11 +2,11 @@
 @section('content')
     @php /** @var \App\Models\BlogPost $post */ @endphp
     <div class="container">
-
         <div class="row">
             <div class="col-md-8 py-3">
                 <div class="card">
                     <div class="card-body">
+                        @include('web.blog.includes.session-msg')
                         <a href="{{ route('blog.posts.index') }}"
                            class="btn btn-outline-dark">Back to posts</a>
                         <div class="form-row">
@@ -24,9 +24,11 @@
                                 @endif
                             </div>
                         </div>
-
                     </div>
                 </div>
+                @foreach($post->comments as $comment)
+                    @include('web.blog.includes.comments')
+                @endforeach
             </div>
             <div class="col-md-4 py-3">
                 <div class="card my-2">
@@ -37,38 +39,29 @@
                     </div>
                     <div class="card-body">
                         <p>
-                            Created at: <strong>{{$post->createdAtRelatedTime()}}</strong>
+                            Created at: <strong>{{ $post->created_at->diffForHumans() }}</strong>
                         </p>
                     </div>
                     <div class="card-body">
                         <p>
-                            Updated at: <strong>{{$post->updatedAtRelatedTime()}}</strong>
+                            Updated at: <strong>{{ $post->created_at->diffForHumans() }}</strong>
                         </p>
                     </div>
                     <div class="card-body">
-                        @if($post->isAuthor())
-                        @elseif($post->likedUsers->contains(\Illuminate\Support\Facades\Auth::user()) )
-                            <button class="btn btn-outline-dark like_btn"
-                                    data-route="{{route('blog.posts.likePostAjax', $post->id)}}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" stroke="currentColor"
-                                     fill="red" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"/>
-                                </svg>
+                        @if(!$post->isAuthor())
+                            <button title="Love it"
+                                    class=
+                                    "like likes-counter
+                                        {{ $post->isLiked() ? 'active' : ''}}"
+                                    data-count="{{ $post->likesCount()}}"
+                                    data-route="{{ route('blog.posts.likePostAjax', $post->id)}}"
+                                    data-id="{{ $post->id}}">
+                                <span class="text-center">
+                                    &#x2764;
+                                </span>
                             </button>
                         @else
-                            <button class="btn btn-outline-dark like_btn"
-                                    data-route="{{route('blog.posts.likePostAjax', $post->id)}}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" stroke="currentColor"
-                                     fill="white" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"/>
-                                </svg>
-                            </button>
                         @endif
-                        <p>
-                            likes count: <span id="likes-count">{{ $post->likesCount() }}</span>
-                        </p>
                     </div>
                 </div>
             </div>

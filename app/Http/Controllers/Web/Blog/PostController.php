@@ -91,10 +91,9 @@ class PostController extends BaseController
      */
     public function edit(BlogPost $post)
     {
-        $userId = \Auth::id();
         $categoryList = $this->blogCategoryRepository->getDropDownList();
 
-        if ($userId === $post->user_id) {
+        if ($post->isAuthor()) {
             return view('web.blog.posts.edit', compact('post', 'categoryList'));
         }
         abort(401);
@@ -130,6 +129,7 @@ class PostController extends BaseController
     public function destroy(BlogPost $post)
     {
         $result = $post->delete();
+
         if ($result) {
             return redirect()->route('blog.posts.index')
                 ->with(['success' => 'Post successfully removed!']);
@@ -142,23 +142,28 @@ class PostController extends BaseController
 
     public function likePostAjax(Request $request, BlogPost $post)
     {
+        if ($request->ajax()) {
+            $this->toggleLike($post);
+            return ['success' => true, 'count' => $post->likedUsers->count()];
+        }
+        throw new BadRequestException('You can only make ajax requests to this route');
+    }
+
+    public function toggleLike(BlogPost $post)
+    {
         $userId = Auth::user()->id;
         $postId = $post->id;
         $current = ['user_id' => $userId, 'post_id' => $postId];
 
-        if ($request->ajax()) {
-            $row = BlogUsersToLikedPosts::where([
-                ['post_id', '=', $postId],
-                ['user_id', '=', $userId]
-            ])->get();
+        $row = BlogUsersToLikedPosts::where([
+            ['post_id', '=', $postId],
+            ['user_id', '=', $userId]
+        ])->get();
 
-            if ($row->isNotEmpty()) {
-                BlogUsersToLikedPosts::destroy($row);
-            } else {
-                BlogUsersToLikedPosts::create($current);
-            }
-            return ['success' => true, 'count' => $post->likedUsers->count()];
+        if ($row->isNotEmpty()) {
+            BlogUsersToLikedPosts::destroy($row);
+        } else {
+            BlogUsersToLikedPosts::create($current);
         }
-        throw new BadRequestException('You can only make ajax requests to this route');
     }
 }
