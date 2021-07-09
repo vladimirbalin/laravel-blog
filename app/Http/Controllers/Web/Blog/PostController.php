@@ -6,8 +6,8 @@ use App\Http\Controllers\Web\BaseController;
 use App\Http\Requests\Web\BlogPost\BlogPostCreateRequest;
 use App\Http\Requests\Web\BlogPost\BlogPostUpdateRequest;
 use App\Jobs\PostCreatedJob;
+use App\Models\BlogComment;
 use App\Models\BlogPost;
-use App\Models\BlogUsersToLikedPosts;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
 use Illuminate\Http\RedirectResponse;
@@ -78,9 +78,12 @@ class PostController extends BaseController
      * @param BlogPost $post
      * @return View
      */
-    public function show(BlogPost $post)
+    public function show($postId)
     {
-        return view('web.blog.posts.show', compact('post'));
+        $post = $this->blogPostRepository->getExactPost($postId);
+        $comments = BlogComment::with(['user'])->where(['post_id' => $postId])->get();
+
+        return view('web.blog.posts.show', compact('post', 'comments'));
     }
 
     /**
@@ -143,9 +146,10 @@ class PostController extends BaseController
     public function likePostAjax(Request $request, BlogPost $post)
     {
         if ($request->ajax()) {
-            $post->toggleLike($post);
-            return ['success' => true, 'count' => $post->likesCount()];
+            $post->toggleLike();
+            return ['success' => true, 'count' => $post->likedUsers()->count()];
         }
+
         throw new BadRequestException('You can only make ajax requests to this route');
     }
 

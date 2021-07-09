@@ -26,7 +26,8 @@
                         </div>
                     </div>
                 </div>
-                @foreach($post->comments as $comment)
+                @include('web.blog.includes.comment-form')
+                @foreach($comments as $comment)
                     @include('web.blog.includes.comments')
                 @endforeach
             </div>

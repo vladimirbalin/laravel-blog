@@ -16,7 +16,6 @@
                 class="btn btn-outline-danger float-right">
                 Delete
             </a>
-            <a href="#edit" class="btn btn-dark float-right mx-2">Edit</a>
             @if($comment->exists)
             <!-- Delete comment form -->
                 <form action="{{route('blog.comments.delete', $comment->id)}}"

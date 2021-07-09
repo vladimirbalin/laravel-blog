@@ -48,6 +48,8 @@ Route::group([
             ->name('blog.posts.likePostAjax');
         Route::match(['delete'], '/comments/delete/{comment}', [CommentController::class, 'destroy'])
             ->name('blog.comments.delete');
+        Route::match(['post'], '/comments/store', [CommentController::class, 'store'])
+            ->name('blog.comments.store');
     });
 });
 

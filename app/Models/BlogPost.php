@@ -81,6 +81,11 @@ class BlogPost extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function comments()
+    {
+        return $this->hasMany(BlogComment::class, 'post_id');
+    }
+
     public function likedUsers()
     {
         return $this->belongsToMany(
@@ -90,6 +95,7 @@ class BlogPost extends Model
             'user_id'
         );
     }
+
     public function toggleLike()
     {
         if ($this->isLiked()) {
@@ -98,6 +104,7 @@ class BlogPost extends Model
             $this->like();
         }
     }
+
     public function like()
     {
         BlogUsersToLikedPosts::create([
@@ -114,14 +121,9 @@ class BlogPost extends Model
         ])->delete();
     }
 
-    public function comments()
-    {
-        return $this->hasMany(BlogComment::class, 'post_id');
-    }
-
     public function likesCount()
     {
-        return $this->likedUsers()->count();
+        return $this->likedUsers->count();
     }
 
     public function isLiked()
