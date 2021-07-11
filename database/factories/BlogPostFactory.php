@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 
 class BlogPostFactory extends Factory
 {
+    private $num = 0;
     /**
      * The name of the factory's corresponding model.
      *
@@ -26,10 +27,13 @@ class BlogPostFactory extends Factory
         $title = $this->faker->sentence(rand(3, 8));
         $text = $this->faker->realText(rand(1000, 4000));
         $isPublished = rand(1, 5) > 1;
-        $createdAt = $this->faker
-            ->dateTimeBetween('-2 months', '-1 days')
-            ->format('Y-m-d H:i:s');
-
+        $createdAt = Carbon::createFromFormat(
+            'Y-m-d H:i:s',
+            Carbon::now()
+                ->addMonths('-6')
+                ->addDays($this->num)
+        );
+        $this->num++;
         return [
             'category_id' => rand(1, 10),
             'user_id' => (rand(1, 3) === 3) ? 1 : 2,
@@ -40,7 +44,7 @@ class BlogPostFactory extends Factory
             'content_html' => $text,
             'is_published' => $isPublished,
             'published_at' => $isPublished
-                ? Carbon::createFromFormat('Y-m-d H:i:s', $createdAt)->addDays(2)
+                ? Carbon::createFromFormat('Y-m-d H:i:s', $createdAt)->addDays('1')
                 : null,
             'created_at' => $createdAt,
             'updated_at' => $createdAt

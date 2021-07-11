@@ -57,7 +57,7 @@ class BlogPostObserver
 
     public function setPublishedAtFromNow(BlogPost $blogPost)
     {
-        $needToSet = empty($blogPost->published_at) && $blogPost->is_published;
+        $needToSet = is_null($blogPost->published_at) && $blogPost->is_published;
         if ($needToSet) {
             $blogPost->published_at = Carbon::now();
         }
