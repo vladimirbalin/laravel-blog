@@ -4,49 +4,43 @@
     <div class="container content">
         @include('web.blog.includes.session-msg')
         <a href="{{ route('blog.posts.create') }}" class="btn btn-primary m-3">Create post</a>
-        <table class="table table-sm table-hover">
-            <thead>
-            <tr style="background-color: #afc2e8">
-                <th>#</th>
-                <th>Author</th>
-                <th>Category</th>
-                <th>Title</th>
-                <th>Published at</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($paginator as $post)
-                @php /** @var \App\Models\BlogPost $post */ @endphp
-                <tr data-id="{{$post->id}}">
-                    <td>{{ $post->id }}</td>
-                    <td>{{ $post->user->name }}</td>
-                    <td>{{ $post->category->title }}</td>
-                    <td>
-                        <a href="{{ route('blog.posts.show', $post->id) }}">
-                            {{ \Illuminate\Support\Str::limit($post->title, 30) }}
-                        </a>
-                    </td>
-                    <td>{{ \Illuminate\Support\Carbon::parse($post->published_at)->format('d M H:m') }}</td>
-                    <td>
+        @foreach($paginator as $post)
+            @php /** @var \App\Models\BlogPost $post */ @endphp
+            <div class="col-md-8 col-sm-12 mx-auto">
+                <div class="card card-body ">
+                    <a class="d-block" href="{{ route('blog.posts.show', $post->id) }}">
+                        <h4 class="card-title">{{$post->title}}</h4>
+                    </a>
+                    <div class="bg-light p-2 mb-3 fs-6 text-dark posted-by">posted by: <span
+                            class="font-weight-bold">{{ $post->getAuthor() }}</span> on {{ $post->whenPublished() }}
+                    </div>
+                    <div class="d-flex justify-content-lg-between">
+
+                        <p class="card-text w-75">{{ $post->limitedContent() }}</p>
                         @if(!$post->isAuthor())
-                            <button title="Love it"
-                                    class=
-                                    "like likes-counter
+                            <div class="float-right">
+                                <button title="Love it"
+                                        class=
+                                        "like likes-counter
                                         {{ $post->isLiked() ? 'active' : '' }}"
-                                    data-count="{{ $post->likesCount() }}"
-                                    data-route="{{ route('blog.posts.likePostAjax', $post->id) }}"
-                                    data-id="{{ $post->id }}">
+                                        data-count="{{ $post->likesCount() }}"
+                                        data-route="{{ route('blog.posts.likePostAjax', $post->id) }}"
+                                        data-id="{{ $post->id }}">
                                 <span class="text-center">
                                     &#x2764;
                                 </span>
-                            </button>
+                                </button>
+                            </div>
+                        @else
+                           <div class="d-flex flex-column align-items-center">
+                               <span class="text-danger">&#x2764: {{ $post->likesCount() }}</span>
+                           </div>
                         @endif
-                    </td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+                    </div>
+
+                </div>
+            </div>
+        @endforeach
         @php /** @var \Illuminate\Pagination\Paginator $paginator */ @endphp
         @if($paginator->total() > $paginator->count())
             <div class="row justify-content-center">

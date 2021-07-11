@@ -1,4 +1,7 @@
-@php $item = !empty($post) ? $post : $category; @endphp
+@php
+    $isPost = !empty($post);
+    $item = $isPost ? $post : $category;
+@endphp
 
 @if($item->exists)
     <div class="card my-2">
@@ -24,6 +27,13 @@
                 Updated at: <strong>{{$item->updated_at}}</strong>
             </p>
         </div>
+        @if($isPost)
+            <div class="card-body">
+                <p>
+                    Published at: <strong>{{$item->published_at}}</strong>
+                </p>
+            </div>
+        @endif
         <div class="card-body">
             <p>
                 Deleted at: <strong>{{$item->deleted_at}}</strong>

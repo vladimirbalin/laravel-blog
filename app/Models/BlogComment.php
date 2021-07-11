@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -14,8 +15,8 @@ use Illuminate\Support\Facades\Auth;
  * @property int $status
  * @property int $post_id
  * @property int $user_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property string|null $deleted_at
  * @property-read \App\Models\BlogPost $post
  * @property-read \App\Models\User $user
@@ -38,6 +39,7 @@ class BlogComment extends Model
     use HasFactory;
 
     protected $fillable = ['content', 'status', 'post_id', 'user_id'];
+    public $statuses = [0 => 'Draft', 1 => 'Draft1', 2 => 'Draft2', 3 => 'Published'];
 
     public function user()
     {
@@ -53,4 +55,37 @@ class BlogComment extends Model
     {
         return $this->user->id === Auth::user()->id;
     }
+    public function getAuthor()
+    {
+        return $this->isAuthor() ? 'You' : $this->user->name;
+    }
+
+    public function getStatus()
+    {
+        switch ($this->status) {
+            case 0:
+                return 'Draft';
+            case 1:
+                return 'Draft1';
+            case 2:
+                return 'Draft2';
+            case 3:
+                return 'Published';
+            default:
+                return 'Bad status';
+        }
+    }
+    public function getPublishedAtShortened()
+    {
+        if($this->published_at){
+            return Carbon::parse($this->published_at)->format('d M H:m');
+        } else {
+            return 'Not published yet';
+        }
+    }
+    public function getCreatedAtShortened()
+    {
+        return Carbon::parse($this->created_at)->format('d M H:m');
+    }
+
 }

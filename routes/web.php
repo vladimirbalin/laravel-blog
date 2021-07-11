@@ -66,6 +66,9 @@ Route::group([
         Route::resource('posts', AdminPostController::class)
             ->except('show')
             ->names('admin.blog.posts');
+        Route::resource('comments', \App\Http\Controllers\Admin\Blog\BlogCommentController::class)
+            ->except(['show', 'create'])
+            ->names('admin.blog.comments');
         Route::match(['patch', 'put'], '/posts/ajax/{post}', [AdminPostController::class, 'updateAjax'])
             ->name('admin.blog.posts.updateAjax');
         Route::patch('/posts/restore/{post}', [AdminPostController::class, 'restore'])

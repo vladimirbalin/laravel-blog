@@ -21,9 +21,9 @@ use Illuminate\Support\Facades\Auth;
  * @property string $content_html
  * @property int $is_published
  * @property string|null $published_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
  * @method static \Database\Factories\BlogPostFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost newQuery()
@@ -134,6 +134,35 @@ class BlogPost extends Model
     public function isAuthor()
     {
         return $this->user->id === Auth::user()->id;
+    }
+
+    public function getAuthor()
+    {
+        return $this->isAuthor() ? 'You' : $this->user->name;
+    }
+
+    public function whenPublished()
+    {
+        return Carbon::parse($this->published_at)->diffForHumans();
+    }
+
+    public function limitedContent()
+    {
+        return \Illuminate\Support\Str::limit($this->content_html, 250);
+    }
+
+    public function getPublishedAtShortened()
+    {
+        if($this->published_at){
+            return Carbon::parse($this->published_at)->format('d M H:m');
+        } else {
+            return 'Not published yet';
+        }
+    }
+
+    public function getCreatedAtShortened()
+    {
+        return Carbon::parse($this->created_at)->format('d M H:m');
     }
 
 }

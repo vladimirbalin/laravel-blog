@@ -39,7 +39,7 @@
                         <label for="is_published">
                         </label>
                     </td>
-                    <td>{{ \Illuminate\Support\Carbon::parse($post->published_at)->format('d M H:m') }}</td>
+                    <td>{{$post->getPublishedAtShortened()}}</td>
                     <td class="">
                         <a href="{{ route('admin.blog.posts.edit', $post->id) }}"
                            class="btn btn-outline-dark btn-sm mx-1">

@@ -18915,3 +18915,9 @@ h3 {
   color: #b12f27;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
 }
+
+.posted-by {
+  max-width: -webkit-fit-content;
+  max-width: -moz-fit-content;
+  max-width: fit-content;
+}

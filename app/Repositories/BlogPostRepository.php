@@ -46,7 +46,7 @@ class BlogPostRepository extends Repository
 
     public function getAllPublishedWithPaginator($perPage)
     {
-        $columns = ['id', 'category_id', 'user_id', 'title', 'published_at'];
+        $columns = ['id', 'category_id', 'user_id', 'content_html', 'title', 'published_at'];
 
         $result = $this->start()
             ->select($columns)

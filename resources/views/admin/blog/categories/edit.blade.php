@@ -16,7 +16,7 @@
                     </div>
                     <div class="col-md-4 py-3">
                         @include('web.blog.includes.save-button')
-                        @include('web.blog.includes.right-part')
+                        @include('web.blog.includes.post-or-category-right-part')
                     </div>
 
                 </div>

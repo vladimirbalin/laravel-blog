@@ -28,13 +28,16 @@ class BlogCommentFactory extends Factory
         $user_id = rand(1, 2);
         $createdAt = $this->faker->dateTimeBetween('-5 years')->format('Y-m-d H:i:s');
 
+        $isPublished = rand(1, 5) > 1;
+
         return [
             'content' => $content,
             'status' => $status,
             'post_id' => $post_id,
             'user_id' => $user_id,
             'created_at' => $createdAt,
-            'updated_at' => $createdAt
+            'updated_at' => $createdAt,
+            'published_at' => $isPublished ? $createdAt : null
         ];
     }
 }

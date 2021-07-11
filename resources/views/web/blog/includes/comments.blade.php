@@ -2,7 +2,7 @@
 <div class="card">
     <div class="card-body">
         <div class="card-title">
-            {{ $comment->user->name }}
+            <strong>{{ $comment->getAuthor() }}</strong>
         </div>
         <p class="card-text">
             {{ $comment->content }}

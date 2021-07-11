@@ -6,9 +6,9 @@ use App\Http\Controllers\Web\BaseController;
 use App\Http\Requests\Web\BlogPost\BlogPostCreateRequest;
 use App\Http\Requests\Web\BlogPost\BlogPostUpdateRequest;
 use App\Jobs\PostCreatedJob;
-use App\Models\BlogComment;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
+use App\Repositories\BlogCommentRepository;
 use App\Repositories\BlogPostRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,12 +20,15 @@ class PostController extends BaseController
 {
     private $blogPostRepository;
     private $blogCategoryRepository;
+    private $blogCommentRepository;
 
     public function __construct(BlogPostRepository $blogPostRepository,
-                                BlogCategoryRepository $blogCategoryRepository)
+                                BlogCategoryRepository $blogCategoryRepository,
+                                BlogCommentRepository $blogCommentRepository)
     {
         $this->blogPostRepository = $blogPostRepository;
         $this->blogCategoryRepository = $blogCategoryRepository;
+        $this->blogCommentRepository = $blogCommentRepository;
     }
 
     /**
@@ -35,7 +38,7 @@ class PostController extends BaseController
      */
     public function index()
     {
-        $paginator = $this->blogPostRepository->getAllPublishedWithPaginator(15);
+        $paginator = $this->blogPostRepository->getAllPublishedWithPaginator(10);
 
         return view('web.blog.posts.index', compact('paginator'));
     }
@@ -81,7 +84,7 @@ class PostController extends BaseController
     public function show($postId)
     {
         $post = $this->blogPostRepository->getExactPost($postId);
-        $comments = BlogComment::with(['user'])->where(['post_id' => $postId])->get();
+        $comments = $this->blogCommentRepository->getAllPublishedByPost($postId);
 
         return view('web.blog.posts.show', compact('post', 'comments'));
     }
