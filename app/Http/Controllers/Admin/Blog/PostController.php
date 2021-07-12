@@ -33,8 +33,9 @@ class PostController extends BaseController
      */
     public function index()
     {
-        $perPage = 25;
-        $paginator = $this->postRepository->getAllWithPaginator($perPage);
+        $postsPerPage = 12;
+        $paginator = $this->postRepository->getAllWithPaginator($postsPerPage);
+
         return view('admin.blog.posts.index', compact('paginator'));
     }
 
@@ -46,6 +47,7 @@ class PostController extends BaseController
     public function create(BlogPost $post)
     {
         $categoryList = $this->categoryRepository->getDropDownList();
+
         return view('admin.blog.posts.edit', compact('post', 'categoryList'));
     }
 

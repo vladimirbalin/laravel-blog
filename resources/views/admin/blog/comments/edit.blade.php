@@ -40,15 +40,16 @@
                                             <div class="form-group col-md-12">
                                             </div>
                                             <div class="form-group col-md-6 align-self-end">
-                                                <label for="status">
-                                                    <strong>Status</strong>
+                                                <input type="hidden" name="is_published" value="0">
+                                                <input type="checkbox"
+                                                       name="status"
+                                                       id="status"
+                                                       class="pt-2"
+                                                       value="1"
+                                                       @if($comment->status) checked="checked" @endif>
+                                                <label for="is_published">
+                                                    <strong>Published</strong>
                                                 </label>
-                                                <select name="status" id="status">
-                                                    @foreach($comment->statuses as $key => $status)
-                                                        <option value="{{ $key }}"
-                                                        @if($key === $comment->status) selected @endif>{{ $status }}</option>
-                                                    @endforeach
-                                                </select>
                                             </div>
                                         </div>
                                         @if($comment->exists)
@@ -85,6 +86,11 @@
                                     <div class="card-body">
                                         <p>
                                             Updated at: <strong>{{$comment->updated_at}}</strong>
+                                        </p>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>
+                                            Updated at: <strong>{{$comment->published_at}}</strong>
                                         </p>
                                     </div>
                                     <div class="card-body">

@@ -2,8 +2,17 @@
 
 @section('content')
     <div class="container content">
+        <div>
+            @php /** @var \Illuminate\Pagination\Paginator $paginator */ @endphp
+            @if($paginator->total() > $paginator->count())
+                <div class="float-left">
+                    {{ $paginator }}
+                </div>
+            @endif
+            <a href="{{ route('admin.blog.posts.create') }}" class="float-right btn btn-primary m-3">Create post</a>
+        </div>
         @include('web.blog.includes.session-msg')
-        <a href="{{ route('admin.blog.posts.create') }}" class="btn btn-primary m-3">Create post</a>
+
         <table class="table table-sm table-hover">
             <thead>
             <tr style="background-color: #afc2e8">
@@ -72,11 +81,5 @@
             @endforeach
             </tbody>
         </table>
-        @php /** @var \Illuminate\Pagination\Paginator $paginator */ @endphp
-        @if($paginator->total() > $paginator->count())
-            <div class="row justify-content-center">
-                {{ $paginator }}
-            </div>
-        @endif
     </div>
 @endsection

@@ -7,7 +7,7 @@ use App\Http\Requests\Admin\BlogComment\BlogCommentUpdate;
 use App\Models\BlogComment;
 use App\Repositories\BlogCommentRepository;
 
-class BlogCommentController extends Controller
+class CommentController extends Controller
 {
     private $blogCommentRepository;
 
@@ -18,7 +18,9 @@ class BlogCommentController extends Controller
 
     public function index()
     {
-        $comments = $this->blogCommentRepository->getAll();
+        $commentsPerPage = 12;
+        $comments = $this->blogCommentRepository->getAllWithPaginator($commentsPerPage);
+
         return view('admin.blog.comments.index', compact('comments'));
     }
 

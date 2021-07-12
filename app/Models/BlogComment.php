@@ -38,8 +38,14 @@ class BlogComment extends Model
 {
     use HasFactory;
 
+    const STATUS_DRAFT = 0;
+    const STATUS_PUBLISHED = 1;
+
     protected $fillable = ['content', 'status', 'post_id', 'user_id'];
-    public $statuses = [0 => 'Draft', 1 => 'Draft1', 2 => 'Draft2', 3 => 'Published'];
+
+    protected $casts = [
+        'status' => 'integer'
+    ];
 
     public function user()
     {
@@ -55,37 +61,32 @@ class BlogComment extends Model
     {
         return $this->user->id === Auth::user()->id;
     }
+
     public function getAuthor()
     {
         return $this->isAuthor() ? 'You' : $this->user->name;
     }
 
-    public function getStatus()
+    public function getStatusText()
     {
-        switch ($this->status) {
-            case 0:
-                return 'Draft';
-            case 1:
-                return 'Draft1';
-            case 2:
-                return 'Draft2';
-            case 3:
-                return 'Published';
-            default:
-                return 'Bad status';
-        }
+        return $this->isPublished() ? 'Published' : 'Draft';
     }
+
     public function getPublishedAtShortened()
     {
-        if($this->published_at){
-            return Carbon::parse($this->published_at)->format('d M H:m');
-        } else {
-            return 'Not published yet';
-        }
+        return $this->isPublished() ?
+            Carbon::parse($this->published_at)->format('d M H:m')
+            : 'Not published';
     }
+
     public function getCreatedAtShortened()
     {
         return Carbon::parse($this->created_at)->format('d M H:m');
+    }
+
+    public function isPublished()
+    {
+        return $this->status === 1;
     }
 
 }

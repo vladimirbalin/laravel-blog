@@ -24,6 +24,16 @@ class BlogCommentRepository extends Repository
         return $result;
     }
 
+    public function getAllWithPaginator(int $perPage)
+    {
+        $result = $this->start()
+            ->with('user', 'post')
+            ->latest('id')
+            ->paginate($perPage);
+
+        return $result;
+    }
+
     public function getAllPublishedByPost($postId)
     {
         $result = $this->start()
@@ -34,6 +44,18 @@ class BlogCommentRepository extends Repository
 
         return $result;
     }
+
+    public function getAllPublishedWithPaginatorByPost($postId, int $perPage)
+    {
+        $result = $this->start()
+            ->where('status', '=', 3)
+            ->where('post_id', '=', $postId)
+            ->latest()
+            ->paginate($perPage);
+
+        return $result;
+    }
+
     public function getExactComment($commentId)
     {
         $result = $this->start()
