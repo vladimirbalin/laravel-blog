@@ -23,12 +23,23 @@
                     <td>
                         <a href="{{ route('admin.blog.posts.edit', $comment->post_id) }}">{{ \Illuminate\Support\Str::limit($comment->post->title, 50) }}</a>
                     </td>
-                    <td><a href="{{ route('admin.blog.comments.edit', $comment->id) }}">{{ $comment->content }}</a>
+                    <td>
+                        <a href="{{ route('admin.blog.comments.edit', $comment->id) }}">{{ \Illuminate\Support\Str::limit($comment->content, 50)  }}</a>
                     </td>
                     <td>{{ $comment->user->name }}</td>
-                    <td>{{ $comment->getStatusText() }}</td>
+                    <td>
+                        <a
+                            data-status="{{ $comment->status === 0 ? 1 : 0 }}"
+                            data-comment="{{ $comment->id }}"
+                            href="{{ route('admin.blog.comments.ajax', $comment->id) }}"
+                            class="publish_comment_btn btn btn-sm {{ $comment->isPublished() ?
+                                'btn-success' :
+                                'btn-danger' }}">
+                            {{ $comment->getStatusText() }}
+                        </a>
+                    </td>
                     <td>{{ $comment->getCreatedAtShortened() }}</td>
-                    <td>{{ $comment->getPublishedAtShortened() }}</td>
+                    <td id="published_at-{{$comment->id}}">{{ $comment->getPublishedAtShortened() }}</td>
                 </tr>
             @endforeach
         </table>

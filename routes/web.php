@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\Blog\CategoryController;
+use App\Http\Controllers\Admin\Blog\CommentController as AdminCommentController;
 use App\Http\Controllers\Admin\Blog\PostController as AdminPostController;
 use App\Http\Controllers\Web\Auth\LoginController;
 use App\Http\Controllers\Web\Auth\RegisterController;
@@ -66,11 +67,13 @@ Route::group([
         Route::resource('posts', AdminPostController::class)
             ->except('show')
             ->names('admin.blog.posts');
-        Route::resource('comments', \App\Http\Controllers\Admin\Blog\CommentController::class)
+        Route::resource('comments', AdminCommentController::class)
             ->except(['show', 'create'])
             ->names('admin.blog.comments');
-        Route::match(['patch', 'put'], '/posts/ajax/{post}', [AdminPostController::class, 'updateAjax'])
-            ->name('admin.blog.posts.updateAjax');
+        Route::match(['patch', 'put'], '/comments/ajax/{comment}', [AdminCommentController::class, 'ajax'])
+            ->name('admin.blog.comments.ajax');
+        Route::match(['patch', 'put'], '/posts/ajax/{post}', [AdminPostController::class, 'ajax'])
+            ->name('admin.blog.posts.ajax');
         Route::patch('/posts/restore/{post}', [AdminPostController::class, 'restore'])
             ->name('admin.blog.posts.restore');
     });

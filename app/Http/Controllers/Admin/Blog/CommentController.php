@@ -45,4 +45,19 @@ class CommentController extends Controller
             ->route('admin.blog.comments.index')
             ->with(['success' => 'Comment deleted']);
     }
+
+    public function ajax(\Illuminate\Http\Request $request, BlogComment $comment)
+    {
+        if (!$request->ajax()) {
+            throw new \Exception('Wrong request type');
+        }
+        $comment->status = $request->input('status');
+        $comment->published_at = $comment->published_at ?: now();
+        $comment->save();
+
+        return [
+            'status' => $comment->status,
+            'published_at' => $comment->getPublishedAtShortened()
+        ];
+    }
 }

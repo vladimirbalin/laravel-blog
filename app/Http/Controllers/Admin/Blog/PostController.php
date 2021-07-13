@@ -107,7 +107,7 @@ class PostController extends BaseController
         }
     }
 
-    public function updateAjax(BlogPostUpdateIsPublishedRequest $request, BlogPost $post)
+    public function ajax(BlogPostUpdateIsPublishedRequest $request, BlogPost $post)
     {
         if ($request->ajax()) {
             $post->update($request->all());

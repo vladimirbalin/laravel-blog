@@ -42,7 +42,7 @@
                         <input type="checkbox"
                                name="is_published"
                                class="pt-2 is_published"
-                               data-route="{{ route('admin.blog.posts.updateAjax', $post->id) }}"
+                               data-route="{{ route('admin.blog.posts.ajax', $post->id) }}"
                                value="1"
                                @if($post->is_published) checked="checked" @endif>
                         <label for="is_published">

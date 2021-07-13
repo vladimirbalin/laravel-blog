@@ -74,7 +74,7 @@ class BlogComment extends Model
 
     public function getPublishedAtShortened()
     {
-        return $this->isPublished() ?
+        return $this->published_at ?
             Carbon::parse($this->published_at)->format('d M H:m')
             : 'Not published';
     }
