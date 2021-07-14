@@ -18,7 +18,7 @@ class BlogPostCreateRequest extends BlogPostBaseRequest
      */
     public function authorize()
     {
-        return Auth::guard('admin')->check();
+        return Auth::check() && Auth::user()->isAdmin();
     }
     /**
      * Get the validation rules that apply to the request.

@@ -8,15 +8,6 @@ use Illuminate\Validation\Rule;
 
 class BlogCategoryCreateRequest extends BlogCategoryBaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return Auth::guard('admin')->check();
-    }
 
     /**
      * Get the validation rules that apply to the request.

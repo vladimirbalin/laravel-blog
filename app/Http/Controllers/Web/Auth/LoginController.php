@@ -25,11 +25,9 @@ class LoginController extends Controller
         return view('web.auth.login');
     }
 
-    public function authenticated()
+    public function redirectPath()
     {
-        return redirect()
-            ->route('home')
-            ->with(['status' => 'You are logged in!']);
+        return route('home');
     }
 
 }

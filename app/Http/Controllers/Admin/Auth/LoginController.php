@@ -29,13 +29,9 @@ class LoginController extends Controller
     }
 
 
-    protected function authenticated(Request $request, $user)
+    public function redirectPath()
     {
-        return redirect()->route('admin.blog.posts.index');
+        return route('admin.home');
     }
 
-    protected function guard()
-    {
-        return Auth::guard('admin');
-    }
 }

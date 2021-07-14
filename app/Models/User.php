@@ -90,4 +90,9 @@ class User extends Authenticatable
             'post_id'
         );
     }
+
+    public function isAdmin()
+    {
+        return $this->is_admin == true;
+    }
 }

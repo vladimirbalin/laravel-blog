@@ -5,10 +5,22 @@ namespace App\Http\Requests\Admin\BlogCategory;
 
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class BlogCategoryBaseRequest extends FormRequest
 {
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return Auth::check() && Auth::user()->isAdmin();
+    }
+
     public function messages()
     {
         return [

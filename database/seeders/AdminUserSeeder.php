@@ -20,10 +20,12 @@ class AdminUserSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@admin.com',
             'email_verified_at' => now(),
+            'created_at' => now(),
             'password' => Hash::make('12345678'),
             'remember_token' => Str::random(10),
+            'is_admin' => true,
         ];
 
-        DB::table('admin_users')->insert($admin);
+        DB::table('users')->insert($admin);
     }
 }

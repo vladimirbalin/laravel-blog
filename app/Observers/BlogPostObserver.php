@@ -4,13 +4,14 @@ namespace App\Observers;
 
 use App\Models\BlogPost;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class BlogPostObserver
 {
     public function creating(BlogPost $blogPost)
     {
-        if ( !auth()->guard('admin')->check() ) {
+        if ( Auth::user() && Auth::user()->isAdmin() ) {
             $this->setSlugFromTitle($blogPost);
         }
 //      TODO::markdown

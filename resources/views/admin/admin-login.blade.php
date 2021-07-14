@@ -4,13 +4,20 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 my-5 mx-auto">
+            @if(session('status'))
+                <div class="alert alert-danger alert-dismissible fade show my-4" role="alert">
+                    {{ session('status') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('admin.login-post') }}">
                         @csrf
-
                         <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 

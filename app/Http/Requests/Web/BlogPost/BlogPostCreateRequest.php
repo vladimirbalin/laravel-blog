@@ -10,15 +10,6 @@ use Illuminate\Validation\Rule;
 
 class BlogPostCreateRequest extends BlogPostBaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return Auth::check();
-    }
 
     public function rules()
     {

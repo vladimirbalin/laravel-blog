@@ -78,7 +78,7 @@ Route::group([
             ->name('admin.blog.posts.restore');
     });
 
-    Route::group(['middleware' => ['guest:admin']], function () {
+    Route::group(['middleware' => ['guest']], function () {
         Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
         Route::post('/login', [AdminLoginController::class, 'login'])->name('admin.login-post');
     });

@@ -2,14 +2,14 @@
 
 @section('content')
     <div class="container content">
-        <div>
+        <div class="d-flex justify-content-between">
             @php /** @var \Illuminate\Pagination\Paginator $paginator */ @endphp
             @if($paginator->total() > $paginator->count())
-                <div class="float-left">
+                <div class="">
                     {{ $paginator }}
                 </div>
             @endif
-            <a href="{{ route('admin.blog.posts.create') }}" class="float-right btn btn-primary m-3">Create post</a>
+            <a href="{{ route('admin.blog.posts.create') }}" class="btn btn-primary m-3">Create post</a>
         </div>
         @include('web.blog.includes.session-msg')
 
