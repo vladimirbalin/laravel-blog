@@ -40,4 +40,10 @@
             </p>
         </div>
     </div>
+    @if($isPost)
+        <h3>Tags:</h3>
+        @foreach($item->tags as $tag)
+            <span class="badge badge-secondary fs-4">{{ $tag->title }}</span>
+        @endforeach
+    @endif
 @endif

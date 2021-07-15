@@ -18921,3 +18921,7 @@ h3 {
   max-width: -moz-fit-content;
   max-width: fit-content;
 }
+
+.fs-4 {
+  font-size: 1.5rem !important;
+}

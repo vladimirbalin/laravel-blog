@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\Blog\CategoryController;
 use App\Http\Controllers\Admin\Blog\CommentController as AdminCommentController;
+use App\Http\Controllers\Admin\Blog\TagController;
 use App\Http\Controllers\Admin\Blog\PostController as AdminPostController;
 use App\Http\Controllers\Web\Auth\LoginController;
 use App\Http\Controllers\Web\Auth\RegisterController;
@@ -70,6 +71,9 @@ Route::group([
         Route::resource('comments', AdminCommentController::class)
             ->except(['show', 'create'])
             ->names('admin.blog.comments');
+        Route::resource('tags', TagController::class)
+            ->only(['create', 'store', 'index', 'edit', 'update', 'destroy'])
+            ->names('admin.blog.tags');
         Route::match(['patch', 'put'], '/comments/ajax/{comment}', [AdminCommentController::class, 'ajax'])
             ->name('admin.blog.comments.ajax');
         Route::match(['patch', 'put'], '/posts/ajax/{post}', [AdminPostController::class, 'ajax'])

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\BlogTag
@@ -25,4 +26,26 @@ use Illuminate\Database\Eloquent\Model;
 class BlogTag extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['title'];
+
+    public function posts()
+    {
+        return $this->belongsToMany(
+            BlogPost::class,
+            'blog_tags_to_posts',
+            'tag_id',
+            'post_id'
+        );
+    }
+
+    public function getCreatedAtShortened()
+    {
+        return Carbon::parse($this->created_at)->format('M d Y H:m');
+    }
+
+    public function getUpdatedAtShortened()
+    {
+        return Carbon::parse($this->updated_at)->format('M d Y H:m');
+    }
 }

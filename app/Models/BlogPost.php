@@ -86,6 +86,16 @@ class BlogPost extends Model
         return $this->hasMany(BlogComment::class, 'post_id');
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany(
+            BlogTag::class,
+            'blog_tags_to_posts',
+            'post_id',
+            'tag_id'
+        );
+    }
+
     public function likedUsers()
     {
         return $this->belongsToMany(
@@ -153,7 +163,7 @@ class BlogPost extends Model
 
     public function getPublishedAtShortened()
     {
-        if($this->published_at){
+        if ($this->published_at) {
             return Carbon::parse($this->published_at)->format('d M H:m');
         } else {
             return 'Not published yet';
