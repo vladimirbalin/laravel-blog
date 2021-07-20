@@ -18916,6 +18916,22 @@ h3 {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
+.like.disabled {
+  border: none;
+  background-color: #efefef;
+  color: #666666;
+  text-shadow: none;
+  box-shadow: none;
+  opacity: 50%;
+}
+.like.disabled:hover, .like.disabled span, .like.disabled:active span {
+  color: #b12f27;
+}
+
+div {
+  padding: 5px 10px;
+}
+
 .posted-by {
   max-width: -webkit-fit-content;
   max-width: -moz-fit-content;

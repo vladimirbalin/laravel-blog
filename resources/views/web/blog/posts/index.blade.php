@@ -32,9 +32,19 @@
                                 </button>
                             </div>
                         @else
-                           <div class="d-flex flex-column align-items-center">
-                               <span class="text-danger">&#x2764: {{ $post->likesCount() }}</span>
-                           </div>
+                            <div class="float-right">
+                                <button title="Love it"
+                                        disabled
+                                        class=
+                                        "like likes-counter disabled"
+                                        data-count="{{ $post->likesCount() }}"
+                                        data-route="{{ route('blog.posts.likePostAjax', $post->id) }}"
+                                        data-id="{{ $post->id }}">
+                                <span class="text-center">
+                                    &#x2764;
+                                </span>
+                                </button>
+                            </div>
                         @endif
                     </div>
 

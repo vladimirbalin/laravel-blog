@@ -149,10 +149,29 @@
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-.posted-by{
+.like.disabled {
+    border: none;
+    background-color: #efefef;
+    color: #666666;
+    text-shadow: none;
+    box-shadow: none;
+    opacity: 50%;
+
+    &:hover,
+    & span,
+    &:active span {
+        color: #b12f27;
+    }
+}
+
+div {
+    padding: 5px 10px;
+}
+
+.posted-by {
     max-width: fit-content;
 }
 
-.fs-4{
-    font-size: 1.5rem!important;
+.fs-4 {
+    font-size: 1.5rem !important;
 }
