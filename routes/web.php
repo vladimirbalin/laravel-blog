@@ -55,6 +55,11 @@ Route::group([
             ->name('blog.comments.store');
         Route::resource('/profile', ProfileController::class)->names('blog.profile')
             ->only(['show', 'edit', 'update']);
+
+        Route::match(['put'], '/profile/follow/{user}', [ProfileController::class, 'follow'])
+            ->name('blog.posts.follow');
+        Route::match(['put'], '/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])
+            ->name('blog.posts.unfollow');
     });
 });
 

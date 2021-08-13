@@ -96,6 +96,7 @@ class User extends Authenticatable
             'followed_user_id'
         );
     }
+
     public function followedByUsers()
     {
         return $this->belongsToMany(
@@ -119,5 +120,27 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return $this->is_admin == true;
+    }
+
+    public function followUser($id)
+    {
+        $this->followedUsers()->attach(User::find($id));
+    }
+
+    public function unfollowUser($id)
+    {
+        $this->followedUsers()->detach(User::find($id));
+    }
+
+    public function isFollowed($id)
+    {
+        $check = $this->followedUsers->keyBy('id')->has($id);
+        return $check;
+    }
+
+    public function isNotFollowed($id)
+    {
+        $check = $this->followedUsers->keyBy('id')->has($id);
+        return !$check;
     }
 }

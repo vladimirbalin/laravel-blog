@@ -18,8 +18,27 @@
                             <div class="bg-light p-2 mb-3 fs-6 text-dark"><span
                                     class="font-weight-bold">
                             by <a href="{{route('blog.profile.show', $post->user->id)}}">{{ $post->getAuthorName() }}</a>
-                                    @if(auth()->user()->id != $post->user->id)
-                                        <button class="btn btn-sm btn-outline-primary follow">follow</button>
+                                    @php
+                                        $isItCurrentUser = auth()->user()->id != $post->user->id;
+                                        $isNotFollowed = auth()->user()->isNotFollowed($post->user->id);
+                                        $isFollowed = auth()->user()->isFollowed($post->user->id);
+                                    @endphp
+
+                                    @if($isItCurrentUser && $isNotFollowed)
+                                        <form action="{{ route('blog.posts.follow', $post->user->id) }}" method="post">
+                                            @method('put')
+                                            @csrf
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-primary follow">follow</button>
+                                        </form>
+                                    @elseif($isItCurrentUser && $isFollowed)
+                                        <form action="{{ route('blog.posts.unfollow', $post->user->id) }}"
+                                              method="post">
+                                            @method('put')
+                                            @csrf
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-primary follow">unfollow</button>
+                                        </form>
                                     @endif
                         </span>
                             </div>

@@ -27,4 +27,19 @@ class ProfileController extends Controller
 
         return redirect()->route('blog.profile.show', $profile->id)->with(['success' => 'All is ok']);
     }
+
+    public function follow($id)
+    {
+        $user = User::find(auth()->user()->id);
+        $user->followUser($id);
+
+        return back();
+    }
+    public function unfollow($id)
+    {
+        $user = User::find(auth()->user()->id);
+        $user->unfollowUser($id);
+
+        return back();
+    }
 }
