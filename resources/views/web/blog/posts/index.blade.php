@@ -7,47 +7,62 @@
         @foreach($paginator as $post)
             @php /** @var \App\Models\BlogPost $post */ @endphp
             <div class="col-md-8 col-sm-12 mx-auto">
-                <div class="card card-body ">
-                    <a class="d-block" href="{{ route('blog.posts.show', $post->id) }}">
-                        <h4 class="card-title">{{$post->title}}</h4>
-                    </a>
-                    <div class="bg-light p-2 mb-3 fs-6 text-dark posted-by">posted by: <span
-                            class="font-weight-bold">
-                            <a href="{{route('blog.profile.show', $post->user->id)}}">{{ $post->getAuthorName() }}</a>
-                        </span> on {{ $post->whenPublished() }}
+                <div class="card card-body">
+                    <div class="top d-flex justify-content-between w-100">
+                        <div class="left w-100">
+                            <a class="d-block" href="{{ route('blog.posts.show', $post->id) }}">
+                                <h4 class="card-title">{{$post->title}}</h4>
+                            </a>
+                        </div>
+                        <div class="right w-100">
+                            <div class="bg-light p-2 mb-3 fs-6 text-dark"><span
+                                    class="font-weight-bold">
+                            by <a href="{{route('blog.profile.show', $post->user->id)}}">{{ $post->getAuthorName() }}</a>
+                                    @if(auth()->user()->id != $post->user->id)
+                                        <button class="btn btn-sm btn-outline-primary follow">follow</button>
+                                    @endif
+                        </span>
+                            </div>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-lg-between">
-
-                        <p class="card-text w-75">{{ $post->limitedContent() }}</p>
-                        @if(!$post->isAuthor())
-                            <div class="float-right">
-                                <button title="Love it"
-                                        class=
-                                        "like likes-counter
+                        <div class="left d-flex flex-column">
+                            <p class="card-text w-75">{{ $post->limitedContent() }}</p>
+                            <div class="bottom  posted-by font-weight-bold bg-light text-dark">
+                                {{ $post->whenPublished() }}
+                            </div>
+                        </div>
+                        <div class="right">
+                            @if(!$post->isAuthor())
+                                <div class="float-right">
+                                    <button title="Love it"
+                                            class=
+                                            "like likes-counter
                                         {{ $post->isLiked() ? 'active' : '' }}"
-                                        data-count="{{ $post->likesCount() }}"
-                                        data-route="{{ route('blog.posts.likePostAjax', $post->id) }}"
-                                        data-id="{{ $post->id }}">
+                                            data-count="{{ $post->likesCount() }}"
+                                            data-route="{{ route('blog.posts.likePostAjax', $post->id) }}"
+                                            data-id="{{ $post->id }}">
                                 <span class="text-center">
                                     &#x2764;
                                 </span>
-                                </button>
-                            </div>
-                        @else
-                            <div class="float-right">
-                                <button title="Love it"
-                                        disabled
-                                        class=
-                                        "like likes-counter disabled"
-                                        data-count="{{ $post->likesCount() }}"
-                                        data-route="{{ route('blog.posts.likePostAjax', $post->id) }}"
-                                        data-id="{{ $post->id }}">
+                                    </button>
+                                </div>
+                            @else
+                                <div class="float-right">
+                                    <button title="Love it"
+                                            disabled
+                                            class=
+                                            "like likes-counter disabled"
+                                            data-count="{{ $post->likesCount() }}"
+                                            data-route="{{ route('blog.posts.likePostAjax', $post->id) }}"
+                                            data-id="{{ $post->id }}">
                                 <span class="text-center">
                                     &#x2764;
                                 </span>
-                                </button>
-                            </div>
-                        @endif
+                                    </button>
+                                </div>
+                            @endif
+                        </div>
                     </div>
 
                 </div>

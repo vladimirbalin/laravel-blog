@@ -19,5 +19,19 @@
             <li><span>Phone:</span> <b>{{ $profile->phone }}</b></li>
             <li><span>Email:</span> <b>{{ $profile->email }}</b></li>
         </ul>
+
+        <h3>follows:</h3>
+        <ul>
+            @foreach($profile->followedUsers as $user)
+                <li><a href="{{route('blog.profile.show', $user->id)}}">{{ $user->fullName }}</a></li>
+            @endforeach
+        </ul>
+
+        <h3>followed by:</h3>
+        <ul>
+            @foreach($profile->followedByUsers as $user)
+                <li><a href="{{route('blog.profile.show', $user->id)}}">{{ $user->fullName }}</a></li>
+            @endforeach
+        </ul>
     </div>
 @endsection
