@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\Auth\LoginController;
 use App\Http\Controllers\Web\Auth\RegisterController;
 use App\Http\Controllers\Web\Blog\CommentController;
 use App\Http\Controllers\Web\Blog\PostController;
+use App\Http\Controllers\Web\Blog\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,6 +53,8 @@ Route::group([
             ->name('blog.comments.delete');
         Route::match(['post'], '/comments/store', [CommentController::class, 'store'])
             ->name('blog.comments.store');
+        Route::resource('/profile', ProfileController::class)->names('blog.profile')
+            ->only(['show', 'edit', 'update']);
     });
 });
 
