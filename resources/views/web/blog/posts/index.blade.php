@@ -12,7 +12,9 @@
                         <h4 class="card-title">{{$post->title}}</h4>
                     </a>
                     <div class="bg-light p-2 mb-3 fs-6 text-dark posted-by">posted by: <span
-                            class="font-weight-bold">{{ $post->getAuthor() }}</span> on {{ $post->whenPublished() }}
+                            class="font-weight-bold">
+                            <a href="{{route('blog.profile.show', $post->user->id)}}">{{ $post->getAuthorName() }}</a>
+                        </span> on {{ $post->whenPublished() }}
                     </div>
                     <div class="d-flex justify-content-lg-between">
 

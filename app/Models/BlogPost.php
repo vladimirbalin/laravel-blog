@@ -146,7 +146,7 @@ class BlogPost extends Model
         return $this->user->id === Auth::user()->id;
     }
 
-    public function getAuthor()
+    public function getAuthorName()
     {
         return $this->isAuthor() ? 'You' : $this->user->name;
     }

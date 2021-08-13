@@ -25,6 +25,6 @@ class ProfileController extends Controller
         $profile->fill($request->input());
         $profile->save();
 
-        return redirect()->route('blog.profile.show', $profile->id);
+        return redirect()->route('blog.profile.show', $profile->id)->with(['success' => 'All is ok']);
     }
 }
