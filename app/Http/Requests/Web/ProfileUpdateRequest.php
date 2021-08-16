@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Web;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
@@ -26,7 +28,14 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'phone' => 'required|string',
             'name' => 'required|string',
-            'email' => 'required|string|email',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'unique' => Rule::unique('users')
+                    ->ignore(Route::current()
+                    ->parameter('profile'))
+            ],
         ];
     }
 }

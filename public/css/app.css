@@ -18932,12 +18932,6 @@ div {
   padding: 5px 10px;
 }
 
-.posted-by {
-  max-width: -webkit-fit-content;
-  max-width: -moz-fit-content;
-  max-width: fit-content;
-}
-
 .fs-4 {
   font-size: 1.5rem !important;
 }

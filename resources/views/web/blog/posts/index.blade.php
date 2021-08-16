@@ -16,22 +16,24 @@
                         </div>
                         <div class="right w-100">
                             <div class="bg-light p-2 mb-3 fs-6 text-dark"><span
-                                    class="font-weight-bold">
-                            by <a href="{{route('blog.profile.show', $post->user->id)}}">{{ $post->getAuthorName() }}</a>
+                                    class="font-weight-bold">by
+                                    <a href="{{route('blog.profile.show', $post->user->id)}}">
+                                        {{ $post->getAuthorName() }}
+                                    </a>
+
                                     @php
-                                        $isItCurrentUser = auth()->user()->id != $post->user->id;
-                                        $isNotFollowed = auth()->user()->isNotFollowed($post->user->id);
-                                        $isFollowed = auth()->user()->isFollowed($post->user->id);
+                                        $isNotFollowed = Auth::user()->isNotFollowed($post->user->id);
+                                        $isFollowed = Auth::user()->isFollowed($post->user->id);
                                     @endphp
 
-                                    @if($isItCurrentUser && $isNotFollowed)
+                                    @if(!$post->isAuthor() && $isNotFollowed)
                                         <form action="{{ route('blog.posts.follow', $post->user->id) }}" method="post">
                                             @method('put')
                                             @csrf
                                         <button type="submit"
                                                 class="btn btn-sm btn-outline-primary follow">follow</button>
                                         </form>
-                                    @elseif($isItCurrentUser && $isFollowed)
+                                    @elseif(!$post->isAuthor() && $isFollowed)
                                         <form action="{{ route('blog.posts.unfollow', $post->user->id) }}"
                                               method="post">
                                             @method('put')
@@ -47,7 +49,7 @@
                     <div class="d-flex justify-content-lg-between">
                         <div class="left d-flex flex-column">
                             <p class="card-text w-75">{{ $post->limitedContent() }}</p>
-                            <div class="bottom  posted-by font-weight-bold bg-light text-dark">
+                            <div class="bottom  posted-by font-weight-bold text-dark">
                                 {{ $post->whenPublished() }}
                             </div>
                         </div>
