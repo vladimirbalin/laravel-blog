@@ -9,7 +9,7 @@ $(document).ready(function () {
     commentBtnClickHandler();
     adminPublishBtnHandler();
     likeBtnClickHandler();
-    if (Laravel.userId) {
+    if (window.Laravel && window.Laravel.userId) {
         $.get(Laravel.notificationsRoute, function (data) {
             addNotifications(data, "#notifications");
         });

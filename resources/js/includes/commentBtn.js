@@ -12,31 +12,26 @@ function commentBtnClickHandler() {
         axios.patch(route, {
             status: status
         }).then(function (res) {
-            function publish() {
+
+            function showPublishBtn() {
+                $this.removeClass('btn-danger');
+                $this.addClass('btn-success');
                 $this.text('Published');
                 $published_at.text(res.data.published_at);
                 $this.attr('data-status', 0);
             }
 
-            function unpublish() {
+            function showUnpublishBtn() {
+                $this.removeClass('btn-success');
+                $this.addClass('btn-danger');
                 $this.text('Draft');
                 $this.attr('data-status', 1);
             }
 
-            function switchClasses() {
-                let classes = $this.attr('class').split(/\s+/);
-                classes = classes.map((className) =>
-                    className === 'btn-success' ? 'btn-danger' :
-                        className === 'btn-danger' ? 'btn-success' :
-                            className)
-                $this.attr('class', classes.join(' '));
-            }
-
-            switchClasses();
-            if (status === 1) {
-                publish()
+            if (parseInt(res.data.status) === 0) {
+                showUnpublishBtn();
             } else {
-                unpublish()
+                showPublishBtn();
             }
         }).catch(function (e) {
             console.log(e)

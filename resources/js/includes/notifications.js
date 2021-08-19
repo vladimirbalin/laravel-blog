@@ -58,7 +58,7 @@ function makeNotificationText(notification) {
         const name = notification.data.following_name;
         text += `<strong>${name}</strong> published a new post`;
     } else if (notification.type === NOTIFICATION_TYPES.like) {
-        const name = notification.data.liked_user_name;
+        const name = notification.data.who_liked;
         text += `<strong>${name}</strong> liked your post`;
     }
     return text;
