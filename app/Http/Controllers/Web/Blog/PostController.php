@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Web\Blog;
 use App\Http\Controllers\Web\BaseController;
 use App\Http\Requests\Web\BlogPost\BlogPostCreateRequest;
 use App\Http\Requests\Web\BlogPost\BlogPostUpdateRequest;
-use App\Jobs\PostCreatedJob;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogCommentRepository;
@@ -65,7 +64,6 @@ class PostController extends BaseController
     {
         $result = BlogPost::create($request->input());
         if ($result) {
-            PostCreatedJob::dispatch($result, Auth::user())->delay(now()->addSeconds(20));
             return back()
                 ->with(['success' => 'Post created']);
         } else {
@@ -155,6 +153,4 @@ class PostController extends BaseController
 
         throw new BadRequestException('You can only make ajax requests to this route');
     }
-
-
 }

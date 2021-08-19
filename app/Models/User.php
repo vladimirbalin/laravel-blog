@@ -125,22 +125,23 @@ class User extends Authenticatable
     public function followUser($id)
     {
         $this->followedUsers()->attach(User::find($id));
+        return $this;
     }
 
     public function unfollowUser($id)
     {
         $this->followedUsers()->detach(User::find($id));
+        return $this;
     }
 
-    public function isFollowed($id)
+    public function isFollows($id)
     {
         $check = $this->followedUsers->keyBy('id')->has($id);
         return $check;
     }
 
-    public function isNotFollowed($id)
+    public function isNotFollows($id)
     {
-        $check = $this->followedUsers->keyBy('id')->has($id);
-        return !$check;
+        return !$this->isFollows($id);
     }
 }

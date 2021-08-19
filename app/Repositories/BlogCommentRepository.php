@@ -37,7 +37,7 @@ class BlogCommentRepository extends Repository
     public function getAllPublishedByPost($postId)
     {
         $result = $this->start()
-            ->where('status', '=', 3)
+            ->where('status', '=', 1)
             ->where('post_id', '=', $postId)
             ->latest()
             ->get();
