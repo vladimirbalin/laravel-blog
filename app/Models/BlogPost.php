@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\BlogPostLiked;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -121,6 +122,9 @@ class BlogPost extends Model
             'post_id' => $this->id,
             'user_id' => auth()->id()
         ]);
+
+        $author = $this->user;
+        $author->notify(new BlogPostLiked($this, auth()->user()));
     }
 
     public function dislike()
@@ -131,7 +135,7 @@ class BlogPost extends Model
         ])->delete();
     }
 
-    public function likesCount()
+    public function getLikesCountAttribute()
     {
         return $this->likedUsers->count();
     }

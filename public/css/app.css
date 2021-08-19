@@ -18929,9 +18929,37 @@ h3 {
 }
 
 div {
-  padding: 5px 10px;
+  padding: 0;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .fs-4 {
   font-size: 1.5rem !important;
+}
+
+#notifications:before {
+  position: relative;
+  content: "";
+  top: 10px;
+  right: 10px;
+}
+
+#notifications.has-notifications {
+  color: #bf5329;
+}
+
+#notificationsMenu {
+  padding: 15px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }

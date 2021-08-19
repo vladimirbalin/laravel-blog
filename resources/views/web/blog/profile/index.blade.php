@@ -4,14 +4,8 @@
         <h2 class="font-weight-bold mb-5">User Details</h2>
         <div class="main d-flex justify-content-center text-center">
             <div class="left w-50">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show my-4" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endif
+                @include('web.blog.includes.session-msg')
+
                 <ul class="list-group m-2">
                     <li class="list-group-item"><span>Name:</span> <b>{{ $profile->fullName }}</b></li>
                     <li class="list-group-item"><span>Phone:</span> <b>{{ $profile->phone }}</b></li>
@@ -28,17 +22,19 @@
                     @foreach($profile->followedUsers as $user)
                         <li class="list-group-item">
                             <a href="{{route('blog.profile.show', $user->id)}}">{{ $user->fullName }}</a>
-                            <button type="submit"
-                                    class="btn btn-sm btn-outline-primary follow"
-                                    onclick="document.getElementById('unfollow-{{$user->id}}').submit()">
-                                unfollow
-                            </button>
-                            <form action="{{ route('blog.posts.unfollow', $user->id) }}"
-                                  method="post"
-                                  id="unfollow-{{$user->id}}">
-                                @method('put')
-                                @csrf
-                            </form>
+                            @if(auth()->user()->id == $profile->id)
+                                <button type="submit"
+                                        class="btn btn-sm btn-outline-primary follow"
+                                        onclick="document.getElementById('unfollow-{{$user->id}}').submit()">
+                                    unfollow
+                                </button>
+                                <form action="{{ route('blog.posts.unfollow', $user->id) }}"
+                                      method="post"
+                                      id="unfollow-{{$user->id}}">
+                                    @method('put')
+                                    @csrf
+                                </form>
+                            @endif
                         </li>
                     @endforeach
                 </ul>

@@ -1,4 +1,4 @@
-<!doctype html>
+<doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -11,17 +11,33 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    {{--    <script>--}}
+    {{--        window.Laravel = <?php echo json_encode([--}}
+    {{--            'csrfToken' => csrf_token(),--}}
+    {{--        ]); ?>;--}}
+    {{--        var module = { }; /*   <-----THIS LINE */--}}
+    {{--    </script>--}}
 
+    @auth
+        <script>
+            window.Laravel = {};
+            window.Laravel.userId = {{ auth()->user()->id }};
+            window.Laravel.notificationsRoute = '{{ route('notifications') }}';
+        </script>
+    @endauth
+
+    @yield('scripts')
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
 </head>
 <body>
 <div id="app">
-    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+    <nav class="sticky navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
                 {{ config('app.name', 'Laravel') }}
@@ -56,6 +72,16 @@
                             </li>
                         @endif
                     @else
+                        <li class="nav-item dropdown cursor-pointer">
+                            <a class="nav-link dropdown-toggle" id="notifications" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="true">
+                                <span>&#128161;</span>
+                                <span id="quantity-sum" class="badge badge-danger"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsMenu" id="notificationsMenu">
+                                <li class="dropdown-header">No notifications</li>
+                            </ul>
+                        </li>
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

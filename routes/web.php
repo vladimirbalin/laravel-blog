@@ -60,6 +60,9 @@ Route::group([
             ->name('blog.posts.follow');
         Route::match(['put'], '/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])
             ->name('blog.posts.unfollow');
+
+        Route::get('/notifications', [ProfileController::class, 'notifications'])
+            ->name('notifications');
     });
 });
 

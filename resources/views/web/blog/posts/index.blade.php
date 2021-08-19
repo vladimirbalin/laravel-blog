@@ -1,5 +1,27 @@
 @extends('layouts.app')
+@section('scripts')
+    <script type="module">
+        import Echo from '{{asset('js/echo.js')}}'
+        import {Pusher} from '{{asset('js/pusher.js')}}'
 
+        window.Pusher = Pusher
+        window.Echo = new Echo({
+            broadcaster: 'pusher',
+            key: 'e68857e8510d7a58b561',
+            cluster: 'eu',
+            forceTLS: true
+        });
+        window.Echo.private('notifications')
+            .listen('BlogPostPublished', (e) => {
+                // this.messages.push({
+                //     message: e.message.message,
+                //     user: e.user
+                // });
+                alert(e);
+                console.log(e);
+            });
+    </script>
+@endsection
 @section('content')
     <div class="container content">
         @include('web.blog.includes.session-msg')
@@ -8,6 +30,12 @@
             @php /** @var \App\Models\BlogPost $post */ @endphp
             <div class="col-md-8 col-sm-12 mx-auto">
                 <div class="card card-body">
+{{--                    <script type="module">--}}
+{{--                        window.Echo.private(`likes.{{$post->id}}`)--}}
+{{--                            .listen('BlogPostLiked', (e) => {--}}
+{{--                                alert(`Your post '${e?.post?.title}' was liked by '${e?.user?.name}'! Now it has ${e?.likesCount} likes!`);--}}
+{{--                            });--}}
+{{--                    </script>--}}
                     <div class="top d-flex justify-content-between w-100">
                         <div class="left w-100">
                             <a class="d-block" href="{{ route('blog.posts.show', $post->id) }}">
@@ -22,18 +50,18 @@
                                     </a>
 
                                     @php
-                                        $isNotFollowed = Auth::user()->isNotFollowed($post->user->id);
-                                        $isFollowed = Auth::user()->isFollowed($post->user->id);
+                                        $isNotFollows = Auth::user()->isNotFollows($post->user->id);
+                                        $isFollows = Auth::user()->isFollows($post->user->id);
                                     @endphp
 
-                                    @if(!$post->isAuthor() && $isNotFollowed)
+                                    @if(!$post->isAuthor() && $isNotFollows)
                                         <form action="{{ route('blog.posts.follow', $post->user->id) }}" method="post">
                                             @method('put')
                                             @csrf
                                         <button type="submit"
                                                 class="btn btn-sm btn-outline-primary follow">follow</button>
                                         </form>
-                                    @elseif(!$post->isAuthor() && $isFollowed)
+                                    @elseif(!$post->isAuthor() && $isFollows)
                                         <form action="{{ route('blog.posts.unfollow', $post->user->id) }}"
                                               method="post">
                                             @method('put')
@@ -60,7 +88,7 @@
                                             class=
                                             "like likes-counter
                                         {{ $post->isLiked() ? 'active' : '' }}"
-                                            data-count="{{ $post->likesCount() }}"
+                                            data-count="{{ $post->likesCount }}"
                                             data-route="{{ route('blog.posts.likePostAjax', $post->id) }}"
                                             data-id="{{ $post->id }}">
                                 <span class="text-center">
@@ -74,7 +102,7 @@
                                             disabled
                                             class=
                                             "like likes-counter disabled"
-                                            data-count="{{ $post->likesCount() }}"
+                                            data-count="{{ $post->likesCount }}"
                                             data-route="{{ route('blog.posts.likePostAjax', $post->id) }}"
                                             data-id="{{ $post->id }}">
                                 <span class="text-center">
