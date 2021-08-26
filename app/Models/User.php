@@ -36,6 +36,17 @@ use Illuminate\Notifications\Notifiable;
  * @property-read int|null $comments_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogPost[] $posts
  * @property-read int|null $posts_count
+ * @property int $is_admin
+ * @property string|null $phone
+ * @property-read \Illuminate\Database\Eloquent\Collection|User[] $followedByUsers
+ * @property-read int|null $followed_by_users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|User[] $followedUsers
+ * @property-read int|null $followed_users_count
+ * @property-read mixed $full_name
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogPost[] $likedPosts
+ * @property-read int|null $liked_posts_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereIsAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePhone($value)
  */
 class User extends Authenticatable
 {
@@ -91,7 +102,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(
             User::class,
-            'blog_users_to_followed_users',
+            'user_user',
             'user_id',
             'followed_user_id'
         );
@@ -101,7 +112,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(
             User::class,
-            'blog_users_to_followed_users',
+            'user_user',
             'followed_user_id',
             'user_id'
         );

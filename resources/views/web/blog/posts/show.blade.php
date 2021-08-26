@@ -49,13 +49,30 @@
                         </p>
                     </div>
                     <div class="card-body">
+                        <p>
+                            Liked by:
+                            @foreach($post->users as $user)
+                                <div>
+                                <a href="{{ route('blog.profile.show', $user->id) }}">
+                                    <strong>
+                                        @if($user->id != auth()->id())
+                                            {{ $user->name }}
+                                        @else
+                                            You
+                                        @endif
+                                    </strong></a>
+                                </div>
+                            @endforeach
+                        </p>
+                    </div>
+                    <div class="card-body">
                         @if(!$post->isAuthor())
                             <button title="Love it"
                                     class=
                                     "like likes-counter
                                         {{ $post->isLiked() ? 'active' : ''}}"
-                                    data-count="{{ $post->likesCount()}}"
-                                    data-route="{{ route('blog.posts.likePostAjax', $post->id)}}"
+                                    data-count="{{ $post->likesCount}}"
+                                    data-route="{{ route('blog.posts.like', $post->id)}}"
                                     data-id="{{ $post->id}}">
                                 <span class="text-center">
                                     &#x2764;

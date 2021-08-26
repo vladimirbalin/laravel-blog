@@ -51,7 +51,7 @@ class BlogPostRepository extends Repository
         $result = $this->start()
             ->select($columns)
             ->where('is_published', '=', true)
-            ->with(['user:id,name', 'category:id,title', 'likedUsers'])
+            ->with(['user:id,name', 'category:id,title', 'users'])
             ->latest('id')
             ->paginate($perPage);
 

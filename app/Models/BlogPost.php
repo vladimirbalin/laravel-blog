@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\BlogPost
@@ -50,6 +49,13 @@ use Illuminate\Support\Facades\Auth;
  * @property-read \App\Models\User $user
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $likedUsers
  * @property-read int|null $liked_users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read mixed $likes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogTag[] $tags
+ * @property-read int|null $tags_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
+ * @property-read int|null $users_count
  */
 class BlogPost extends Model
 {
@@ -97,11 +103,11 @@ class BlogPost extends Model
         );
     }
 
-    public function likedUsers()
+    public function users()
     {
         return $this->belongsToMany(
             User::class,
-            'blog_users_to_liked_posts',
+            'blog_post_user',
             'post_id',
             'user_id'
         );
@@ -110,43 +116,41 @@ class BlogPost extends Model
     public function toggleLike()
     {
         if ($this->isLiked()) {
-            $this->dislike();
+            return $this->dislike();
         } else {
-            $this->like();
+            return $this->like();
         }
     }
 
     public function like()
     {
-        BlogUsersToLikedPosts::create([
-            'post_id' => $this->id,
-            'user_id' => auth()->id()
-        ]);
+        $this->users()->attach(auth()->id());
 
-        event(new BlogPostLikedEvent($this, Auth::getUser()));
+        event(new BlogPostLikedEvent($this, auth()->user()));
+
+        return $this->load('users');
     }
 
     public function dislike()
     {
-        BlogUsersToLikedPosts::where([
-            'post_id' => $this->id,
-            'user_id' => auth()->id()
-        ])->delete();
+        $this->users()->detach(auth()->id());
+
+        return $this->load('users');
     }
 
     public function getLikesCountAttribute()
     {
-        return $this->likedUsers->count();
+        return $this->users->count();
     }
 
     public function isLiked()
     {
-        return $this->likedUsers->contains(Auth::user());
+        return $this->users->contains(auth()->user());
     }
 
     public function isAuthor()
     {
-        return $this->user->id === Auth::user()->id;
+        return $this->user->id === auth()->id();
     }
 
     public function getAuthorName()

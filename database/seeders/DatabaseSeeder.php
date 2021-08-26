@@ -7,8 +7,6 @@ use App\Models\BlogComment;
 use App\Models\BlogPost;
 use App\Models\BlogTag;
 use App\Models\User;
-use App\Models\BlogUsersToFollowedUsers;
-use App\Models\BlogUsersToLikedPosts;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,15 +18,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory(4)->create();
+        User::factory(4)->create()
+            ->each(function ($user) {
+                $ids = range(1, 4);
+                $ids = array_filter($ids, function ($val) use ($user) {
+                    return $val != $user->id;
+                });
+                $user->followedUsers()->attach($ids[array_rand($ids)]);
+            });
         $this->call(AdminUserSeeder::class);
-
         $this->call(BlogRootCategorySeeder::class);
         BlogCategory::factory(9)->create();
-        BlogPost::factory(100)->create();
+        BlogPost::factory(100)->create()
+            ->each(function ($post) {
+                $post->users()->attach(rand(1, 2));
+            });
         BlogTag::factory(5)->create();
         BlogComment::factory(200)->create();
-        $this->call(BlogUsersToFollowedUsersSeeder::class);
-        BlogUsersToLikedPosts::factory(80)->create();
     }
 }

@@ -33,6 +33,8 @@ use Illuminate\Support\Facades\Auth;
  * @method static \Illuminate\Database\Eloquent\Builder|BlogComment whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogComment whereUserId($value)
  * @mixin \Eloquent
+ * @property string|null $published_at
+ * @method static \Illuminate\Database\Eloquent\Builder|BlogComment wherePublishedAt($value)
  */
 class BlogComment extends Model
 {

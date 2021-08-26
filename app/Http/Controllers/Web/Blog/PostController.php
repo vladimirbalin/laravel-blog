@@ -147,8 +147,8 @@ class PostController extends BaseController
     public function like(Request $request, BlogPost $post)
     {
         if ($request->ajax()) {
-            $post->toggleLike();
-            return ['success' => true, 'count' => $post->likedUsers()->count()];
+            $post = $post->toggleLike();
+            return ['success' => true, 'count' => $post->likesCount];
         }
 
         throw new BadRequestException('You can only make ajax requests to this route');

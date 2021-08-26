@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBlogUsersToFollowedUsersTable extends Migration
+class CreateUserUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,7 @@ class CreateBlogUsersToFollowedUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('blog_users_to_followed_users', function (Blueprint $table) {
-            $table->id();
+        Schema::create('user_user', function (Blueprint $table) {
 
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('followed_user_id')->unsigned();
@@ -31,6 +30,6 @@ class CreateBlogUsersToFollowedUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('blog_users_to_followed_users');
+        Schema::dropIfExists('user_user');
     }
 }
