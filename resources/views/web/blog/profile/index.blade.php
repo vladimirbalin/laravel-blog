@@ -12,8 +12,28 @@
                     <li class="list-group-item"><span>Email:</span> <b>{{ $profile->email }}</b></li>
                 </ul>
 
-                @if(auth()->user()->id == $profile->id)
-                    <a href="{{route('blog.profile.edit', $profile->id)}}" class="btn btn-dark">Edit Profile</a>
+                @php /** @var $currentUser \App\Models\User */
+                    $currentUser = auth()->user(); @endphp
+
+                @if($currentUser->id == $profile->id)
+                    <a href="{{route('blog.profile.edit', $profile->id)}}"
+                       class="btn btn-dark">Edit Profile</a>
+                @elseif($currentUser->id != $profile->id && $currentUser->isFollows($profile->id))
+                    <form action="{{ route('blog.profile.unfollow', $profile->id) }}"
+                          method="post">
+                        @method('put')
+                        @csrf
+                        <button type="submit"
+                                class="btn btn-sm btn-outline-primary follow">unfollow</button>
+                    </form>
+                @elseif($currentUser->id != $profile->id && $currentUser->isNotFollows($profile->id))
+                    <form action="{{ route('blog.profile.follow', $profile->id) }}"
+                          method="post">
+                        @method('put')
+                        @csrf
+                        <button type="submit"
+                                class="btn btn-sm btn-outline-primary follow">follow</button>
+                    </form>
                 @endif
             </div>
             <div class="right">
@@ -28,7 +48,7 @@
                                         onclick="document.getElementById('unfollow-{{$user->id}}').submit()">
                                     unfollow
                                 </button>
-                                <form action="{{ route('blog.posts.unfollow', $user->id) }}"
+                                <form action="{{ route('blog.profile.unfollow', $user->id) }}"
                                       method="post"
                                       id="unfollow-{{$user->id}}">
                                     @method('put')

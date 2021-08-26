@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Web\Blog;
 
+use App\Events\UserFollowedEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\ProfileUpdateRequest;
 use App\Models\User;
-use App\Notifications\UserFollowed;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
@@ -37,8 +36,7 @@ class ProfileController extends Controller
 
         if ($currentUser->isNotFollows($id)) {
             $currentUser->followUser($id);
-
-            $followedUser->notify(new UserFollowed($currentUser));
+            event(new UserFollowedEvent($currentUser, $followedUser));
 
             return back()->with(['success' => "You are now following {$followedUser->name}!"]);
         }
@@ -50,7 +48,7 @@ class ProfileController extends Controller
         $currentUser = Auth::user();
         $unfollowedUser = User::find($id);
 
-        if($currentUser->isFollows($id)){
+        if ($currentUser->isFollows($id)) {
             $currentUser->unfollowUser($id);
             return back()->with(['success' => "You are no longer following {$unfollowedUser->name}"]);
         }
@@ -60,6 +58,20 @@ class ProfileController extends Controller
 
     public function notifications()
     {
-        return auth()->user()->unreadNotifications()->limit(5)->get()->toArray();
+        return [
+            'lastFive' => auth()->user()->unreadNotifications()
+                ->limit(5)->get()->sortBy('created_at')->keyBy((function () {
+                    global $val;
+                    return (int)$val++;
+                }))->toArray(),
+
+            'count' => auth()->user()->unreadNotifications()->count()
+        ];
+    }
+
+    public function markAsReadAllNotifications()
+    {
+        auth()->user()->unreadNotifications()->get()->markAsRead();
+        return back();
     }
 }

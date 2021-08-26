@@ -122,26 +122,34 @@ class User extends Authenticatable
         return $this->is_admin == true;
     }
 
-    public function followUser($id)
+    public function followUser($user)
     {
+        $id = $user instanceof User ? $user->{$user->primaryKey} : $user;
         $this->followedUsers()->attach(User::find($id));
+
         return $this;
     }
 
-    public function unfollowUser($id)
+    public function unfollowUser($user)
     {
+        $id = $user instanceof User ? $user->{$user->primaryKey} : $user;
         $this->followedUsers()->detach(User::find($id));
+
         return $this;
     }
 
-    public function isFollows($id)
+    public function isFollows($user)
     {
+        $id = $user instanceof User ?
+            $user->{$user->primaryKey} :
+            $user;
         $check = $this->followedUsers->keyBy('id')->has($id);
+
         return $check;
     }
 
-    public function isNotFollows($id)
+    public function isNotFollows($user)
     {
-        return !$this->isFollows($id);
+        return !$this->isFollows($user);
     }
 }

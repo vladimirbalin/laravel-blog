@@ -55,14 +55,14 @@
                                     @endphp
 
                                     @if(!$post->isAuthor() && $isNotFollows)
-                                        <form action="{{ route('blog.posts.follow', $post->user->id) }}" method="post">
+                                        <form action="{{ route('blog.profile.follow', $post->user->id) }}" method="post">
                                             @method('put')
                                             @csrf
                                         <button type="submit"
                                                 class="btn btn-sm btn-outline-primary follow">follow</button>
                                         </form>
                                     @elseif(!$post->isAuthor() && $isFollows)
-                                        <form action="{{ route('blog.posts.unfollow', $post->user->id) }}"
+                                        <form action="{{ route('blog.profile.unfollow', $post->user->id) }}"
                                               method="post">
                                             @method('put')
                                             @csrf
@@ -89,7 +89,7 @@
                                             "like likes-counter
                                         {{ $post->isLiked() ? 'active' : '' }}"
                                             data-count="{{ $post->likesCount }}"
-                                            data-route="{{ route('blog.posts.likePostAjax', $post->id) }}"
+                                            data-route="{{ route('blog.posts.like', $post->id) }}"
                                             data-id="{{ $post->id }}">
                                 <span class="text-center">
                                     &#x2764;
@@ -103,7 +103,7 @@
                                             class=
                                             "like likes-counter disabled"
                                             data-count="{{ $post->likesCount }}"
-                                            data-route="{{ route('blog.posts.likePostAjax', $post->id) }}"
+                                            data-route="{{ route('blog.posts.like', $post->id) }}"
                                             data-id="{{ $post->id }}">
                                 <span class="text-center">
                                     &#x2764;

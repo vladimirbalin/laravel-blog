@@ -144,7 +144,7 @@ class PostController extends BaseController
         }
     }
 
-    public function likePostAjax(Request $request, BlogPost $post)
+    public function like(Request $request, BlogPost $post)
     {
         if ($request->ajax()) {
             $post->toggleLike();

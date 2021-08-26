@@ -3,24 +3,28 @@
 namespace App\Notifications;
 
 use App\Models\User;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class UserFollowed extends Notification implements ShouldQueue
+class UserFollowedNotification extends Notification implements ShouldQueue, ShouldBroadcast
 {
     use Queueable;
 
     public $follower;
+    public $followedUser;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(User $follower)
+    public function __construct(User $follower, User $followedUser)
     {
         $this->follower = $follower;
+        $this->followedUser = $followedUser;
     }
 
     /**
@@ -31,7 +35,7 @@ class UserFollowed extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database', 'broadcast'];
     }
 
     public function toDatabase($notifiable)
@@ -51,7 +55,15 @@ class UserFollowed extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            //
+            'data' => [
+                'follower_id' => $this->follower->id,
+                'follower_name' => $this->follower->name
+            ]
         ];
+    }
+
+    public function broadcastOn()
+    {
+        return new PrivateChannel("user.{$this->followedUser->id}");
     }
 }

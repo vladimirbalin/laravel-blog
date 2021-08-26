@@ -1,30 +1,35 @@
-let notifications = [];
-
 const NOTIFICATION_TYPES = {
-    follow: 'App\\Notifications\\UserFollowed',
-    newPost: 'App\\Notifications\\NewPost',
-    like: 'App\\Notifications\\BlogPostLiked'
+    follow: 'App\\Notifications\\UserFollowedNotification',
+    newPost: 'App\\Notifications\\NewPostNotification',
+    like: 'App\\Notifications\\BlogPostLikedNotification'
 };
 
 
-function addNotifications(newNotifications, target) {
-    notifications = _.concat(notifications, newNotifications);
-    notifications.slice(0, 5);
-
-    showNotifications(notifications, target);
-}
-
-function showNotifications(notifications, target) {
-    if (notifications.length) {
-        let htmlElements = notifications.map(function (notification) {
+function addNotifications(newNotification = {},
+                          dbNotifications = [],
+                          target,
+                          count) {
+    const hasNewNotification = !$.isEmptyObject(newNotification);
+    const hasDatabaseNotifications = dbNotifications.length;
+    if (hasNewNotification) {
+        $(target + 'Menu').append(makeNotification(newNotification));
+    } else if (hasDatabaseNotifications) {
+        let htmlElements = dbNotifications.map(function (notification) {
             return makeNotification(notification);
         });
-        $(target + 'Menu').html(htmlElements.join(''));
-        $(target).addClass('has-notifications')
-        $('#quantity-sum').text(notifications.length)
-    } else {
-        $(target + 'Menu').html('<li class="dropdown-header">No notifications</li>');
+        $(target + 'Menu').append(htmlElements.join(''));
+    }
+
+    $(target + 'Menu').find('.dropdown-header').text('Last notifications:');
+    $(target).addClass('has-notifications')
+    $('#quantity-sum').text(count)
+    $('.all-read').removeClass('disabled');
+
+    if (!hasDatabaseNotifications && !hasNewNotification) {
+        $(target + 'Menu').find('.dropdown-header').html('No notifications');
+        $('#quantity-sum').text('')
         $(target).removeClass('has-notifications');
+        $('.all-read').addClass('disabled');
     }
 }
 
@@ -38,6 +43,7 @@ function makeNotification(notification) {
 function routeNotification(notification) {
     let to = `?read=${notification.id}`;
     if (notification.type === NOTIFICATION_TYPES.follow) {
+        console.log(notification)
         to = 'blog/profile/' + notification.data.follower_id + to;
     } else if (notification.type === NOTIFICATION_TYPES.newPost) {
         const postId = notification.data.post_id;
@@ -58,8 +64,9 @@ function makeNotificationText(notification) {
         const name = notification.data.following_name;
         text += `<strong>${name}</strong> published a new post`;
     } else if (notification.type === NOTIFICATION_TYPES.like) {
-        const name = notification.data.who_liked;
-        text += `<strong>${name}</strong> liked your post`;
+        const name = notification.data.liker_name;
+        const id = notification.data.post_id;
+        text += `<strong>${name}</strong> liked your post #${id}`;
     }
     return text;
 }

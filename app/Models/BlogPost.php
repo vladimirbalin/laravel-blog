@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Notifications\BlogPostLiked;
+use App\Events\BlogPostLikedEvent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -123,8 +123,7 @@ class BlogPost extends Model
             'user_id' => auth()->id()
         ]);
 
-        $author = $this->user;
-        $author->notify(new BlogPostLiked($this, auth()->user()));
+        event(new BlogPostLikedEvent($this, Auth::getUser()));
     }
 
     public function dislike()

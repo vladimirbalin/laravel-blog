@@ -34,68 +34,76 @@ Route::domain('admin.laravel-playground.local')
     ->name('admin.home');
 
 //web part
-Route::group([
-    'domain' => 'laravel-playground.local',
-    'prefix' => 'blog'
-], function () {
-    Route::group(['middleware' => ['guest']], function () {
-        Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-        Route::post('/login', [LoginController::class, 'login'])->name('login-post');
-        Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-        Route::post('/register', [RegisterController::class, 'register'])->name('register-post');
-    });
-    Route::group(['middleware' => ['auth']], function () {
-        Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-        Route::resource('/posts', PostController::class)->names('blog.posts');
-        Route::match(['patch', 'put'], '/posts/likeAjax/{post}', [PostController::class, 'likePostAjax'])
-            ->name('blog.posts.likePostAjax');
-        Route::match(['delete'], '/comments/delete/{comment}', [CommentController::class, 'destroy'])
-            ->name('blog.comments.delete');
-        Route::match(['post'], '/comments/store', [CommentController::class, 'store'])
-            ->name('blog.comments.store');
-        Route::resource('/profile', ProfileController::class)->names('blog.profile')
-            ->only(['show', 'edit', 'update']);
+Route::name('blog.')
+    ->domain('laravel-playground.local')
+    ->prefix('/blog')
+    ->group(function () {
+        Route::group(['middleware' => ['guest']], function () {
+            Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+            Route::post('/login', [LoginController::class, 'login'])->name('login-post');
+            Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+            Route::post('/register', [RegisterController::class, 'register'])->name('register-post');
+        });
+        Route::group(['middleware' => ['auth']], function () {
+            Route::post('/logout', [LoginController::class, 'logout'])
+                ->name('logout');
+            Route::resource('/posts', PostController::class)
+                ->names('posts');
+            Route::match(['patch', 'put'], '/posts/like/{post}', [PostController::class, 'like'])
+                ->name('posts.like');
+            Route::match(['delete'], '/comments/delete/{comment}', [CommentController::class, 'destroy'])
+                ->name('comments.delete');
+            Route::match(['post'], '/comments/store', [CommentController::class, 'store'])
+                ->name('comments.store');
+            Route::resource('/profile', ProfileController::class)->names('profile')
+                ->only(['show', 'edit', 'update']);
 
-        Route::match(['put'], '/profile/follow/{user}', [ProfileController::class, 'follow'])
-            ->name('blog.posts.follow');
-        Route::match(['put'], '/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])
-            ->name('blog.posts.unfollow');
+            Route::match(['put'], '/profile/follow/{user}', [ProfileController::class, 'follow'])
+                ->name('profile.follow');
+            Route::match(['put'], '/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])
+                ->name('profile.unfollow');
 
-        Route::get('/notifications', [ProfileController::class, 'notifications'])
-            ->name('notifications');
+            Route::get('/notifications', [ProfileController::class, 'notifications'])
+                ->name('notifications');
+            Route::patch('/notifications/mark-as-read', [ProfileController::class, 'markAsReadAllNotifications'])
+                ->name('notifications.read');
+        });
     });
-});
 
 //admin part
 Route::group([
     'domain' => 'admin.laravel-playground.local',
     'prefix' => '/blog',
+    'name' => 'admin.'
 ], function () {
-    Route::group(['middleware' => ['auth:admin']], function () {
-        Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+    Route::group([
+        'middleware' => ['auth:admin'],
+        'name' => 'blog.'
+    ], function () {
+        Route::post('/logout', [AdminLoginController::class, 'logout'])->name('logout');
         Route::resource('categories', CategoryController::class)
             ->except('show')
-            ->names('admin.blog.categories');
+            ->names('categories');
         Route::resource('posts', AdminPostController::class)
             ->except('show')
-            ->names('admin.blog.posts');
+            ->names('posts');
         Route::resource('comments', AdminCommentController::class)
             ->except(['show', 'create'])
-            ->names('admin.blog.comments');
+            ->names('comments');
         Route::resource('tags', TagController::class)
             ->only(['create', 'store', 'index', 'edit', 'update', 'destroy'])
-            ->names('admin.blog.tags');
+            ->names('tags');
         Route::match(['patch', 'put'], '/comments/ajax/{comment}', [AdminCommentController::class, 'ajax'])
-            ->name('admin.blog.comments.ajax');
+            ->name('comments.ajax');
         Route::match(['patch', 'put'], '/posts/ajax/{post}', [AdminPostController::class, 'ajax'])
-            ->name('admin.blog.posts.ajax');
+            ->name('posts.ajax');
         Route::patch('/posts/restore/{post}', [AdminPostController::class, 'restore'])
-            ->name('admin.blog.posts.restore');
+            ->name('posts.restore');
     });
 
     Route::group(['middleware' => ['guest']], function () {
-        Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
-        Route::post('/login', [AdminLoginController::class, 'login'])->name('admin.login-post');
+        Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [AdminLoginController::class, 'login'])->name('login-post');
     });
 });
 
