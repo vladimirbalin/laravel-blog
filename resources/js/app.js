@@ -1,5 +1,3 @@
-import notifications from "./includes/notifications";
-
 require('./bootstrap');
 import commentBtnClickHandler from "./includes/commentBtn";
 import adminPublishBtnHandler from "./includes/adminPublishBtn";
@@ -11,8 +9,8 @@ $(document).ready(function () {
     commentBtnClickHandler();
     adminPublishBtnHandler();
     likeBtnClickHandler();
-    if (window.Laravel && window.Laravel.userId) {
 
+    if (window.Laravel && window.Laravel.userId) {
         axios.get('/blog/notifications')
             .then(res => {
                 let count = res.data.count,
@@ -20,7 +18,7 @@ $(document).ready(function () {
                     target = '#notifications';
 
                 addNotifications({}, databaseNotifications, target, count)
-                console.log(typeof databaseNotifications)
+
                 window.Echo.private(`user.${window.Laravel.userId}`)
                     .notification(function (newNotification) {
                         addNotifications(newNotification, databaseNotifications, target, ++count);

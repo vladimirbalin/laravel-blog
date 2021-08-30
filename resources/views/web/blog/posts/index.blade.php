@@ -1,27 +1,4 @@
 @extends('layouts.app')
-@section('scripts')
-    <script type="module">
-        import Echo from '{{asset('js/echo.js')}}'
-        import {Pusher} from '{{asset('js/pusher.js')}}'
-
-        window.Pusher = Pusher
-        window.Echo = new Echo({
-            broadcaster: 'pusher',
-            key: 'e68857e8510d7a58b561',
-            cluster: 'eu',
-            forceTLS: true
-        });
-        window.Echo.private('notifications')
-            .listen('BlogPostPublished', (e) => {
-                // this.messages.push({
-                //     message: e.message.message,
-                //     user: e.user
-                // });
-                alert(e);
-                console.log(e);
-            });
-    </script>
-@endsection
 @section('content')
     <div class="container content">
         @include('web.blog.includes.session-msg')
@@ -30,12 +7,6 @@
             @php /** @var \App\Models\BlogPost $post */ @endphp
             <div class="col-md-8 col-sm-12 mx-auto">
                 <div class="card card-body">
-{{--                    <script type="module">--}}
-{{--                        window.Echo.private(`likes.{{$post->id}}`)--}}
-{{--                            .listen('BlogPostLiked', (e) => {--}}
-{{--                                alert(`Your post '${e?.post?.title}' was liked by '${e?.user?.name}'! Now it has ${e?.likesCount} likes!`);--}}
-{{--                            });--}}
-{{--                    </script>--}}
                     <div class="top d-flex justify-content-between w-100">
                         <div class="left w-100">
                             <a class="d-block" href="{{ route('blog.posts.show', $post->id) }}">

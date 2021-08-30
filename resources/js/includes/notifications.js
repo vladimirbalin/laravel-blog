@@ -43,7 +43,6 @@ function makeNotification(notification) {
 function routeNotification(notification) {
     let to = `?read=${notification.id}`;
     if (notification.type === NOTIFICATION_TYPES.follow) {
-        console.log(notification)
         to = 'blog/profile/' + notification.data.follower_id + to;
     } else if (notification.type === NOTIFICATION_TYPES.newPost) {
         const postId = notification.data.post_id;
