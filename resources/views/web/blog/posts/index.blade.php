@@ -21,25 +21,14 @@
                                     </a>
 
                                     @php
-                                        $isNotFollows = Auth::user()->isNotFollows($post->user->id);
-                                        $isFollows = Auth::user()->isFollows($post->user->id);
+                                        $isNotFollow = Auth::user()->isNotFollow($post->user->id);
+                                        $isFollow = Auth::user()->isFollow($post->user->id);
                                     @endphp
 
-                                    @if(!$post->isAuthor() && $isNotFollows)
-                                        <form action="{{ route('blog.profile.follow', $post->user->id) }}" method="post">
-                                            @method('put')
-                                            @csrf
-                                        <button type="submit"
-                                                class="btn btn-sm btn-outline-primary follow">follow</button>
-                                        </form>
-                                    @elseif(!$post->isAuthor() && $isFollows)
-                                        <form action="{{ route('blog.profile.unfollow', $post->user->id) }}"
-                                              method="post">
-                                            @method('put')
-                                            @csrf
-                                        <button type="submit"
-                                                class="btn btn-sm btn-outline-primary follow">unfollow</button>
-                                        </form>
+                                    @if(!$post->isAuthor() && $isNotFollow)
+                                        @include('web.blog.posts._follow-btn')
+                                    @elseif(!$post->isAuthor() && $isFollow)
+                                        @include('web.blog.posts._unfollow-btn')
                                     @endif
                         </span>
                             </div>

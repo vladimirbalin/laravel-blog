@@ -108,7 +108,7 @@ class User extends Authenticatable
         );
     }
 
-    public function followedByUsers()
+    public function followers()
     {
         return $this->belongsToMany(
             User::class,
@@ -149,7 +149,7 @@ class User extends Authenticatable
         return $this;
     }
 
-    public function isFollows($user)
+    public function isFollow($user)
     {
         $id = $user instanceof User ?
             $user->{$user->primaryKey} :
@@ -159,8 +159,8 @@ class User extends Authenticatable
         return $check;
     }
 
-    public function isNotFollows($user)
+    public function isNotFollow($user)
     {
-        return !$this->isFollows($user);
+        return !$this->isFollow($user);
     }
 }

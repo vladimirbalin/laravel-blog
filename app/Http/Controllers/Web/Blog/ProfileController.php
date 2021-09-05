@@ -34,7 +34,7 @@ class ProfileController extends Controller
         $currentUser = Auth::user();
         $followedUser = User::find($id);
 
-        if ($currentUser->isNotFollows($id)) {
+        if ($currentUser->isNotFollow($id)) {
             $currentUser->followUser($id);
             event(new UserFollowedEvent($currentUser, $followedUser));
 
@@ -48,7 +48,7 @@ class ProfileController extends Controller
         $currentUser = Auth::user();
         $unfollowedUser = User::find($id);
 
-        if ($currentUser->isFollows($id)) {
+        if ($currentUser->isFollow($id)) {
             $currentUser->unfollowUser($id);
             return back()->with(['success' => "You are no longer following {$unfollowedUser->name}"]);
         }

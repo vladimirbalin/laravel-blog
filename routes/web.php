@@ -58,9 +58,9 @@ Route::name('blog.')
             Route::resource('/profile', ProfileController::class)->names('profile')
                 ->only(['show', 'edit', 'update']);
 
-            Route::match(['put'], '/profile/follow/{user}', [ProfileController::class, 'follow'])
+            Route::match(['post'], '/profile/follow/{user}', [ProfileController::class, 'follow'])
                 ->name('profile.follow');
-            Route::match(['put'], '/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])
+            Route::match(['delete'], '/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])
                 ->name('profile.unfollow');
 
             Route::get('/notifications', [ProfileController::class, 'notifications'])

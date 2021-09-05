@@ -18,21 +18,22 @@
                 @if($currentUser->id == $profile->id)
                     <a href="{{route('blog.profile.edit', $profile->id)}}"
                        class="btn btn-dark">Edit Profile</a>
-                @elseif($currentUser->id != $profile->id && $currentUser->isFollows($profile->id))
+                @elseif($currentUser->id != $profile->id && $currentUser->isFollow($profile->id))
                     <form action="{{ route('blog.profile.unfollow', $profile->id) }}"
                           method="post">
-                        @method('put')
+                        @method('delete')
                         @csrf
                         <button type="submit"
-                                class="btn btn-sm btn-outline-primary follow">unfollow</button>
+                                class="btn btn-sm btn-outline-primary follow">unfollow
+                        </button>
                     </form>
-                @elseif($currentUser->id != $profile->id && $currentUser->isNotFollows($profile->id))
+                @elseif($currentUser->id != $profile->id && $currentUser->isNotFollow($profile->id))
                     <form action="{{ route('blog.profile.follow', $profile->id) }}"
                           method="post">
-                        @method('put')
                         @csrf
                         <button type="submit"
-                                class="btn btn-sm btn-outline-primary follow">follow</button>
+                                class="btn btn-sm btn-outline-primary follow">follow
+                        </button>
                     </form>
                 @endif
             </div>
@@ -43,29 +44,25 @@
                         <li class="list-group-item">
                             <a href="{{route('blog.profile.show', $user->id)}}">{{ $user->fullName }}</a>
                             @if(auth()->user()->id == $profile->id)
-                                <button type="submit"
-                                        class="btn btn-sm btn-outline-primary follow"
-                                        onclick="document.getElementById('unfollow-{{$user->id}}').submit()">
-                                    unfollow
-                                </button>
-                                <form action="{{ route('blog.profile.unfollow', $user->id) }}"
-                                      method="post"
-                                      id="unfollow-{{$user->id}}">
-                                    @method('put')
-                                    @csrf
-                                </form>
+                                @include('web.blog.profile._follow-btn')
                             @endif
                         </li>
                     @endforeach
                 </ul>
                 <ul class="list-group">
                     <li class="list-group-item-dark list-group-item">
-                        Followed by
+                        Followers
                     </li>
-                    @foreach($profile->followedByUsers as $user)
-                        <li class="list-group-item"><a
-                                href="{{route('blog.profile.show', $user->id)}}">{{ $user->fullName }}</a></li>
-                    @endforeach
+                    @if($profile->followers->isNotEmpty())
+                        @foreach($profile->followers as $user)
+                            <li class="list-group-item"><a
+                                    href="{{route('blog.profile.show', $user->id)}}">{{ $user->fullName }}</a></li>
+                        @endforeach
+                    @else
+                        <li class="list-group-item">
+                            No followers :(
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>
