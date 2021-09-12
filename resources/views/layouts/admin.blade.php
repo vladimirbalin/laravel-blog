@@ -72,12 +72,12 @@
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="{{ route('admin.logout') }}"
+                    <a class="dropdown-item" href="{{ route('admin.blog.logout') }}"
                        onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">
                         Logout</a>
                 </div>
-                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
+                <form id="logout-form" action="{{ route('admin.blog.logout') }}" method="POST" class="d-none">
                     @csrf
                 </form>
             </li>

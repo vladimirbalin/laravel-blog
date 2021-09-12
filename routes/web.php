@@ -71,39 +71,35 @@ Route::name('blog.')
     });
 
 //admin part
-Route::group([
-    'domain' => 'admin.laravel-playground.local',
-    'prefix' => '/blog',
-    'name' => 'admin.'
-], function () {
-    Route::group([
-        'middleware' => ['auth:admin'],
-        'name' => 'blog.'
-    ], function () {
-        Route::post('/logout', [AdminLoginController::class, 'logout'])->name('logout');
-        Route::resource('categories', CategoryController::class)
-            ->except('show')
-            ->names('categories');
-        Route::resource('posts', AdminPostController::class)
-            ->except('show')
-            ->names('posts');
-        Route::resource('comments', AdminCommentController::class)
-            ->except(['show', 'create'])
-            ->names('comments');
-        Route::resource('tags', TagController::class)
-            ->only(['create', 'store', 'index', 'edit', 'update', 'destroy'])
-            ->names('tags');
-        Route::match(['patch', 'put'], '/comments/ajax/{comment}', [AdminCommentController::class, 'ajax'])
-            ->name('comments.ajax');
-        Route::match(['patch', 'put'], '/posts/ajax/{post}', [AdminPostController::class, 'ajax'])
-            ->name('posts.ajax');
-        Route::patch('/posts/restore/{post}', [AdminPostController::class, 'restore'])
-            ->name('posts.restore');
-    });
+Route::name('admin.blog.')
+    ->domain('admin.laravel-playground.local')
+    ->prefix('/blog')
+    ->group(function () {
+        Route::group(['middleware' => 'auth:admin'], function () {
+            Route::post('/logout', [AdminLoginController::class, 'logout'])->name('logout');
+            Route::resource('categories', CategoryController::class)
+                ->except('show')
+                ->names('categories');
+            Route::resource('posts', AdminPostController::class)
+                ->except('show')
+                ->names('posts');
+            Route::resource('comments', AdminCommentController::class)
+                ->except(['show', 'create'])
+                ->names('comments');
+            Route::resource('tags', TagController::class)
+                ->only(['create', 'store', 'index', 'edit', 'update', 'destroy'])
+                ->names('tags');
+            Route::match(['patch', 'put'], '/comments/ajax/{comment}', [AdminCommentController::class, 'ajax'])
+                ->name('comments.ajax');
+            Route::match(['patch', 'put'], '/posts/ajax/{post}', [AdminPostController::class, 'ajax'])
+                ->name('posts.ajax');
+            Route::patch('/posts/restore/{post}', [AdminPostController::class, 'restore'])
+                ->name('posts.restore');
+        });
 
-    Route::group(['middleware' => ['guest']], function () {
-        Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('login');
-        Route::post('/login', [AdminLoginController::class, 'login'])->name('login-post');
+        Route::group(['middleware' => ['guest']], function () {
+            Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('login');
+            Route::post('/login', [AdminLoginController::class, 'login'])->name('login-post');
+        });
     });
-});
 
