@@ -24,7 +24,7 @@ class Authenticate
     public function handle(Request $request, Closure $next, $role = null)
     {
         if (!Auth::check()) {
-            return $this->redirectTo();
+            return redirect($this->redirectTo());
         }
 
         if ($role === 'admin' && !Auth::user()->isAdmin()) {
