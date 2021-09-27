@@ -74,4 +74,9 @@ class ProfileController extends Controller
         auth()->user()->unreadNotifications()->get()->markAsRead();
         return back();
     }
+
+    public function emailConfirmPage()
+    {
+        return view('web.blog.profile.confirmation');
+    }
 }

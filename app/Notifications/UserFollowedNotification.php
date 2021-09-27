@@ -35,7 +35,15 @@ class UserFollowedNotification extends Notification implements ShouldQueue, Shou
      */
     public function via($notifiable)
     {
-        return ['broadcast'];
+        return ['database', 'broadcast'];
+    }
+
+    public function toDatabase($notifiable)
+    {
+        return [
+            'follower_id' => $this->follower->id,
+            'follower_name' => $this->follower->name
+        ];
     }
 
     /**

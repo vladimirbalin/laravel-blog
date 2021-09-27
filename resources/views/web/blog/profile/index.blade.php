@@ -21,8 +21,8 @@
                 @elseif($currentUser->id != $profile->id && $currentUser->isFollow($profile->id))
                     <form action="{{ route('blog.profile.unfollow', $profile->id) }}"
                           method="post">
-                        @method('delete')
                         @csrf
+                        @method('delete')
                         <button type="submit"
                                 class="btn btn-sm btn-outline-primary follow">unfollow
                         </button>

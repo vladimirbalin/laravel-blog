@@ -36,7 +36,15 @@ class BlogPostLikedNotification extends Notification implements ShouldQueue, Sho
      */
     public function via($notifiable)
     {
-        return ['broadcast'];
+        return ['database', 'broadcast'];
+    }
+
+    public function toDatabase($notifiable)
+    {
+        return [
+            'post_id' => $this->post->id,
+            'liker_name' => $this->liker->name
+        ];
     }
 
     public function toArray($notifiable)

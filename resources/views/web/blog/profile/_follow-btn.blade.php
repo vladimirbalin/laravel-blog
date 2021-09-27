@@ -6,6 +6,6 @@
 <form action="{{ route('blog.profile.unfollow', $user->id) }}"
       method="post"
       id="unfollow-{{$user->id}}">
-    @method('put')
+    @method('delete')
     @csrf
 </form>

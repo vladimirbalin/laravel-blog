@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -33,7 +34,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -48,7 +49,7 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param array $data
      * @return \App\Models\User
      */
     protected function create(array $data)
@@ -63,5 +64,17 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         return view('web.auth.register');
+    }
+
+    public function confirmEmail(Request $request)
+    {
+        if (! $request->hasValidSignature()) {
+            abort(403);
+        }
+
+        $request->user()->markEmailAsVerified();
+
+        return redirect('/')
+            ->with(['status' => 'Successfully validated email']);
     }
 }

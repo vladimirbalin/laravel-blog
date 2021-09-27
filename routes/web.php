@@ -44,29 +44,55 @@ Route::name('blog.')
             Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
             Route::post('/register', [RegisterController::class, 'register'])->name('register-post');
         });
-        Route::group(['middleware' => ['auth']], function () {
-            Route::post('/logout', [LoginController::class, 'logout'])
-                ->name('logout');
+
+        Route::delete('/logout', [LoginController::class, 'logout'])
+            ->name('logout')
+            ->middleware('auth');
+
+        Route::group(['middleware' => ['auth', 'email']], function () {
+
+            //posts resource
             Route::resource('/posts', PostController::class)
                 ->names('posts');
-            Route::match(['patch', 'put'], '/posts/like/{post}', [PostController::class, 'like'])
-                ->name('posts.like');
+
+            //comments
             Route::match(['delete'], '/comments/delete/{comment}', [CommentController::class, 'destroy'])
                 ->name('comments.delete');
             Route::match(['post'], '/comments/store', [CommentController::class, 'store'])
                 ->name('comments.store');
+
+            //profile
             Route::resource('/profile', ProfileController::class)->names('profile')
                 ->only(['show', 'edit', 'update']);
 
-            Route::match(['post'], '/profile/follow/{user}', [ProfileController::class, 'follow'])
+            //email confirmation
+            Route::get('/{user}/confirm-email', [RegisterController::class, 'confirmEmail'])
+                ->name('confirm.email')
+                ->middleware('signed')
+                ->withoutMiddleware('email');
+
+            Route::get('/{user}/confirmation-page', [ProfileController::class, 'emailConfirmPage'])
+                ->name('profile.confirmation-page')
+                ->withoutMiddleware('email');
+
+            //follow-unfollow user
+            Route::post('/profile/follow/{user}', [ProfileController::class, 'follow'])
                 ->name('profile.follow');
-            Route::match(['delete'], '/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])
+            Route::delete('/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])
                 ->name('profile.unfollow');
 
+            // api:
+            //notifications
             Route::get('/notifications', [ProfileController::class, 'notifications'])
-                ->name('notifications');
+                ->name('notifications')
+                ->withoutMiddleware('email');
+
             Route::patch('/notifications/mark-as-read', [ProfileController::class, 'markAsReadAllNotifications'])
                 ->name('notifications.read');
+
+            //like-dislike
+            Route::match(['patch', 'put'], '/posts/like/{post}', [PostController::class, 'like'])
+                ->name('posts.like');
         });
     });
 

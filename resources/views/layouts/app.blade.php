@@ -115,6 +115,7 @@
 
                                     <form id="logout-form" action="{{ route('blog.logout') }}" method="POST" class="d-none">
                                         @csrf
+                                        @method('delete')
                                     </form>
                                 </div>
                             </li>
