@@ -78,6 +78,10 @@ class BlogPost extends Model
         'user_id' => 'integer'
     ];
 
+    protected $appends = [
+        'likes_count'
+    ];
+
     public function category()
     {
         return $this->belongsTo(BlogCategory::class);

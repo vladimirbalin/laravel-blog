@@ -1,5 +1,5 @@
 {
-	"authHost": "http://laravel-playground.local",
+	"authHost": "localhost",
 	"authEndpoint": "/broadcasting/auth",
 	"clients": [],
 	"database": "redis",
