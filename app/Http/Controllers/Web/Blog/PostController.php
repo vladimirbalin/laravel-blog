@@ -21,9 +21,9 @@ class PostController extends BaseController
     private $blogCategoryRepository;
     private $blogCommentRepository;
 
-    public function __construct(BlogPostRepository $blogPostRepository,
+    public function __construct(BlogPostRepository     $blogPostRepository,
                                 BlogCategoryRepository $blogCategoryRepository,
-                                BlogCommentRepository $blogCommentRepository)
+                                BlogCommentRepository  $blogCommentRepository)
     {
         $this->blogPostRepository = $blogPostRepository;
         $this->blogCategoryRepository = $blogCategoryRepository;
@@ -37,9 +37,13 @@ class PostController extends BaseController
      */
     public function index()
     {
-        $paginator = $this->blogPostRepository->getAllPublishedWithPaginator(10);
+        $paginator = $this->blogPostRepository
+            ->getAllPublishedWithPaginator(5);
 
-        return view('web.blog.posts.index', compact('paginator'));
+        return view(
+            'web.blog.posts.index',
+            compact('paginator')
+        );
     }
 
     /**
@@ -51,7 +55,10 @@ class PostController extends BaseController
     {
         $categoryList = $this->blogCategoryRepository->getDropDownList();
 
-        return view('web.blog.posts.edit', compact('post', 'categoryList'));
+        return view(
+            'web.blog.posts.edit',
+            compact('post', 'categoryList')
+        );
     }
 
     /**
@@ -63,20 +70,21 @@ class PostController extends BaseController
     public function store(BlogPostCreateRequest $request)
     {
         $result = BlogPost::create($request->input());
-        if ($result) {
+
+        if (!$result) {
             return back()
-                ->with(['success' => 'Post created']);
-        } else {
-            return back()
-                ->withErrors('Creation failed')
+                ->withErrors(['msg' => 'Creation failed'])
                 ->withInput();
         }
+
+        return back()
+            ->with(['success' => 'Post created']);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param BlogPost $post
+     * @param int $postId
      * @return View
      */
     public function show($postId)
@@ -84,7 +92,10 @@ class PostController extends BaseController
         $post = $this->blogPostRepository->getExactPost($postId);
         $comments = $this->blogCommentRepository->getAllPublishedByPost($postId);
 
-        return view('web.blog.posts.show', compact('post', 'comments'));
+        return view(
+            'web.blog.posts.show',
+            compact('post', 'comments')
+        );
     }
 
     /**
@@ -97,10 +108,14 @@ class PostController extends BaseController
     {
         $categoryList = $this->blogCategoryRepository->getDropDownList();
 
-        if ($post->isAuthor()) {
-            return view('web.blog.posts.edit', compact('post', 'categoryList'));
+        if (!$post->isAuthor()) {
+            abort(401);
         }
-        abort(401);
+
+        return view(
+            'web.blog.posts.edit',
+            compact('post', 'categoryList')
+        );
     }
 
     /**
@@ -108,20 +123,19 @@ class PostController extends BaseController
      *
      * @param BlogPostUpdateRequest $request
      * @param BlogPost $post
-     * @return RedirectResponse|void
+     * @return RedirectResponse
      */
     public function update(BlogPostUpdateRequest $request, BlogPost $post)
     {
         $result = $post->update($request->all());
 
-        if ($result) {
-            return back()
-                ->with(['success' => 'Successfully saved']);
-        } else {
+        if (!$result) {
             return back()
                 ->withInput()
                 ->withErrors(['msg' => 'Save fail']);
         }
+
+        return back()->with(['success' => 'Successfully saved']);
     }
 
     /**
@@ -134,14 +148,15 @@ class PostController extends BaseController
     {
         $result = $post->delete();
 
-        if ($result) {
-            return redirect()->route('blog.posts.index')
-                ->with(['success' => 'Post successfully removed!']);
-        } else {
+        if (!$result) {
             return back()
                 ->withInput()
                 ->withErrors(['msg' => 'Save fail']);
         }
+
+        return redirect()
+            ->route('blog.posts.index')
+            ->with(['success' => 'Post successfully removed!']);
     }
 
     public function like(Request $request, BlogPost $post)

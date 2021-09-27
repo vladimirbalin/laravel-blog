@@ -7,41 +7,30 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
+use Illuminate\Validation\UnauthorizedException;
 
 class Authenticate
 {
     /**
      * Get the path the user should be redirected to when they are not authenticated.
      *
-     * @param Request $request
      * @return string|null
      */
-    protected function redirectTo(Request $request)
+    protected function redirectTo()
     {
         return '/blog/login';
     }
 
     public function handle(Request $request, Closure $next, $role = null)
     {
-        $userIsNotLoggedIn = !Auth::check();
-
-        if ($userIsNotLoggedIn) return redirect('/blog/login');
+        if (!Auth::check()) {
+            return $this->redirectTo();
+        }
 
         if ($role === 'admin' && !Auth::user()->isAdmin()) {
-            return $this->logout();
+            throw new UnauthorizedException('You have no rights to go through this');
         }
 
         return $next($request);
-    }
-
-
-    public function logout()
-    {
-        Auth::logout();
-
-        return redirect('/blog/login')
-            ->with(['status' => 'You have no access to this page']);
     }
 }
