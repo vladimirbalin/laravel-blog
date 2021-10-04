@@ -17,25 +17,14 @@ class BlogCategoryRepository extends Repository
     }
 
     /**
-     * Get Model for editing in admin layer
-     * @param $id
-     * @return mixed
-     */
-    public function getEdit($id)
-    {
-        $result = $this->start()
-            ->find($id);
-        return $result;
-    }
-
-    /**
-     * Get array of Models for dropdown list
-     * @return mixed
+     * Get array of stdClasses for dropdown list of categories
+     * @return array
      */
     public function getDropDownList()
     {
         $columns = implode(', ', ['id', 'title', 'parent_id',
             "CONCAT (`id`, '. ', `title`) AS select_title"]);
+
         $result = $this->start()
             ->selectRaw($columns)
             ->toBase()
