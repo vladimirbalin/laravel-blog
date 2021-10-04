@@ -88,6 +88,7 @@
                                             document.getElementById('notifications.allread').submit();"
                                             class="all-read btn btn-sm btn-secondary">Mark all as read</a></li>
                                     <li class="dropdown-header">No notifications</li>
+                                    <span id="all-notifications"></span>
                                 </ul>
                             </li>
 

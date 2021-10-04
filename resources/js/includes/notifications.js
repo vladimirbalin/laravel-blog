@@ -11,26 +11,50 @@ function addNotifications(newNotification = {},
                           count) {
     const hasNewNotification = !$.isEmptyObject(newNotification);
     const hasDatabaseNotifications = dbNotifications.length;
+
     if (hasNewNotification) {
-        $(target + 'Menu').append(makeNotification(newNotification));
+        insertNewNotification(newNotification, target);
     } else if (hasDatabaseNotifications) {
-        let htmlElements = dbNotifications.map(function (notification) {
-            return makeNotification(notification);
-        });
-        $(target + 'Menu').append(htmlElements.join(''));
+        insertDatabaseNotification(dbNotifications, target);
     }
 
-    $(target + 'Menu').find('.dropdown-header').text('Last notifications:');
-    $(target).addClass('has-notifications')
-    $('#quantity-sum').text(count)
-    $('.all-read').removeClass('disabled');
+    setNewNotificationsClasses(target);
+    countNotifications(count);
 
     if (!hasDatabaseNotifications && !hasNewNotification) {
-        $(target + 'Menu').find('.dropdown-header').html('No notifications');
-        $('#quantity-sum').text('')
-        $(target).removeClass('has-notifications');
-        $('.all-read').addClass('disabled');
+        setNoNotificationsClasses();
+        resetCountNotifications();
     }
+}
+
+function setNoNotificationsClasses(target) {
+    $(target + 'Menu').find('.dropdown-header').html('No notifications');
+    $(target).removeClass('has-notifications');
+    $('.all-read').addClass('disabled');
+}
+
+function setNewNotificationsClasses(target) {
+    $(target + 'Menu').find('.dropdown-header').text('Last notifications:');
+    $(target).addClass('has-notifications')
+    $('.all-read').removeClass('disabled');
+}
+
+function countNotifications(count) {
+    $('#quantity-sum').text(count);
+}
+function resetCountNotifications() {
+    $('#quantity-sum').text('');
+}
+
+function insertNewNotification(newNotification, target) {
+    $(makeNotification(newNotification)).insertAfter($(target + 'Menu .dropdown-header'));
+}
+
+function insertDatabaseNotification(dbNotifications, target) {
+    let htmlElements = dbNotifications.map(function (notification) {
+        return makeNotification(notification);
+    });
+    $(target + 'Menu').append(htmlElements.join(''));
 }
 
 function makeNotification(notification) {

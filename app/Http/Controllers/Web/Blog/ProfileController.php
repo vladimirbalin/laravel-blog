@@ -59,14 +59,17 @@ class ProfileController extends Controller
     public function notifications()
     {
         return [
-            'lastFive' => auth()->user()->unreadNotifications()
-                ->limit(5)->get()->sortBy('created_at')->keyBy((function () {
-                    global $val;
-                    return (int)$val++;
-                }))->toArray(),
-
+            'lastFive' => $this->getLastFiveUnreadNotifications(),
             'count' => auth()->user()->unreadNotifications()->count()
         ];
+    }
+
+    public function getLastFiveUnreadNotifications()
+    {
+        return auth()->user()
+            ->unreadNotifications()
+            ->limit(5)
+            ->get();
     }
 
     public function markAsReadAllNotifications()
