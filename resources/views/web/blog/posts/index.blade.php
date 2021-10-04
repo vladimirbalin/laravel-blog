@@ -3,6 +3,10 @@
     <div class="container content">
         @include('web.blog.includes.session-msg')
         <a href="{{ route('blog.posts.create') }}" class="btn btn-primary m-3">Create post</a>
+        <a href="{{ route('blog.posts.index', ['sort' => 'likesCount', 'page' => request('page')]) }}"
+           class="btn btn-sm btn-info m-3">sort by likes asc</a>
+        <a href="{{ route('blog.posts.index', ['sort' => '-likesCount', 'page' => request('page')]) }}"
+           class="btn btn-sm btn-info m-3">sort by likes desc</a>
         @foreach($paginator as $post)
             @php /** @var \App\Models\BlogPost $post */ @endphp
             <div class="col-md-8 col-sm-12 mx-auto">
@@ -81,6 +85,8 @@
         @if($paginator->total() > $paginator->count())
             <div class="row justify-content-center">
                 {{ $paginator }}
+{{--                {!! $paginator->appends(\Request::except('page'))->render() !!}][1]--}}
+
             </div>
         @endif
     </div>

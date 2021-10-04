@@ -35,11 +35,18 @@ class PostController extends BaseController
      *
      * @return View
      */
-    public function index()
+    public function index(Request $request)
     {
-        $paginator = $this->blogPostRepository
-            ->getAllPublishedWithPaginator(5);
+        if ($request->has('sort')) {
+            $sort = $request->get('sort');
+            $paginator = $this->blogPostRepository
+                ->getAllPublishedWithPaginatorSortedBy($sort, 5, $request->get('page'));
+        } else {
+            $paginator = $this->blogPostRepository
+                ->getAllPublishedWithPaginator(5);
+        }
 
+        $paginator->appends($request->except('page'));
         return view(
             'web.blog.posts.index',
             compact('paginator')

@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
         BlogCategory::factory(9)->create();
         BlogPost::factory(100)->create()
             ->each(function ($post) {
-                $post->users()->attach(rand(1, 2));
+                $post->likedUsers()->attach(rand(1, 2));
             });
         BlogTag::factory(5)->create();
         BlogComment::factory(200)->create();

@@ -107,7 +107,7 @@ class BlogPost extends Model
         );
     }
 
-    public function users()
+    public function likedUsers()
     {
         return $this->belongsToMany(
             User::class,
@@ -128,28 +128,28 @@ class BlogPost extends Model
 
     public function like()
     {
-        $this->users()->attach(auth()->id());
+        $this->likedUsers()->attach(auth()->id());
 
         event(new BlogPostLikedEvent($this, auth()->user()));
 
-        return $this->load('users');
+        return $this->load('likedUsers');
     }
 
     public function dislike()
     {
-        $this->users()->detach(auth()->id());
+        $this->likedUsers()->detach(auth()->id());
 
-        return $this->load('users');
+        return $this->load('likedUsers');
     }
 
     public function getLikesCountAttribute()
     {
-        return $this->users->count();
+        return $this->likedUsers->count();
     }
 
     public function isLiked()
     {
-        return $this->users->contains(auth()->user());
+        return $this->likedUsers->contains(auth()->user());
     }
 
     public function isAuthor()

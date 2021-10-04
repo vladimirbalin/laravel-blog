@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 
 use App\Models\BlogPost as Model;
+use Illuminate\Support\Facades\DB;
 
 class BlogPostRepository extends Repository
 {
@@ -46,15 +47,46 @@ class BlogPostRepository extends Repository
 
     public function getAllPublishedWithPaginator($perPage)
     {
-        $columns = ['id', 'category_id', 'user_id', 'content_html', 'title', 'published_at'];
-
-        $result = $this->start()
-            ->select($columns)
-            ->where('is_published', '=', true)
-            ->with(['user:id,name', 'category:id,title', 'users'])
+        $result = $this->allPublishedQuery()
+            ->with(['user:id,name', 'category:id,title', 'likedUsers'])
+            ->withCount('likedUsers')
             ->latest('id')
             ->paginate($perPage);
 
         return $result;
+    }
+
+    public function getAllPublishedWithPaginatorSortedBy($sortedBy, $perPage = 5)
+    {
+        $startedWithMinus = substr($sortedBy, 0, 1) === '-';
+        if($startedWithMinus){
+            $sortedBy = substr($sortedBy, 1);
+        }
+        $sorted = $this->allPublishedQuery()
+            ->with('likedUsers:id')
+            ->get()
+            ->sortBy([[$sortedBy, $startedWithMinus ? 'desc' : 'asc']])
+            ->pluck('id')
+            ->toArray();
+
+        $orderedIds = implode(',', $sorted);
+
+        $paginator = $this->allPublishedQuery()
+            ->with(['user:id,name', 'category:id,title', 'likedUsers'])
+            ->orderByRaw(DB::raw('FIELD(id, ' . $orderedIds . ')'))
+            ->paginate($perPage);
+
+        return $paginator;
+    }
+
+    public function allPublishedQuery()
+    {
+        $columns = ['id', 'category_id', 'user_id', 'content_html', 'title', 'published_at'];
+
+        $query = $this->start()
+            ->select($columns)
+            ->where('is_published', '=', true);
+
+        return $query;
     }
 }
