@@ -14,7 +14,8 @@ class CreateBlogTagsToPostsTable extends Migration
     public function up()
     {
         Schema::create('blog_tags_to_posts', function (Blueprint $table) {
-            $table->id();
+            $table->primary(['tag_id', 'post_id']);
+
             $table->integer('tag_id')->unsigned();
             $table->bigInteger('post_id')->unsigned();
             $table->foreign('tag_id')->references('id')->on('blog_tags');

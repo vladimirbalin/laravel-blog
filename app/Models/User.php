@@ -103,7 +103,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(
             User::class,
-            'user_user',
+            'user_to_followed_user',
             'user_id',
             'followed_user_id'
         );
@@ -113,7 +113,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(
             User::class,
-            'user_user',
+            'user_to_followed_user',
             'followed_user_id',
             'user_id'
         );
