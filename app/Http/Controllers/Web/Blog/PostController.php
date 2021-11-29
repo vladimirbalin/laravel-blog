@@ -33,23 +33,23 @@ class PostController extends BaseController
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return View
      */
     public function index(Request $request)
     {
-        if ($request->has('sort')) {
-            $sort = $request->get('sort');
-            $paginator = $this->blogPostRepository
-                ->getAllPublishedWithPaginatorSortedBy($sort, 5, $request->get('page'));
-        } else {
-            $paginator = $this->blogPostRepository
-                ->getAllPublishedWithPaginator(5);
-        }
+        $paginator = $this->blogPostRepository
+            ->getAllPublishedWithPaginatorByCategorySortedBy(
+                $request->get('sort'),
+                $request->get('category')
+            );
+        $paginator->withQueryString();
 
-        $paginator->appends($request->except('page'));
-        return view(
-            'web.blog.posts.index',
-            compact('paginator')
+        $categoryDropdown = $this->blogCategoryRepository->getDropDownList();
+
+        return view('web.blog.posts.index',
+            compact('paginator',
+                'categoryDropdown')
         );
     }
 

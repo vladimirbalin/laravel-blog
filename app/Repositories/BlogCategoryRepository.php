@@ -22,7 +22,7 @@ class BlogCategoryRepository extends Repository
      */
     public function getDropDownList()
     {
-        $columns = implode(', ', ['id', 'title', 'parent_id',
+        $columns = implode(', ', ['id', 'title', 'parent_id', 'slug',
             "CONCAT (`id`, '. ', `title`) AS select_title"]);
 
         $result = $this->start()

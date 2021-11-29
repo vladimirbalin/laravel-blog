@@ -3,10 +3,46 @@
     <div class="container content">
         @include('web.blog.includes.session-msg')
         <a href="{{ route('blog.posts.create') }}" class="btn btn-primary m-3">Create post</a>
-        <a href="{{ route('blog.posts.index', ['sort' => 'likesCount', 'page' => request('page')]) }}"
-           class="btn btn-sm btn-info m-3">sort by likes asc</a>
-        <a href="{{ route('blog.posts.index', ['sort' => '-likesCount', 'page' => request('page')]) }}"
-           class="btn btn-sm btn-info m-3">sort by likes desc</a>
+
+        <div class="col-md-8 col-sm-12 m-2 d-flex justify-content-between align-items-center mx-auto">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle"
+                        type="button"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                    @php echo request()->get('category') ?? "Categories" @endphp
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    @foreach($categoryDropdown as $category)
+                        <a class="dropdown-item
+                            @if($category->slug === request()->get('category')) active @endif"
+                           href="{{ route('blog.posts.index',
+                                            \Arr::collapse([request()->query(),
+                                            ['category' => $category->slug]]))
+                                }}">
+                            {{ $category->title }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="btn-group" role="group">
+                <a href="{{ route('blog.posts.index', \Arr::collapse(
+                                                    [request()->query(),
+                                                    ['sort' => 'likesCount']]
+                                                )) }}"
+                   class="btn btn-sm btn-info">likes &#8593;</a>
+                <a href="{{ route('blog.posts.index',\Arr::collapse(
+                                                    [request()->query(),
+                                                    ['sort' => '-likesCount']]
+                                                )) }}"
+                   class="btn btn-sm btn-info">likes &#8595;</a>
+            </div>
+        </div>
+
+        {{--  blog posts--}}
         @foreach($paginator as $post)
             @php /** @var \App\Models\BlogPost $post */ @endphp
             <div class="col-md-8 col-sm-12 mx-auto">
@@ -14,8 +50,9 @@
                     <div class="top d-flex justify-content-between w-100">
                         <div class="left w-100">
                             <a class="d-block" href="{{ route('blog.posts.show', $post->id) }}">
-                                <h4 class="card-title">{{$post->title}}</h4>
+                                <h4 class="card-title">{{ $post->id }}. {{$post->title}}</h4>
                             </a>
+                            <p class="text-muted ml-2">{{ $post->category->title }}</p>
                         </div>
                         <div class="right w-100">
                             <div class="bg-light p-2 mb-3 fs-6 text-dark"><span
@@ -85,8 +122,6 @@
         @if($paginator->total() > $paginator->count())
             <div class="row justify-content-center">
                 {{ $paginator }}
-{{--                {!! $paginator->appends(\Request::except('page'))->render() !!}][1]--}}
-
             </div>
         @endif
     </div>

@@ -4,11 +4,15 @@
 namespace App\Repositories;
 
 
+use App\Models\BlogCategory;
+use App\Models\BlogPost;
 use App\Models\BlogPost as Model;
 use Illuminate\Support\Facades\DB;
 
 class BlogPostRepository extends Repository
 {
+    private $query;
+
     /**
      * @return string
      */
@@ -45,35 +49,14 @@ class BlogPostRepository extends Repository
         return $result;
     }
 
-    public function getAllPublishedWithPaginator($perPage)
+    public function getAllPublishedWithPaginatorByCategorySortedBy($sortedBy = '', $category = '', $perPage = 5)
     {
-        $result = $this->allPublishedQuery()
-            ->with(['user:id,name', 'category:id,title', 'likedUsers'])
-            ->withCount('likedUsers')
-            ->latest('id')
-            ->paginate($perPage);
+        $this->allPublishedQuery()
+            ->sortedBy($sortedBy)
+            ->byCategory($category);
 
-        return $result;
-    }
-
-    public function getAllPublishedWithPaginatorSortedBy($sortedBy, $perPage = 5)
-    {
-        $startedWithMinus = substr($sortedBy, 0, 1) === '-';
-        if($startedWithMinus){
-            $sortedBy = substr($sortedBy, 1);
-        }
-        $sorted = $this->allPublishedQuery()
-            ->with('likedUsers:id')
-            ->get()
-            ->sortBy([[$sortedBy, $startedWithMinus ? 'desc' : 'asc']])
-            ->pluck('id')
-            ->toArray();
-
-        $orderedIds = implode(',', $sorted);
-
-        $paginator = $this->allPublishedQuery()
-            ->with(['user:id,name', 'category:id,title', 'likedUsers'])
-            ->orderByRaw(DB::raw('FIELD(id, ' . $orderedIds . ')'))
+        $paginator = $this->query
+            ->with(['user:id,name', 'category:id,title,slug', 'likedUsers'])
             ->paginate($perPage);
 
         return $paginator;
@@ -83,10 +66,54 @@ class BlogPostRepository extends Repository
     {
         $columns = ['id', 'category_id', 'user_id', 'content_html', 'title', 'published_at'];
 
-        $query = $this->start()
+        $this->query = $this->start()
             ->select($columns)
             ->where('is_published', '=', true);
 
-        return $query;
+        return $this;
+    }
+
+    public function byCategory($category = "")
+    {
+        if (! $category) {
+            return $this;
+        }
+
+        $category = BlogCategory::where(['slug' => $category])->first();
+
+        if (isset($category)) {
+            $this->query = $this->query->where(['category_id' => $category->id]);
+            return $this;
+        }
+
+        throw new \InvalidArgumentException('Cannot sort by this category field');
+    }
+
+    public function sortedBy($sortedBy = "")
+    {
+        if (! $sortedBy) {
+            return $this;
+        }
+
+        if (! $this->start()->first()->$sortedBy) {
+            throw new \InvalidArgumentException('Cannot sort by this field');
+        }
+
+        $startedWithMinus = substr($sortedBy, 0, 1) === '-';
+        if ($startedWithMinus) {
+            $sortedBy = substr($sortedBy, 1);
+        }
+
+        $sorted = $this->start()
+            ->with(['likedUsers:id,name'])
+            ->get()
+            ->sortBy([[$sortedBy, $startedWithMinus ? 'desc' : 'asc']])
+            ->pluck('id')
+            ->toArray();
+        $orderedIds = implode(',', $sorted);
+        $this->query = $this->query
+            ->orderByRaw(DB::raw('FIELD(id, ' . $orderedIds . ')'));
+
+        return $this;
     }
 }

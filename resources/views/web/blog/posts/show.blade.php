@@ -51,7 +51,7 @@
                     <div class="card-body">
                         <p>
                             Liked by:
-                            @foreach($post->users as $user)
+                            @foreach($post->likedUsers as $user)
                                 <div>
                                 <a href="{{ route('blog.profile.show', $user->id) }}">
                                     <strong>
