@@ -13,7 +13,7 @@ class BlogCategoryFactory extends Factory
     public function definition()
     {
         $category = [];
-        $categoryName = "Категория " . $this->faker->unique()->word();
+        $categoryName = $this->faker->unique()->word() . " category";
         $category['parent_id'] = rand(1, 4);
         $category['title'] = $categoryName;
         $category['slug'] = Str::slug($categoryName);

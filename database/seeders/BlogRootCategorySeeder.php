@@ -16,7 +16,7 @@ class BlogRootCategorySeeder extends Seeder
      */
     public function run()
     {
-        $categoryName = 'Без категории';
+        $categoryName = 'No category';
         $category['parent_id'] = 0;
         $category['title'] = $categoryName;
         $category['slug'] = Str::slug($categoryName);

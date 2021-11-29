@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\BlogComment;
+use App\Models\BlogPost;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
@@ -24,8 +26,8 @@ class BlogCommentFactory extends Factory
     {
         $content = $this->faker->sentence;
         $status = rand(0, 1);
-        $post_id = rand(1, 100);
-        $user_id = rand(1, 2);
+        $post_id = BlogPost::all()->random()->id;
+        $user_id = User::all()->random()->id;
         $createdAt = $this->faker->dateTimeBetween('-5 years')->format('Y-m-d H:i:s');
 
         return [

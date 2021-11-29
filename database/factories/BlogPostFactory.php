@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\BlogPost;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -36,7 +37,7 @@ class BlogPostFactory extends Factory
         $this->num++;
         return [
             'category_id' => rand(1, 10),
-            'user_id' => (rand(1, 3) === 3) ? 1 : 2,
+            'user_id' => User::all()->random()->id,
             'title' => $title,
             'slug' => Str::slug($title),
             'excerpt' => $this->faker->text(rand(40, 100)),
