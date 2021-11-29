@@ -61,7 +61,7 @@ class BlogComment extends Model
 
     public function isAuthor()
     {
-        return $this->user->id === Auth::user()->id;
+        return $this->user->id === auth()->user()->id;
     }
 
     public function getAuthor()
@@ -76,7 +76,7 @@ class BlogComment extends Model
 
     public function getPublishedAtShortened()
     {
-        return $this->published_at ?
+        return $this->isPublished() ?
             Carbon::parse($this->published_at)->format('d M H:m')
             : 'Not published';
     }
@@ -88,7 +88,7 @@ class BlogComment extends Model
 
     public function isPublished()
     {
-        return $this->status === 1;
+        return $this->status === self::STATUS_PUBLISHED;
     }
 
 }
