@@ -5,6 +5,7 @@
         <a href="{{ route('blog.posts.create') }}" class="btn btn-primary m-3">Create post</a>
 
         <div class="col-md-8 col-sm-12 m-2 d-flex justify-content-between align-items-center mx-auto">
+            {{--category dropdown--}}
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle"
                         type="button"
@@ -17,28 +18,55 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     @foreach($categoryDropdown as $category)
                         <a class="dropdown-item
-                            @if($category->slug === request()->get('category')) active @endif"
+                           @if($category->slug === request()->get('category')) active @endif"
                            href="{{ route('blog.posts.index',
                                             \Arr::collapse([request()->query(),
                                             ['category' => $category->slug]]))
-                                }}">
+                                 }}">
                             {{ $category->title }}
                         </a>
                     @endforeach
                 </div>
             </div>
+            {{--sort dropdown--}}
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle"
+                        type="button"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        @switch(request()->get('sort'))
+                            @case('likes-count')
+                                likes &#8593
+                                @break
+                            @case('-likes-count')
+                                likes &#8595;
+                                @break
+                            @default
+                                Sort by
+                        @endswitch
+                </button>
 
-            <div class="btn-group" role="group">
-                <a href="{{ route('blog.posts.index', \Arr::collapse(
-                                                    [request()->query(),
-                                                    ['sort' => 'likesCount']]
-                                                )) }}"
-                   class="btn btn-sm btn-info">likes &#8593;</a>
-                <a href="{{ route('blog.posts.index',\Arr::collapse(
-                                                    [request()->query(),
-                                                    ['sort' => '-likesCount']]
-                                                )) }}"
-                   class="btn btn-sm btn-info">likes &#8595;</a>
+                <div class="dropdown-menu" aria-labelledby="sort">
+                    <a class="dropdown-item
+                            @if("likesCount" === request()->get('sort')) active @endif"
+                       href="{{ route('blog.posts.index', \Arr::collapse(
+                                                            [request()->query(),
+                                                            ['sort' => 'likes-count']]
+                                                           ))
+                             }}">
+                        likes &#8593;
+                    </a>
+                    <a class="dropdown-item
+                            @if("-likesCount" === request()->get('sort')) active @endif"
+                       href="{{ route('blog.posts.index', \Arr::collapse(
+                                                            [request()->query(),
+                                                            ['sort' => '-likes-count']]
+                                                           ))
+                             }}">
+                        likes &#8595;
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -87,8 +115,8 @@
                                 <div class="float-right">
                                     <button title="Love it"
                                             class=
-                                            "like likes-counter
-                                        {{ $post->isLiked() ? 'active' : '' }}"
+                                                "like likes-counter
+                                            {{ $post->isLiked() ? 'active' : '' }}"
                                             data-count="{{ $post->likesCount }}"
                                             data-route="{{ route('blog.posts.like', $post->id) }}"
                                             data-id="{{ $post->id }}">
@@ -101,8 +129,7 @@
                                 <div class="float-right">
                                     <button title="Love it"
                                             disabled
-                                            class=
-                                            "like likes-counter disabled"
+                                            class= "like likes-counter disabled"
                                             data-count="{{ $post->likesCount }}"
                                             data-route="{{ route('blog.posts.like', $post->id) }}"
                                             data-id="{{ $post->id }}">

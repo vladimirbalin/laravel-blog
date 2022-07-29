@@ -5,7 +5,6 @@ namespace App\Repositories;
 
 
 use App\Models\BlogCategory;
-use App\Models\BlogPost;
 use App\Models\BlogPost as Model;
 use Illuminate\Support\Facades\DB;
 
