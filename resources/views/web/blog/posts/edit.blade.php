@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.web')
 @section('content')
     @php /** @var \App\Models\BlogPost $post */ @endphp
     <div class="container">
-        @include('web.blog.includes.session-msg')
+        <x-session-message/>
 
         @if($post->exists)
             <form method="post" action="{{ route('blog.posts.update', $post->id) }}">
@@ -20,14 +20,14 @@
                                                 <label for="title"><strong>Title</strong></label>
                                                 <input
                                                     type="text"
-                                                    class="form-control"
+                                                    class="form-control mb-3"
                                                     id="title"
                                                     name="title"
                                                     placeholder="Please enter the title"
                                                     value="{{ old('title', $post->title) }}">
                                                 <input
                                                     type="hidden"
-                                                    class="form-control"
+                                                    class="form-control mb-3"
                                                     id="slug"
                                                     name="slug"
                                                     value="{{ old('slug', $post->slug) }}">
@@ -35,7 +35,7 @@
                                             <div class="form-group col-md-12">
                                                 <label for="content_raw"><strong>Post</strong></label>
                                                 <textarea
-                                                    class="form-control"
+                                                    class="form-control mb-3"
                                                     name="content_raw"
                                                     id="content_raw"
                                                     rows="8">{{ old('content_raw', $post->content_raw) }}</textarea>

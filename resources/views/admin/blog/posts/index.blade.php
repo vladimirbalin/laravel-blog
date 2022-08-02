@@ -2,17 +2,7 @@
 
 @section('content')
     <div class="container content">
-        <div class="d-flex justify-content-between">
-            @php /** @var \Illuminate\Pagination\Paginator $paginator */ @endphp
-            @if($paginator->total() > $paginator->count())
-                <div class="">
-                    {{ $paginator }}
-                </div>
-            @endif
-            <a href="{{ route('admin.blog.posts.create') }}" class="btn btn-primary m-3">Create post</a>
-        </div>
-        @include('web.blog.includes.session-msg')
-
+        <x-session-message/>
         <table class="table table-sm table-hover">
             <thead>
             <tr style="background-color: #afc2e8">
@@ -28,7 +18,8 @@
             <tbody>
             @foreach($paginator as $post)
                 @php /** @var \App\Models\BlogCategory $post */ @endphp
-                <tr data-id="{{$post->id}}" @if(!$post->is_published) style="background-color: #ececec" @endif>
+                <tr data-post-id="{{$post->id}}"
+                    @if(! $post->is_published) style="background-color: #ececec" @endif>
                     <td>{{ $post->id }}</td>
                     <td>{{ $post->user->name }}</td>
                     <td>{{ $post->category->title }}</td>
@@ -38,18 +29,17 @@
                         </a>
                     </td>
                     <td>
-                        <input type="hidden" name="is_published" value="0">
-                        <input type="checkbox"
-                               name="is_published"
-                               class="pt-2 is_published"
-                               data-route="{{ route('admin.blog.posts.ajax', $post->id) }}"
-                               value="1"
-                               @if($post->is_published) checked="checked" @endif>
-                        <label for="is_published">
+                        <label class="switch">
+                            <input type="checkbox"
+                                   name="is_published"
+                                   class="pt-2 is_published"
+                                   data-route="{{ route('admin.blog.posts.ajax', $post->id) }}"
+                                   @if($post->is_published) checked="checked" @endif>
+                            <span class="slider round"></span>
                         </label>
                     </td>
-                    <td>{{$post->getPublishedAtShortened()}}</td>
-                    <td class="">
+                    <td class="published_at">{{ $post->getPublishedAtShortened() ?? 'Not published' }}</td>
+                    <td>
                         <a href="{{ route('admin.blog.posts.edit', $post->id) }}"
                            class="btn btn-outline-dark btn-sm mx-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -81,5 +71,13 @@
             @endforeach
             </tbody>
         </table>
+
+        <div class="d-flex justify-content-between align-items-center">
+            @php /** @var \Illuminate\Pagination\Paginator $paginator */ @endphp
+            @if($paginator->total() > $paginator->count())
+                {{ $paginator }}
+            @endif
+            <a href="{{ route('admin.blog.posts.create') }}" class="btn btn-primary">Create post</a>
+        </div>
     </div>
 @endsection

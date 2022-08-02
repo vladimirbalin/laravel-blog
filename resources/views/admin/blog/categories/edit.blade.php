@@ -2,7 +2,7 @@
 @section('content')
     @php /** @var \App\Models\BlogCategory $category */ @endphp
     <div class="container">
-        @include('web.blog.includes.session-msg')
+        <x-session-message/>
         @if($category->exists)
             <form method="post" action="{{ route('admin.blog.categories.update', $category->id) }}">
                 @method('PUT')

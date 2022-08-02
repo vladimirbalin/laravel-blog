@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.web')
 @section('content')
     @php /** @var \App\Models\BlogPost $post */ @endphp
     <div class="container">
@@ -6,9 +6,12 @@
             <div class="col-md-8 py-3">
                 <div class="card">
                     <div class="card-body">
-                        @include('web.blog.includes.session-msg')
+                        <x-session-message/>
+
                         <a href="{{ route('blog.posts.index') }}"
-                           class="btn btn-outline-dark">Back to posts</a>
+                           class="btn btn-outline-dark">
+                            Back to posts
+                        </a>
                         <div class="form-row">
                             <div class="col mx-auto my-2">
                                 <h2>{{ $post->title }}</h2>
@@ -27,15 +30,21 @@
                     </div>
                 </div>
                 @include('web.blog.includes.comment-form')
+                <p class="mt-5">Comments:</p>
+                @unless($comments->count())
+                    <p class="fs-4">--Still no comments--</p>
+                @endunless
                 @foreach($comments as $comment)
-                    @include('web.blog.includes.comments')
+                    <x-comment :comment="$comment"/>
                 @endforeach
             </div>
             <div class="col-md-4 py-3">
                 <div class="card my-2">
                     <div class="card-body">
                         <p>
-                            Author: <strong>{{$post->user->name}}</strong>
+                            Author: <a class="text-decoration-none"
+                                       href="{{ route('blog.profile.show', $post->user_id) }}">
+                                <strong>{{ $post->user->name }}</strong></a>
                         </p>
                     </div>
                     <div class="card-body">
@@ -51,26 +60,22 @@
                     <div class="card-body">
                         <p>
                             Liked by:
-                            @foreach($post->likedUsers as $user)
-                                <div>
-                                <a href="{{ route('blog.profile.show', $user->id) }}">
-                                    <strong>
-                                        @if($user->id != auth()->id())
-                                            {{ $user->name }}
-                                        @else
-                                            You
-                                        @endif
-                                    </strong></a>
-                                </div>
+                        @foreach($post->likedUsers as $user)
+                            <div>
+                                <a class="text-decoration-none badge rounded-pill bg-light text-dark"
+                                   href="{{ route('blog.profile.show', $user->id) }}">
+                                    {{ $user->name }}
+                                </a>
+                            </div>
                             @endforeach
-                        </p>
+                            </p>
                     </div>
                     <div class="card-body">
                         @if(!$post->isAuthor())
                             <button title="Love it"
                                     class=
-                                    "like likes-counter
-                                        {{ $post->isLiked() ? 'active' : ''}}"
+                                        "like likes-counter
+                                            {{ $post->isLiked() ? 'active' : ''}}"
                                     data-count="{{ $post->likesCount}}"
                                     data-route="{{ route('blog.posts.like', $post->id)}}"
                                     data-id="{{ $post->id}}">

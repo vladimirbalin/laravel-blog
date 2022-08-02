@@ -2,10 +2,7 @@
 
 @section('content')
     <div class="container content">
-        <div class="d-flex justify-content-between">
-            <a href="{{ route('admin.blog.tags.create') }}" class="btn btn-primary m-3">Add new tag</a>
-        </div>
-        @include('web.blog.includes.session-msg')
+        <x-session-message/>
 
         <table class="table table-sm table-hover">
             <thead>
@@ -61,5 +58,9 @@
             @endforeach
             </tbody>
         </table>
+
+        <div class="d-flex justify-content-end">
+            <a href="{{ route('admin.blog.tags.create') }}" class="btn btn-primary">Add new tag</a>
+        </div>
     </div>
 @endsection

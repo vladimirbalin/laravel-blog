@@ -1,155 +1,83 @@
-@extends('layouts.app')
+@extends('layouts.web')
 @section('content')
-    <div class="container content">
-        @include('web.blog.includes.session-msg')
-        <a href="{{ route('blog.posts.create') }}" class="btn btn-primary m-3">Create post</a>
+    <div class="container content align-self-start">
+        <div class="col-md-8 col-sm-12 mx-auto">
+            <x-session-message/>
+        </div>
+        <div class="col-md-8 col-sm-12 mx-auto">
+            <a href="{{ route('blog.posts.create') }}" class="btn btn-primary m-3">
+                <i class="bi bi-plus-square"></i>
+            </a>
+        </div>
 
         <div class="col-md-8 col-sm-12 m-2 d-flex justify-content-between align-items-center mx-auto">
-            {{--category dropdown--}}
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle"
-                        type="button"
-                        id="dropdownMenuButton"
-                        data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                    @php echo request()->get('category') ?? "Categories" @endphp
-                </button>
-
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @foreach($categoryDropdown as $category)
-                        <a class="dropdown-item
-                           @if($category->slug === request()->get('category')) active @endif"
-                           href="{{ route('blog.posts.index',
-                                            \Arr::collapse([request()->query(),
-                                            ['category' => $category->slug]]))
-                                 }}">
-                            {{ $category->title }}
-                        </a>
-                    @endforeach
+            {{--sort buttons--}}
+            <div class="sort-buttons-wrapper d-flex flex-row">
+                <p>Sort by:</p>
+                {{--likes sort--}}
+                <div class="likes-sort mx-2">
+                    @switch(request()->get('sort'))
+                        @case('likes-count')
+                            <x-sort-link baseRouteName="blog.posts.index"
+                                         sortBy="-likes-count">
+                                Popularity &#8593;
+                            </x-sort-link>
+                            @break
+                        @case('-likes-count')
+                            <x-sort-link baseRouteName="blog.posts.index"
+                                         sortBy="likes-count">
+                                Popularity &#8595;
+                            </x-sort-link>
+                            @break
+                        @default
+                            <x-sort-link baseRouteName="blog.posts.index"
+                                         sortBy="-likes-count">
+                                Popularity
+                            </x-sort-link>
+                    @endswitch
+                </div>
+                {{--date-sort--}}
+                <div class="dates-sort mx-2">
+                    @switch(request()->get('sort'))
+                        @case('published_at')
+                            <x-sort-link baseRouteName="blog.posts.index"
+                                         sortBy="-published_at">
+                                Published at &#8593; (oldest)
+                            </x-sort-link>
+                            @break
+                        @case('-published_at')
+                            <x-sort-link baseRouteName="blog.posts.index"
+                                         sortBy="published_at">
+                                Published at &#8595; (newest)
+                            </x-sort-link>
+                            @break
+                        @default
+                            <x-sort-link baseRouteName="blog.posts.index"
+                                         sortBy="-published_at">
+                                Published at
+                            </x-sort-link>
+                    @endswitch
                 </div>
             </div>
-            {{--sort dropdown--}}
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle"
-                        type="button"
-                        id="dropdownMenuButton"
-                        data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        @switch(request()->get('sort'))
-                            @case('likes-count')
-                                likes &#8593
-                                @break
-                            @case('-likes-count')
-                                likes &#8595;
-                                @break
-                            @default
-                                Sort by
-                        @endswitch
-                </button>
-
-                <div class="dropdown-menu" aria-labelledby="sort">
-                    <a class="dropdown-item
-                            @if("likesCount" === request()->get('sort')) active @endif"
-                       href="{{ route('blog.posts.index', \Arr::collapse(
-                                                            [request()->query(),
-                                                            ['sort' => 'likes-count']]
-                                                           ))
-                             }}">
-                        likes &#8593;
-                    </a>
-                    <a class="dropdown-item
-                            @if("-likesCount" === request()->get('sort')) active @endif"
-                       href="{{ route('blog.posts.index', \Arr::collapse(
-                                                            [request()->query(),
-                                                            ['sort' => '-likes-count']]
-                                                           ))
-                             }}">
-                        likes &#8595;
-                    </a>
-                </div>
-            </div>
+            <x-category-dropdown :categoryDropdown="$categoryDropdown"/>
         </div>
 
         {{--  blog posts--}}
+        @unless($paginator->count())
+            <div class="text-center fs-2">
+                <strong>-- No posts --</strong>
+            </div>
+        @endunless
+
         @foreach($paginator as $post)
-            @php /** @var \App\Models\BlogPost $post */ @endphp
-            <div class="col-md-8 col-sm-12 mx-auto">
-                <div class="card card-body">
-                    <div class="top d-flex justify-content-between w-100">
-                        <div class="left w-100">
-                            <a class="d-block" href="{{ route('blog.posts.show', $post->id) }}">
-                                <h4 class="card-title">{{ $post->id }}. {{$post->title}}</h4>
-                            </a>
-                            <p class="text-muted ml-2">{{ $post->category->title }}</p>
-                        </div>
-                        <div class="right w-100">
-                            <div class="bg-light p-2 mb-3 fs-6 text-dark"><span
-                                    class="font-weight-bold">by
-                                    <a href="{{route('blog.profile.show', $post->user->id)}}">
-                                        {{ $post->getAuthorName() }}
-                                    </a>
-
-                                    @php
-                                        $isNotFollow = Auth::user()->isNotFollow($post->user->id);
-                                        $isFollow = Auth::user()->isFollow($post->user->id);
-                                    @endphp
-
-                                    @if(!$post->isAuthor() && $isNotFollow)
-                                        @include('web.blog.posts._follow-btn')
-                                    @elseif(!$post->isAuthor() && $isFollow)
-                                        @include('web.blog.posts._unfollow-btn')
-                                    @endif
-                        </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-lg-between">
-                        <div class="left d-flex flex-column">
-                            <p class="card-text w-75">{{ $post->limitedContent() }}</p>
-                            <div class="bottom  posted-by font-weight-bold text-dark">
-                                {{ $post->whenPublished() }}
-                            </div>
-                        </div>
-                        <div class="right">
-                            @if(!$post->isAuthor())
-                                <div class="float-right">
-                                    <button title="Love it"
-                                            class=
-                                                "like likes-counter
-                                            {{ $post->isLiked() ? 'active' : '' }}"
-                                            data-count="{{ $post->likesCount }}"
-                                            data-route="{{ route('blog.posts.like', $post->id) }}"
-                                            data-id="{{ $post->id }}">
-                                <span class="text-center">
-                                    &#x2764;
-                                </span>
-                                    </button>
-                                </div>
-                            @else
-                                <div class="float-right">
-                                    <button title="Love it"
-                                            disabled
-                                            class= "like likes-counter disabled"
-                                            data-count="{{ $post->likesCount }}"
-                                            data-route="{{ route('blog.posts.like', $post->id) }}"
-                                            data-id="{{ $post->id }}">
-                                <span class="text-center">
-                                    &#x2764;
-                                </span>
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-
-                </div>
+            <div class="col-md-8 col-sm-12 d-flex mx-auto mb-5">
+                <x-blog-post :post="$post"/>
             </div>
         @endforeach
+
         @php /** @var \Illuminate\Pagination\Paginator $paginator */ @endphp
         @if($paginator->total() > $paginator->count())
-            <div class="row justify-content-center">
-                {{ $paginator }}
-            </div>
+            {{ $paginator }}
         @endif
     </div>
 @endsection

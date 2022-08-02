@@ -2,7 +2,7 @@
 @section('content')
     @php /** @var \App\Models\BlogComment $comment */ @endphp
     <div class="container">
-        @include('web.blog.includes.session-msg')
+        <x-session-message/>
 
         @if($comment->exists)
             <form method="post" action="{{ route('admin.blog.comments.update', $comment->id) }}">
@@ -27,7 +27,7 @@
                                     </div>
                                     <div class="card-body">
                                         <div class="form-row">
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group col-md-12 mb-2">
                                                 <label for="content"><strong>Content</strong></label>
                                                 <textarea
                                                     class="form-control"
@@ -35,21 +35,17 @@
                                                     name="content"
                                                     placeholder="Comment content">{{ old('content', $comment->content) }}</textarea>
                                             </div>
-                                            <div class="form-group col-md-12">
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                            </div>
-                                            <div class="form-group col-md-6 align-self-end">
-                                                <input type="hidden" name="is_published" value="0">
-                                                <input type="checkbox"
-                                                       name="status"
-                                                       id="status"
-                                                       class="pt-2"
-                                                       value="1"
-                                                       @if($comment->status) checked="checked" @endif>
-                                                <label for="is_published">
-                                                    <strong>Published</strong>
+                                            <div class="form-group col-md-6 mb-2">
+                                                <label class="switch">
+                                                    <input type="hidden" name="status" value="0">
+                                                    <input type="checkbox"
+                                                           name="status"
+                                                           value="1"
+                                                           data-route="{{ route('admin.blog.comments.ajax', $comment->id) }}"
+                                                           @if($comment->status) checked="checked" @endif>
+                                                    <span class="slider round"></span>
                                                 </label>
+                                                <span>Published</span>
                                             </div>
                                         </div>
                                         @if($comment->exists)
@@ -90,7 +86,7 @@
                                     </div>
                                     <div class="card-body">
                                         <p>
-                                            Updated at: <strong>{{$comment->published_at}}</strong>
+                                            Published at: <strong>{{$comment->published_at}}</strong>
                                         </p>
                                     </div>
                                     <div class="card-body">

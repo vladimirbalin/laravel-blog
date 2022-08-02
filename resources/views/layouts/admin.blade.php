@@ -14,44 +14,38 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Main styles for this application-->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-    <!-- Global site tag (gtag.js) - Google Analytics-->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{ asset('js/coreui.bundle.js') }}" defer></script>
-
+    <script src="{{ asset('js/app.js') }}"></script>
 </head>
-<body class="c-app">
-<div class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
-    <div class="c-sidebar-brand d-lg-down-none">
-
+<body>
+<div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
+    <div class="sidebar-brand d-none d-md-flex">
+        Admin panel
     </div>
-    <ul class="c-sidebar-nav">
+    <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
 
-        <li class="c-sidebar-nav-item">
-            <a class="c-sidebar-nav-link" href="{{ route('admin.home') }}">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.home') }}">
                 Dashboard
             </a>
         </li>
-        <li class="c-sidebar-nav-title">Things</li>
-        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('admin.blog.categories.index') }}">
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.blog.categories.index') }}">
                 Post categories</a></li>
-        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('admin.blog.posts.index') }}">
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.blog.posts.index') }}">
                 Posts</a></li>
-        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('admin.blog.comments.index') }}">
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.blog.comments.index') }}">
                 Comments</a></li>
-        <li class="c-sidebar-nav-item"><a class="c-sidebar-nav-link" href="{{ route('admin.blog.tags.index') }}">
+        <li class="nav-item"><a class="nav-link" href="{{ route('admin.blog.tags.index') }}">
                 Tags</a></li>
     </ul>
-    <button class="c-sidebar-minimizer c-class-toggler" type="button" data-target="_parent"
-            data-class="c-sidebar-minimized"></button>
+    <button class="minimizer c-class-toggler" type="button" data-target="_parent"
+            data-class="minimized"></button>
 </div>
-<div class="c-wrapper c-fixed-components">
-    <header class="c-header c-header-light c-header-fixed c-header-with-subheader">
-        <button class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar"
-                data-class="c-sidebar-lg-show" responsive="true">
-            <svg class="c-icon c-icon-lg">
+<div class="wrapper d-flex flex-column min-vh-100 h-100 bg-light">
+    <header class="header header-sticky mb-4">
+        <button class="header-toggler px-md-0 me-md-3" type="button"
+                onclick="coreui.Sidebar.getInstance(document.querySelector('#sidebar')).toggle()">
+            <svg class="icon icon-lg">
                 <svg id="cil-menu" viewBox="0 0 512 512">
                     <rect width="352" height="32" x="80" y="96" fill="var(--ci-primary-color, currentColor)"
                           class="ci-primary"></rect>
@@ -62,12 +56,11 @@
                 </svg>
             </svg>
         </button>
-        <ul class="c-header-nav ml-auto mr-4">
-
-            <li class="c-header-nav-item dropdown">
-                <a class="c-header-nav-link" data-toggle="dropdown" href="#"
-                   role="button" aria-haspopup="true" aria-expanded="false">
-                    <div>
+        <ul class="header-nav ms-3">
+            <li class="nav-item dropdown">
+                <a class="nav-link py-0" data-coreui-toggle="dropdown" href="#" role="button"
+                   aria-haspopup="true" aria-expanded="false">
+                    <div class="nav-item">
                         {{ auth()->user()->name }}
                     </div>
                 </a>
@@ -83,14 +76,9 @@
             </li>
         </ul>
     </header>
-    <div class="c-body">
-        <main>
-            @yield('content')
-        </main>
-        <footer class="c-footer">
-            <div><a href="https://coreui.io">CoreUI</a> &copy; 2020 creativeLabs.</div>
-        </footer>
-    </div>
+    <main class="h-100">
+        @yield('content')
+    </main>
 </div>
 </body>
 </html>

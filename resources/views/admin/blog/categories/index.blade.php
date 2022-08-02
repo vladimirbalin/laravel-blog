@@ -3,17 +3,14 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-               @include('web.blog.includes.session-msg')
-                <nav class="navbar navbar-toggleable-md navbar-light bg-faded justify-content-end">
-                    <a href="{{ route('admin.blog.categories.create') }}" class="btn btn-primary">Добавить</a>
-                </nav>
+                <x-session-message/>
                 <div class="col-md-12">
                     <table class="table table-hover">
                         <thead>
-                        <tr>
+                        <tr style="background-color: #afc2e8">
                             <th>#</th>
-                            <th>Категория</th>
-                            <th>Родитель</th>
+                            <th>Category</th>
+                            <th>Parent</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -37,6 +34,9 @@
                             {{ $paginator }}
                         </div>
                     @endif
+                    <nav class="navbar navbar-toggleable-md navbar-light bg-faded justify-content-end">
+                        <a href="{{ route('admin.blog.categories.create') }}" class="btn btn-primary">Add category</a>
+                    </nav>
                 </div>
             </div>
         </div>

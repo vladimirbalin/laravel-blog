@@ -1,9 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.web')
 
 @section('content')
     <div class="container m-3">
         <h2>Testing purposes page</h2>
-        @include('web.blog.includes.session-msg')
+        <x-session-message/>
+
         @if(! auth()->user()->hasVerifiedEmail())
             <li class="list-group-item"><span>Verify Email</span>
                 <b><a href="{{ url()->signedRoute('blog.confirm.email', ['user' => auth()->user()->id]) }}">

@@ -1,22 +1,17 @@
 @php /** @var \Illuminate\Support\ViewErrorBag $errors */ @endphp
 
-{{--        Session message start --}}
 @if($errors->any())
-    <div class="alert alert-danger alert-dismissible fade show my-4" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
         @foreach($errors->all() as $error)
             <span>{{$error}}</span><br>
         @endforeach
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
 @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show my-4" role="alert">
         {{ session('success') }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
 @if(session('toRestore'))
@@ -27,9 +22,7 @@
            href="{{ route('admin.blog.posts.restore', session('post_id'))  }}"
            class="btn btn-secondary"
            data-dismiss="modal">Restore?</a>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-coreui-dismiss="alert" aria-label="Close"></button>
     </div>
     <form action="{{ route('admin.blog.posts.restore', session('post_id')) }}"
           method="POST"
@@ -38,4 +31,3 @@
         @csrf
     </form>
 @endif
-{{--        Session message end --}}

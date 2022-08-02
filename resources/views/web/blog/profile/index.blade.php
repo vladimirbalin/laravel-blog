@@ -1,11 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.web')
 @section('content')
-    <div class="container p-5">
-        <h2 class="font-weight-bold mb-5">User Details</h2>
+    <div class="container">
+        <x-session-message/>
+        <h2 class="font-weight-bold text-center mb-5">User Details</h2>
         <div class="main d-flex justify-content-center text-center">
             <div class="left w-50">
-                @include('web.blog.includes.session-msg')
-
                 <ul class="list-group m-2">
                     <li class="list-group-item"><span>Name:</span> <b>{{ $profile->fullName }}</b></li>
                     <li class="list-group-item"><span>Phone:</span> <b>{{ $profile->phone }}</b></li>
@@ -42,7 +41,10 @@
                     <li class="list-group-item-dark list-group-item">Follows:</li>
                     @foreach($profile->followedUsers as $user)
                         <li class="list-group-item">
-                            <a href="{{route('blog.profile.show', $user->id)}}">{{ $user->fullName }}</a>
+                            <a class="text-decoration-none badge rounded-pill bg-light text-dark"
+                               href="{{route('blog.profile.show', $user->id)}}">
+                                {{ $user->fullName }}
+                            </a>
                             @if(auth()->user()->id == $profile->id)
                                 @include('web.blog.profile._follow-btn')
                             @endif
@@ -55,8 +57,12 @@
                     </li>
                     @if($profile->followers->isNotEmpty())
                         @foreach($profile->followers as $user)
-                            <li class="list-group-item"><a
-                                    href="{{route('blog.profile.show', $user->id)}}">{{ $user->fullName }}</a></li>
+                            <li class="list-group-item">
+                                <a class="text-decoration-none badge rounded-pill bg-light text-dark"
+                                   href="{{route('blog.profile.show', $user->id)}}">
+                                    {{ $user->fullName }}
+                                </a>
+                            </li>
                         @endforeach
                     @else
                         <li class="list-group-item">

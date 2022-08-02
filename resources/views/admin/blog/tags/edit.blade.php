@@ -2,7 +2,7 @@
 @section('content')
     @php /** @var \App\Models\BlogPost $tag */ @endphp
     <div class="container">
-        @include('web.blog.includes.session-msg')
+        <x-session-message/>
 
             <form method="post" action="{{ route('admin.blog.tags.update', $tag->id) }}">
                 @if($tag->exists)
