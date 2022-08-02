@@ -2,20 +2,11 @@
 
 namespace App\Http\Requests\Web;
 
+use App\Http\Requests\Web\BaseRequests\BaseRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class BlogCommentRequest extends FormRequest
+class BlogCommentRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *

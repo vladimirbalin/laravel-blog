@@ -2,21 +2,12 @@
 
 namespace App\Http\Requests\Web;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\Web\BaseRequests\BaseRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
-class ProfileUpdateRequest extends FormRequest
+class ProfileUpdateRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
 
     /**
      * Get the validation rules that apply to the request.

@@ -4,20 +4,10 @@
 namespace App\Http\Requests\Admin\BlogPost;
 
 
-use App\Http\Requests\BaseRequests\BlogPostBaseRequest;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Admin\BaseRequests\BaseRequest;
 
-class BlogPostUpdateIsPublishedRequest extends BlogPostBaseRequest
+class BlogPostUpdateIsPublishedRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return Auth::check() && Auth::user()->isAdmin();
-    }
     public function rules()
     {
         return [

@@ -2,23 +2,12 @@
 
 namespace App\Http\Requests\Admin\BlogPost;
 
-use App\Http\Requests\BaseRequests\BlogPostBaseRequest;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Admin\BaseRequests\BaseRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
-class BlogPostUpdateRequest extends BlogPostBaseRequest
+class BlogPostUpdateRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return Auth::check() && Auth::user()->isAdmin();
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -32,7 +21,8 @@ class BlogPostUpdateRequest extends BlogPostBaseRequest
                 'unique' => Rule::unique('blog_posts')->ignore(Route::current()->parameter('post'))],
             'excerpt' => 'max:500',
             'content_raw' => 'required|string|max:10000',
-            'category_id' => 'required|integer|exists:blog_categories,id'
+            'category_id' => 'required|integer|exists:blog_categories,id',
+            'is_published' => 'required'
         ];
     }
 }

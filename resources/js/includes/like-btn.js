@@ -1,4 +1,4 @@
-function likeBtnClickHandler() {
+export default function likeBtn() {
     $('.like').click(function (event) {
         event.preventDefault();
 
@@ -13,5 +13,3 @@ function likeBtnClickHandler() {
         })
     })
 }
-
-export default likeBtnClickHandler;

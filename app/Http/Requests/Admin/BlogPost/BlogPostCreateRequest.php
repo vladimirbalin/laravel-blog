@@ -4,22 +4,12 @@
 namespace App\Http\Requests\Admin\BlogPost;
 
 
-use App\Http\Requests\BaseRequests\BlogPostBaseRequest;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Admin\BaseRequests\BaseRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
-class BlogPostCreateRequest extends BlogPostBaseRequest
+class BlogPostCreateRequest extends BaseRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return Auth::check() && Auth::user()->isAdmin();
-    }
     /**
      * Get the validation rules that apply to the request.
      *

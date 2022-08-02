@@ -18,8 +18,10 @@ function addNotifications(newNotification = {},
         insertDatabaseNotification(dbNotifications, target);
     }
 
-    setNewNotificationsClasses(target);
-    countNotifications(count);
+    if (hasNewNotification || hasDatabaseNotifications) {
+        setNewNotificationsClasses(target);
+        countNotifications(count);
+    }
 
     if (!hasDatabaseNotifications && !hasNewNotification) {
         setNoNotificationsClasses();
@@ -28,13 +30,13 @@ function addNotifications(newNotification = {},
 }
 
 function setNoNotificationsClasses(target) {
-    $(target + 'Menu').find('.dropdown-header').html('No notifications');
+    $('.dropdown-header').text('No new notifications');
     $(target).removeClass('has-notifications');
     $('.all-read').addClass('disabled');
 }
 
 function setNewNotificationsClasses(target) {
-    $(target + 'Menu').find('.dropdown-header').text('Last notifications:');
+    $('.dropdown-header').text('Last notifications:');
     $(target).addClass('has-notifications')
     $('.all-read').removeClass('disabled');
 }
@@ -42,6 +44,7 @@ function setNewNotificationsClasses(target) {
 function countNotifications(count) {
     $('#quantity-sum').text(count);
 }
+
 function resetCountNotifications() {
     $('#quantity-sum').text('');
 }

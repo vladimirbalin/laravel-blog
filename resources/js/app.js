@@ -1,14 +1,16 @@
 require('./bootstrap');
-import commentBtnClickHandler from "./includes/commentBtn";
-import adminPublishBtnHandler from "./includes/adminPublishBtn";
-import likeBtnClickHandler from "./includes/likeBtn";
+
+import adminPublishButton from "./includes/admin-publish-btn";
+import likeBtn from "./includes/like-btn";
 import addNotifications from './includes/notifications';
+import cardHover from './includes/post-card-hover';
 
 
 $(document).ready(function () {
-    commentBtnClickHandler();
-    adminPublishBtnHandler();
-    likeBtnClickHandler();
+    adminPublishButton('.is_published', 'post-id', 'is_published');
+    adminPublishButton('.status', 'comment-id', 'status');
+    likeBtn();
+    cardHover();
 
     if (window.Laravel && window.Laravel.userId) {
         axios.get('/blog/notifications')

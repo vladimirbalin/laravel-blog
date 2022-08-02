@@ -88,14 +88,26 @@ class PostController extends BaseController
 
     /**
      * Update the specified resource in storage.
+     * Update published_at only when prev published_at is null
+     * and current is_published is 1
      *
      * @param BlogPostUpdateRequest $request
      * @param BlogPost $post
-     * @return RedirectResponse|void
+     * @return RedirectResponse
      */
     public function update(BlogPostUpdateRequest $request, BlogPost $post)
     {
-        $result = $post->update($request->all());
+        $is_published = $request->is_published;
+
+        $post->is_published = $is_published;
+        if ($is_published && is_null($post->published_at)) {
+            $post->published_at = now();
+        }
+        if (! $is_published) {
+            $post->published_at = null;
+        }
+        $result = $post->save();
+
         if ($result) {
             return redirect()
                 ->route('admin.blog.posts.edit', compact('post'))
@@ -109,11 +121,19 @@ class PostController extends BaseController
 
     public function ajax(BlogPostUpdateIsPublishedRequest $request, BlogPost $post)
     {
-        if ($request->ajax()) {
-            $post->update($request->all());
-            return ['success' => true];
+        if (!$request->ajax()) {
+            throw new BadRequestException('You can only make ajax requests to this route');
         }
-        throw new BadRequestException('You can only make ajax requests to this route');
+        $is_published = $request->is_published;
+
+        $post->is_published = $is_published;
+        $post->published_at = $is_published == 1 ? now() : null;
+        $post->save();
+
+        return [
+            'is_published' => $post->is_published,
+            'published_at' => $post->getPublishedAtShortened()
+        ];
     }
 
     /**

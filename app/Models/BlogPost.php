@@ -61,6 +61,9 @@ class BlogPost extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const STATUS_DRAFT = 0;
+    const STATUS_PUBLISHED = 1;
+
     protected $fillable = [
         'category_id',
         'slug',
@@ -74,7 +77,7 @@ class BlogPost extends Model
 
     protected $casts = [
         'category_id' => 'integer',
-        'is_published' => 'boolean',
+        'is_published' => 'integer',
         'user_id' => 'integer'
     ];
 
@@ -167,18 +170,16 @@ class BlogPost extends Model
         return Carbon::parse($this->published_at)->diffForHumans();
     }
 
-    public function limitedContent()
+    public function limitedContent($limit)
     {
-        return \Illuminate\Support\Str::limit($this->content_html, 250);
+        return \Illuminate\Support\Str::limit($this->content_html, $limit);
     }
 
     public function getPublishedAtShortened()
     {
-        if ($this->published_at) {
-            return Carbon::parse($this->published_at)->format('d M H:m');
-        } else {
-            return 'Not published yet';
-        }
+        return $this->published_at ?
+            Carbon::parse($this->published_at)->format('d M H:m')
+            : null;
     }
 
     public function getCreatedAtShortened()
@@ -186,4 +187,13 @@ class BlogPost extends Model
         return Carbon::parse($this->created_at)->format('d M H:m');
     }
 
+    public function isPublished()
+    {
+        return $this->is_published === self::STATUS_PUBLISHED;
+    }
+
+    public function isNotPublished()
+    {
+        return $this->is_published === self::STATUS_DRAFT;
+    }
 }
