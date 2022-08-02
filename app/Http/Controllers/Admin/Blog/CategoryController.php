@@ -13,7 +13,7 @@ use Illuminate\Http\RedirectResponse;
 class CategoryController extends BaseController
 {
     protected $repository;
-    protected $perPage = 5;
+    protected $perPage = 10;
 
     public function __construct()
     {
