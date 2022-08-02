@@ -28,7 +28,7 @@ class BlogCommentFactory extends Factory
         $status = rand(0, 1);
         $post_id = BlogPost::all()->random()->id;
         $user_id = User::all()->random()->id;
-        $createdAt = $this->faker->dateTimeBetween('-5 years')->format('Y-m-d H:i:s');
+        $createdAt = $this->faker->dateTimeBetween('-1 years')->format('Y-m-d H:i:s');
 
         return [
             'content' => $content,

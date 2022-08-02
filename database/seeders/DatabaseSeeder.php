@@ -8,6 +8,7 @@ use App\Models\BlogPost;
 use App\Models\BlogTag;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 
 class DatabaseSeeder extends Seeder
@@ -20,35 +21,40 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(AdminUserSeeder::class);
-        $this->createUsersWithSubscriptions(4, 2);
+        $this->createUsersWithSubscriptions(5, 5);
         $this->call(BlogRootCategorySeeder::class);
-        BlogCategory::factory(9)->create();
-        $this->createBlogPostsWithRandomNumberOfLikedUsers(100);
+        BlogCategory::factory(4)->create();
+        $this->createBlogPostsWithRandomNumberOfLikedUsers(random_int(50, 200));
         BlogTag::factory(5)->create();
-        BlogComment::factory(200)->create();
+        BlogComment::factory(random_int(100, 300))->create();
     }
 
     public function createBlogPostsWithRandomNumberOfLikedUsers($numberOfPosts): void
     {
-        BlogPost::factory($numberOfPosts)->create()
+        BlogPost::factory($numberOfPosts)
+            ->create()
             ->each(function ($post) {
-                $range = range(1, rand(1, User::all()->last()->id));
-                foreach ($range as $userId) {
-                    $post->likedUsers()->attach($userId);
-                }
+                $usersCount = User::count();
+                $likedUserIds = User::all()->random(rand(0, $usersCount))->pluck('id')->toArray();
+                $likedUserIds = Arr::where($likedUserIds, function ($value) use ($post) {
+                    return $value !== $post->user_id;
+                });
+                $post->likedUsers()->attach($likedUserIds);
             });
     }
 
-    public function createUsersWithSubscriptions($numberOfUsers, $numberOfSubscriptions): void
+    public function createUsersWithSubscriptions($numberOfUsers, $numberOfSubscriptionsEach): void
     {
-        if ($numberOfSubscriptions > User::all()->count() - 1) {
+        if ($numberOfSubscriptionsEach > $numberOfUsers) {
             throw new InvalidParameterException(
-                'Number of subscriptions must be less than number of all users');
+                'Number of subscriptions must be less than number of users provided');
         }
 
-        User::factory($numberOfUsers)->create()
-            ->each(function ($user) use ($numberOfSubscriptions) {
-                $subscriptions = User::all()->except($user->id)->random($numberOfSubscriptions);
+        User::factory($numberOfUsers)
+            ->create()
+            ->each(function ($user) use ($numberOfSubscriptionsEach) {
+                $subscriptions = User::all()->except($user->id)->random($numberOfSubscriptionsEach);
+
                 foreach ($subscriptions as $subscribedUser) {
                     $user->followedUsers()->attach($subscribedUser->id);
                 }

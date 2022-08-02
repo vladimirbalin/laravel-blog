@@ -129,3 +129,6 @@ Route::name('admin.blog.')
         });
     });
 
+Route::fallback(function () {
+    return redirect('/');
+});

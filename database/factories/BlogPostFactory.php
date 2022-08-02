@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\BlogCategory;
 use App\Models\BlogPost;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -36,7 +37,7 @@ class BlogPostFactory extends Factory
         );
         $this->num++;
         return [
-            'category_id' => rand(1, 10),
+            'category_id' => BlogCategory::all()->random()->id,
             'user_id' => User::all()->random()->id,
             'title' => $title,
             'slug' => Str::slug($title),
