@@ -34,6 +34,11 @@ class BlogCommentRepository extends Repository
         return $result;
     }
 
+    /**
+     * Get collection of published comments of given post
+     * @param $postId
+     * @return mixed
+     */
     public function getAllPublishedByPost($postId)
     {
         $result = $this->start()
@@ -56,6 +61,11 @@ class BlogCommentRepository extends Repository
         return $result;
     }
 
+    /**
+     * Get model of comment with given id.
+     * @param $commentId
+     * @return mixed
+     */
     public function getExactComment($commentId)
     {
         $result = $this->start()

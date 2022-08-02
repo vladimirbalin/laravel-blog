@@ -120,6 +120,12 @@ class BlogPost extends Model
         );
     }
 
+    /**
+     * Like the post if it isn't, remove like otherwise.
+     *
+     * @return BlogPost
+     * Updated model.
+     */
     public function toggleLike()
     {
         if ($this->isLiked()) {
@@ -129,6 +135,12 @@ class BlogPost extends Model
         }
     }
 
+    /**
+     * Like the post by current authenticated user.
+     *
+     * @return BlogPost
+     * Updated model with user, liked this post.
+     */
     public function like()
     {
         $this->likedUsers()->attach(auth()->id());
@@ -150,6 +162,12 @@ class BlogPost extends Model
         return $this->likedUsers->count();
     }
 
+    /**
+     * Check if current authenticated user in the list of
+     * users, who liked this post.
+     *
+     * @return bool
+     */
     public function isLiked()
     {
         return $this->likedUsers->contains(auth()->user());
@@ -162,7 +180,7 @@ class BlogPost extends Model
 
     public function getAuthorName()
     {
-        return $this->isAuthor() ? 'You' : $this->user->name;
+        return $this->user->name;
     }
 
     public function whenPublished()

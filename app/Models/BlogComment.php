@@ -64,31 +64,44 @@ class BlogComment extends Model
         return $this->user->id === auth()->user()->id;
     }
 
-    public function getAuthor()
+    public function getAuthorAttribute()
     {
-        return $this->isAuthor() ? 'You' : $this->user->name;
+        return $this->user->name;
     }
 
-    public function getStatusText()
-    {
-        return $this->isPublished() ? 'Published' : 'Draft';
-    }
-
+    /**
+     * Returns shortened published_at field string
+     * if comment is published,
+     * null if not.
+     *
+     * @return string|null
+     */
     public function getPublishedAtShortened()
     {
         return $this->isPublished() ?
             Carbon::parse($this->published_at)->format('d M H:m')
-            : 'Not published';
+            : null;
     }
 
-    public function getCreatedAtShortened()
+    public function getCreatedAtShortened(): string
     {
         return Carbon::parse($this->created_at)->format('d M H:m');
     }
 
-    public function isPublished()
+    /**
+     * Returns true if comment is published,
+     * false otherwise.
+     *
+     * @return bool
+     */
+    public function isPublished(): bool
     {
         return $this->status === self::STATUS_PUBLISHED;
+    }
+
+    public function isNotPublished(): bool
+    {
+        return $this->status === self::STATUS_DRAFT;
     }
 
 }

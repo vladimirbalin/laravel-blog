@@ -94,13 +94,14 @@ class BlogPostRepository extends Repository
             return $this;
         }
 
-        if (! $this->start()->first()->$sortedBy) {
-            throw new \InvalidArgumentException('Cannot sort by this field');
-        }
 
         $startedWithMinus = substr($sortedBy, 0, 1) === '-';
         if ($startedWithMinus) {
             $sortedBy = substr($sortedBy, 1);
+        }
+
+        if (! isset($this->start()->first()->$sortedBy)) {
+            throw new \InvalidArgumentException('Cannot sort by this field');
         }
 
         $sorted = $this->start()
