@@ -24,18 +24,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 //domains split
-Route::domain('laravel-playground.local')
+Route::domain(config('app.url'))
     ->middleware('auth')
     ->get('/', [App\Http\Controllers\HomeController::class, 'index'])
     ->name('home');
-Route::domain('admin.laravel-playground.local')
+Route::domain('admin.'.config('app.url'))
     ->middleware('auth:admin')
     ->get('/', [App\Http\Controllers\HomeController::class, 'adminIndex'])
     ->name('admin.home');
 
 //web part
 Route::name('blog.')
-    ->domain('laravel-playground.local')
+    ->domain(config('app.url'))
     ->prefix('/blog')
     ->group(function () {
         Route::group(['middleware' => ['guest']], function () {
@@ -98,7 +98,7 @@ Route::name('blog.')
 
 //admin part
 Route::name('admin.blog.')
-    ->domain('admin.laravel-playground.local')
+    ->domain('admin.'.config('app.url'))
     ->prefix('/blog')
     ->group(function () {
         Route::group(['middleware' => 'auth:admin'], function () {
