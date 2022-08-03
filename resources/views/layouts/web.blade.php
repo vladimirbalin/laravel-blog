@@ -69,7 +69,7 @@
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-coreui-toggle="dropdown" aria-expanded="false">
                                 <img src="{{ asset('images/no-notifications.png') }}" width="20px"
                                      alt="no-notifications icon">
-                                <span id="quantity-sum" class="badge badge-danger"></span>
+                                <span id="quantity-sum" class="badge text-bg-danger"></span>
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsMenu"

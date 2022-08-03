@@ -43,7 +43,7 @@
     @if($isPost)
         <h3>Tags:</h3>
         @foreach($item->tags as $tag)
-            <span class="badge badge-secondary">{{ $tag->title }}</span>
+            <span class="badge text-bg-light">{{ $tag->title }}</span>
         @endforeach
     @endif
 @endif
