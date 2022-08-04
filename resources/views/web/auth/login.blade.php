@@ -52,17 +52,17 @@
                                             </div>
                                         </div>
                                         <div class="d-flex flex-row justify-content-between">
-                                            <a class="btn btn-outline-info px-4"
-                                               href="{{ route('admin.blog.login') }}"
-                                               type="button">
-                                                <i class="bi bi-arrow-left"></i>
-                                                {{ __('Admin panel') }}
-                                            </a>
                                             <div>
                                                 <button class="btn btn-primary px-4"
                                                         type="submit">{{ __('Login') }}
                                                 </button>
                                             </div>
+                                            <a class="btn btn-outline-info px-4"
+                                               href="{{ route('admin.blog.login') }}"
+                                               type="button">
+                                                {{ __('Admin panel') }}
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
                                         </div>
                                     </form>
                                 </div>

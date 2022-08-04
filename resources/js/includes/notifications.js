@@ -32,13 +32,13 @@ function addNotifications(newNotification = {},
 function setNoNotificationsClasses(target) {
     $('.dropdown-header').text('No new notifications');
     $(target).removeClass('has-notifications');
-    $('.all-read').addClass('disabled');
+    $('.all-read').addClass('d-none');
 }
 
 function setNewNotificationsClasses(target) {
     $('.dropdown-header').text('Last notifications:');
     $(target).addClass('has-notifications')
-    $('.all-read').removeClass('disabled');
+    $('.all-read').removeClass('d-none');
 }
 
 function countNotifications(count) {

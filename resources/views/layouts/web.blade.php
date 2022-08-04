@@ -69,15 +69,15 @@
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-coreui-toggle="dropdown" aria-expanded="false">
                                 <img src="{{ asset('images/no-notifications.png') }}" width="20px"
                                      alt="no-notifications icon">
-                                <span id="quantity-sum" class="badge text-bg-danger"></span>
+                                <span id="quantity-sum" class="top-0 start-100 translate-middle badge rounded-pill bg-danger"></span>
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsMenu"
                                 id="notificationsMenu">
-                                <li class="dropdown-item text-center d-none">
+                                <li class="all-read text-center d-none">
                                     <a onclick="event.preventDefault();
                                                     document.getElementById('notifications.allread').submit();"
-                                       class="all-read btn btn-sm btn-secondary">
+                                       class="btn btn-sm btn-light">
                                         Mark all as read
                                     </a>
                                 </li>

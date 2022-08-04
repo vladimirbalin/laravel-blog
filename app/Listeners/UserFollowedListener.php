@@ -4,11 +4,6 @@ namespace App\Listeners;
 
 use App\Events\UserFollowedEvent;
 use App\Notifications\UserFollowedNotification;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class UserFollowedListener
 {

@@ -70,7 +70,6 @@
                                                 </select>
                                             </div>
                                             <div class="my-3">
-                                                <span>Published:</span>
                                                 <label class="switch">
                                                     <input type="hidden" name="is_published" value="0">
                                                     <input type="checkbox"
