@@ -1,6 +1,6 @@
 window._ = require('lodash');
 window.coreui = require('@coreui/coreui');
-import 'bootstrap-icons/font/bootstrap-icons.scss';
+require('bootstrap-icons/font/bootstrap-icons.scss');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -30,18 +30,13 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  */
 
 import Echo from 'laravel-echo';
-
-window.io = require('socket.io-client');
-// window.Pusher = require('pusher-js');
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     forceTLS: true
-// });
+window.Pusher = require('pusher-js');
 
 window.Echo = new Echo({
-    broadcaster: 'socket.io',
-    host: window.location.hostname + ':6001'
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+    forceTLS: false,
+    disableStats: true,
 });
