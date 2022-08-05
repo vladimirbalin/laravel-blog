@@ -1,3 +1,7 @@
+@push('head-scripts')
+    <script src="{{ asset('js/includes/test-credentials.js') }}" defer></script>
+@endpush
+
 @extends('layouts.blank')
 
 @section('content')
@@ -48,14 +52,26 @@
                                                 </button>
                                             </div>
                                             <div>
-                                                <a class="btn btn-outline-info px-4 text-end"
-                                                   href="{{ route('blog.login') }}"
-                                                   type="button">{{ __('Main part of site') }}
-                                                    <i class="bi bi-arrow-right"></i>
-                                                </a>
+                                                <p>Fill the form with test credentials:</p>
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <button type="button" class="btn btn-danger text-white btn-credentials-1">
+                                                        Admin user
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger text-white btn-credentials-2">
+                                                        Regular user
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </form>
+                                    <hr>
+                                    <div>
+                                        <a class="btn btn-sm btn-outline-info px-4 text-end float-end"
+                                           href="{{ route('blog.login') }}"
+                                           type="button">{{ __('Main part of site') }}
+                                            <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

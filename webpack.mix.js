@@ -14,5 +14,6 @@ const mix = require('laravel-mix');
 mix.setPublicPath('public/build')
     .setResourceRoot('/build')
     .js('resources/js/app.js', 'js')
+    .js('resources/js/includes/test-credentials.js', 'js/includes')
     .sass('resources/sass/app.scss', 'css')
     .sourceMaps();

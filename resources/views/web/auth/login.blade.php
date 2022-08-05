@@ -1,3 +1,7 @@
+@push('head-scripts')
+    <script src="{{ asset('js/includes/test-credentials.js') }}" defer></script>
+@endpush
+
 @extends('layouts.blank')
 
 @section('content')
@@ -41,7 +45,7 @@
                                                 </span>
                                             @enderror
                                         </div>
-                                        <div class="input-group mb-4">
+                                        <div class="input-group">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" name="remember"
                                                        id="remember" {{ old('remember') ? 'checked' : '' }}>
@@ -51,19 +55,32 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="d-flex flex-row justify-content-between">
-                                            <div>
+                                        <div class="d-flex flex-row justify-content-between mb-3">
+                                            <div class="align-self-end">
                                                 <button class="btn btn-primary px-4"
                                                         type="submit">{{ __('Login') }}
                                                 </button>
                                             </div>
-                                            <a class="btn btn-outline-info px-4"
-                                               href="{{ route('admin.blog.login') }}"
-                                               type="button">
-                                                {{ __('Admin panel') }}
-                                                <i class="bi bi-arrow-right"></i>
-                                            </a>
+                                            <div>
+                                                <p>Fill the form with test credentials:</p>
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <button type="button" class="btn btn-danger text-white btn-credentials-1">
+                                                        Admin user
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger text-white btn-credentials-2">
+                                                        Regular user
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <hr>
+
+                                        <a class="btn btn-sm btn-outline-info px-4 float-end"
+                                           href="{{ route('admin.blog.login') }}"
+                                           type="button">
+                                            {{ __('Admin panel') }}
+                                            <i class="bi bi-arrow-right"></i>
+                                        </a>
                                     </form>
                                 </div>
                             </div>

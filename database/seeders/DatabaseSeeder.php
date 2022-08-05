@@ -17,19 +17,18 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      *
      * @return void
+     * @throws \Exception
      */
     public function run()
     {
-        $this->call(AdminUserSeeder::class);
-        $this->createUsersWithSubscriptions(5, 5);
-        $this->call(BlogRootCategorySeeder::class);
-        BlogCategory::factory(4)->create();
-        $this->createBlogPostsWithRandomNumberOfLikedUsers(random_int(50, 200));
-        BlogTag::factory(5)->create();
-        BlogComment::factory(random_int(100, 300))->create();
+        $this->createUsers();
+        $this->createCategories();
+        $this->createComments();
+        $this->createPostsWithRandomLikes(random_int(50, 200));
+        $this->createTags();
     }
 
-    public function createBlogPostsWithRandomNumberOfLikedUsers($numberOfPosts): void
+    public function createPostsWithRandomLikes($numberOfPosts): void
     {
         BlogPost::factory($numberOfPosts)
             ->create()
@@ -59,5 +58,29 @@ class DatabaseSeeder extends Seeder
                     $user->followedUsers()->attach($subscribedUser->id);
                 }
             });
+    }
+
+    public function createCategories()
+    {
+        $this->call(BlogRootCategorySeeder::class);
+        BlogCategory::factory(4)->create();
+    }
+
+    public function createUsers()
+    {
+        $this->call(AdminUserSeeder::class);
+        $this->call(RegularUserSeeder::class);
+        $this->createUsersWithSubscriptions(5, 5);
+
+    }
+
+    public function createTags()
+    {
+        BlogTag::factory(5)->create();
+    }
+
+    public function createComments()
+    {
+        BlogComment::factory(random_int(100, 300) )->create();
     }
 }

@@ -20,11 +20,11 @@
                     @php /** @var $comment \App\Models\BlogComment */ @endphp
                     <td class="align-middle">{{ $comment->id }}</td>
                     <td class="align-middle opacity-25-hover:hover">
-                        <a class="link-info"
+                        <a class="link-info text-decoration-none"
                            href="{{ route('admin.blog.posts.edit', $comment->post_id) }}">{{ \Illuminate\Support\Str::limit($comment->post->title, 35) }}</a>
                     </td>
                     <td class="align-middle">
-                        <a class="link-info"
+                        <a class="link-info text-decoration-none"
                            href="{{ route('admin.blog.comments.edit', $comment->id) }}">{{ \Illuminate\Support\Str::limit($comment->content, 35)  }}</a>
                     </td>
                     <td class="align-middle">{{ $comment->user->name }}</td>
