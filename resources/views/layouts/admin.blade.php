@@ -58,11 +58,9 @@
         </button>
         <ul class="header-nav ms-3">
             <li class="nav-item dropdown">
-                <a class="nav-link py-0" data-coreui-toggle="dropdown" href="#" role="button"
+                <a class="nav-link dropdown-toggle py-0" data-coreui-toggle="dropdown" href="#" role="button"
                    aria-haspopup="true" aria-expanded="false">
-                    <div class="nav-item">
                         {{ auth()->user()->name }}
-                    </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="{{ route('admin.blog.logout') }}"

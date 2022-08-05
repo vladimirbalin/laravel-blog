@@ -3,18 +3,22 @@
 Written on Laravel
 ### Features and instruments used
 
-- Main and admin parts
+- Blog and admin parts
 - Login and registration
-- Profile update
-- Adding new, updating and deleting posts
-- Comments: create, edit, delete
+- Validation
+- Profile page
+- Posts management
+- Comments
 - Follow/unfollow system
 - Likes system
-- Sockets:
-    - Notifications (notify user, whose post was liked or who was followed)
-- Admin part:
+- Ajax requests
+- Sorting
+- Websockets:
+    - Notifications
+- Admin panel:
+    - CRUD posts/comments/categories
     - Publish/unpublish posts/comments/postcategories
-    - CRUD
+
 
 ### Installation and deployment
 
@@ -24,11 +28,11 @@ Written on Laravel
 composer install
 npm i
 ```
-Make sure you created .env `cp .env.example .env`
+Make sure you created .env `cp .env.example .env`,
 
-And don't forget to generate laravel app key `php artisan key:generate`
+and generate laravel app key `php artisan key:generate`.
 
-2. Create database and set correspond properties in .env
+2. Create database and set corresponds properties in .env:
 ```
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -43,32 +47,29 @@ php artisan migrate --seed
  ```
 
 ### Now lets setup our broadcasting system
-1. Set Pusher's (Pusher Channels broadcaster) properties for backend:
+1. We use [beyondcode/laravel-websockets](https://github.com/beyondcode/laravel-websockets) for notification system, for that we need to set next .env variables:
+```
+BROADCAST_DRIVER=pusher
+```
+2. Set Pusher's (Pusher Channels broadcaster) properties (it does not matter what you set as your PUSHER_ variables, just make sure they are unique for each project):
 ```
 PUSHER_APP_ID=
 PUSHER_APP_KEY=
 PUSHER_APP_SECRET=
 PUSHER_APP_CLUSTER=
 ```
-2. Install laravel echo server globally and initialize it:
+3. Once we have configured our WebSocket apps and Pusher settings, we can start the Laravel WebSocket server by issuing the artisan command:
 ```
-npm install laravel-echo-server --location=global
-laravel-echo-server init
+php artisan websockets:serve
 ```
-Setup laravel-echo-server 'laravel-echo-server.json'
-
-3. For frontend we have already installed 'laravel-echo' package, we just need to start our laravel echo server:
-```
-laravel-echo-server start
-```
-4. Start up the queue:
+4. Finally, start up the queue:
 ```
 php artisan queue:work
 ```
-
 ## Tech stack used
 
 - Laravel
-- [PHPFaker](https://github.com/FakerPHP/Faker) for seeds
 - Mysql for db
 - Redis for queues and jobs
+- [beyondcode/laravel-websockets](https://github.com/beyondcode/laravel-websockets) for notifications system
+- [PHPFaker](https://github.com/FakerPHP/Faker) for seeds
