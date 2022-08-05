@@ -28,7 +28,8 @@ class Authenticate
         }
 
         if ($role === 'admin' && !Auth::user()->isAdmin()) {
-            throw new UnauthorizedException('You have no rights to go through this');
+            Auth::logout();
+            return redirect($this->redirectTo())->withErrors(['Only admins have rights to go through']);
         }
 
         return $next($request);
