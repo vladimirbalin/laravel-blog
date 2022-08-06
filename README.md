@@ -28,6 +28,8 @@ Written on Laravel
 composer install
 npm i
 ```
+`npm run dev` or `npm run prod`, depends on what environment you're on.
+
 Make sure you created .env `cp .env.example .env`,
 
 and generate laravel app key `php artisan key:generate`.
@@ -58,11 +60,16 @@ PUSHER_APP_KEY=
 PUSHER_APP_SECRET=
 PUSHER_APP_CLUSTER=
 ```
-3. Once we have configured our WebSocket apps and Pusher settings, we can start the Laravel WebSocket server by issuing the artisan command:
+3. Set your SSL certificates paths(for HTTPS scheme):
+```
+LARAVEL_WEBSOCKETS_SSL_LOCAL_CERT=
+LARAVEL_WEBSOCKETS_SSL_LOCAL_PK=
+```
+4. Once we have configured our WebSocket apps and Pusher settings, we can start the Laravel WebSocket server by issuing the artisan command:
 ```
 php artisan websockets:serve
 ```
-4. Finally, start up the queue:
+5. Finally, start up the queue:
 ```
 php artisan queue:work
 ```

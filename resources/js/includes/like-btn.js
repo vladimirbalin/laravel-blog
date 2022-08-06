@@ -7,7 +7,7 @@ export default function likeBtn() {
         let $this = $(this),
             route = $this.closest('button').attr('data-route');
 
-        httpService().patch(route, {}).then(function (res) {
+        httpService.patch(route, {}).then(function (res) {
             $this.attr('data-count', res.data.count);
             $this.toggleClass('active');
         }).catch(function (e) {
