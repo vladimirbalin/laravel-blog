@@ -23,8 +23,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->createUsers();
         $this->createCategories();
-        $this->createComments();
         $this->createPostsWithRandomLikes(random_int(50, 200));
+        $this->createComments();
         $this->createTags();
     }
 
