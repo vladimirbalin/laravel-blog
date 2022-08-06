@@ -1,3 +1,5 @@
+import httpService from "../services/axiosWithCsrfFromMetaTag";
+
 export default function likeBtn() {
     $('.like').click(function (event) {
         event.preventDefault();
@@ -5,7 +7,7 @@ export default function likeBtn() {
         let $this = $(this),
             route = $this.closest('button').attr('data-route');
 
-        axios.patch(route, {}).then(function (res) {
+        httpService().patch(route, {}).then(function (res) {
             $this.attr('data-count', res.data.count);
             $this.toggleClass('active');
         }).catch(function (e) {
