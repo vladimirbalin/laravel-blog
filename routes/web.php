@@ -25,10 +25,10 @@ use Illuminate\Support\Facades\Route;
 
 //domains split
 Route::domain(config('app.url'))
-    ->middleware('auth')
+    ->middleware(['auth', 'email'])
     ->get('/', [App\Http\Controllers\HomeController::class, 'index'])
     ->name('home');
-Route::domain('admin.'.config('app.url'))
+Route::domain('admin.' . config('app.url'))
     ->middleware('auth:admin')
     ->get('/', [App\Http\Controllers\HomeController::class, 'adminIndex'])
     ->name('admin.home');
@@ -62,7 +62,8 @@ Route::name('blog.')
                 ->name('comments.store');
 
             //profile
-            Route::resource('/profile', ProfileController::class)->names('profile')
+            Route::resource('/profile', ProfileController::class)
+                ->names('profile')
                 ->only(['show', 'edit', 'update']);
 
             //email confirmation
@@ -102,7 +103,8 @@ Route::name('admin.blog.')
     ->prefix('/blog')
     ->group(function () {
         Route::group(['middleware' => 'auth:admin'], function () {
-            Route::post('/logout', [AdminLoginController::class, 'logout'])->name('logout');
+            Route::post('/logout', [AdminLoginController::class, 'logout'])
+                ->name('logout');
             Route::resource('categories', CategoryController::class)
                 ->except('show')
                 ->names('categories');

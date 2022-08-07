@@ -26,7 +26,9 @@ class ProfileController extends Controller
         $profile->fill($request->input());
         $profile->save();
 
-        return redirect()->route('blog.profile.show', $profile->id)->with(['success' => 'All is ok']);
+        return redirect()
+            ->route('blog.profile.show', $profile->id)
+            ->with(['success' => 'You\'ve successfully updated your profile!']);
     }
 
     public function follow($id)

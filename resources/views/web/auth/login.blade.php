@@ -81,6 +81,11 @@
                                             {{ __('Admin panel') }}
                                             <i class="bi bi-arrow-right"></i>
                                         </a>
+                                        <a class="btn btn-sm btn-outline-info px-4 float-end"
+                                           href="{{ route('blog.register') }}"
+                                           type="button">
+                                            {{ __('Register') }}
+                                        </a>
                                     </form>
                                 </div>
                             </div>

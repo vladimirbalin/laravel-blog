@@ -54,7 +54,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-//        TODO: sending confirmation email
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -76,6 +75,13 @@ class RegisterController extends Controller
         $request->user()->markEmailAsVerified();
 
         return redirect('/')
-            ->with(['status' => 'Successfully validated email']);
+            ->with(['success' => 'You have successfully validated email']);
+    }
+
+    public function registered()
+    {
+        return redirect()
+            ->route('home')
+            ->with(['success' => 'You have successfully registered!']);
     }
 }

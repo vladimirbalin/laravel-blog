@@ -1,8 +1,8 @@
 @extends('layouts.web')
 
 @section('content')
-    <div class="container m-3">
-        <h2>Testing purposes page</h2>
+    <div class="container content">
+        <h2>Email verification simulation page</h2>
         <x-session-message/>
 
         @if(! auth()->user()->hasVerifiedEmail())

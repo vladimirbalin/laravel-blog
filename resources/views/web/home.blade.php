@@ -4,6 +4,8 @@
     <div class="container content">
         <div class="row justify-content-center">
             <div class="col-md-8">
+                <x-session-message/>
+
                 <div class="card">
                     <div class="card-header"><h2>Dashboard</h2></div>
                     <ul class="list-unstyled p-3">
