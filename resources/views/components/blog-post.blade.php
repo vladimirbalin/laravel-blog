@@ -3,7 +3,7 @@
 <div class="card-group d-flex">
     <div class="card card-bigger">
         <div class="card-body">
-            <a class="d-block text-decoration-none stretched-link"
+            <a class="d-block text-decoration-none stretched-link stretched-link-post-card"
                href="{{ route('blog.posts.show', $post->id) }}">
                 <h5 class="card-title">{{ $post->id }}. {{$post->title}}</h5>
             </a>

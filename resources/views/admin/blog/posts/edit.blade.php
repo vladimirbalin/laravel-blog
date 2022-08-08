@@ -69,18 +69,20 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <div class="my-3">
-                                                <label class="switch">
-                                                    <input type="hidden" name="is_published" value="0">
-                                                    <input type="checkbox"
-                                                           name="is_published"
-                                                           value="1"
-                                                           data-route="{{ route('admin.blog.posts.ajax', $post->id) }}"
-                                                           @if($post->is_published) checked="checked" @endif>
-                                                    <span class="slider round"></span>
-                                                </label>
-                                                <span>Published</span>
-                                            </div>
+                                            @if($post->exists)
+                                                <div class="my-3">
+                                                    <label class="switch">
+                                                        <input type="hidden" name="is_published" value="0">
+                                                        <input type="checkbox"
+                                                               name="is_published"
+                                                               value="1"
+                                                               data-route="{{ route('admin.blog.posts.ajax', $post->id) }}"
+                                                               @if($post->is_published) checked="checked" @endif>
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                    <span>Published</span>
+                                                </div>
+                                            @endif
                                         </form>
                                         @if($post->exists)
                                             <a type="button"

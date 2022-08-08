@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Models\BlogCategory;
 use App\Models\BlogPost as Model;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class BlogPostRepository extends Repository
@@ -74,7 +75,7 @@ class BlogPostRepository extends Repository
 
     public function byCategory($category = "")
     {
-        if (! $category) {
+        if (!$category) {
             return $this;
         }
 
@@ -90,17 +91,16 @@ class BlogPostRepository extends Repository
 
     public function sortedBy($sortedBy = "")
     {
-        if (! $sortedBy) {
+        if (!$sortedBy) {
             return $this;
         }
-
 
         $startedWithMinus = substr($sortedBy, 0, 1) === '-';
         if ($startedWithMinus) {
             $sortedBy = substr($sortedBy, 1);
         }
 
-        if (! isset($this->start()->first()->$sortedBy)) {
+        if (!isset($this->start()->first()->$sortedBy)) {
             throw new \InvalidArgumentException('Cannot sort by this field');
         }
 
@@ -115,5 +115,29 @@ class BlogPostRepository extends Repository
             ->orderByRaw(DB::raw('FIELD(id, ' . $orderedIds . ')'));
 
         return $this;
+    }
+
+    /**
+     * Get posts, ordered by likes in descending order
+     *
+     * @param $numberOfPosts
+     * @param $subMonths
+     * @return \Illuminate\Support\Collection
+     */
+    public function topByLikes($numberOfPosts, $subMonths)
+    {
+        $minusMonthsDate = Carbon::now()->subMonths($subMonths);
+
+        return DB::table('blog_likes')
+            ->join('blog_posts', 'blog_likes.post_id', '=', 'blog_posts.id')
+            ->join('users', 'blog_posts.user_id', '=', 'users.id')
+            ->select(DB::raw('users.name as author, blog_posts.created_at, title, post_id as id, COUNT(*) as count'))
+            ->where('blog_posts.created_at', '>', $minusMonthsDate)
+            ->groupBy(['blog_likes.post_id', 'users.name'])
+            ->orderBy('count', 'DESC')
+            ->orderBy('created_at', 'DESC')
+            ->limit($numberOfPosts)
+            ->get()
+            ->toBase();
     }
 }

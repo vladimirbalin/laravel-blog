@@ -32,10 +32,9 @@ class BlogPostFactory extends Factory
         $createdAt = Carbon::createFromFormat(
             'Y-m-d H:i:s',
             Carbon::now()
-                ->addMonths('-6')
-                ->addDays($this->num)
+                ->subMonths('4')
+                ->addDays(random_int(1, 4 * 30))
         );
-        $this->num++;
         return [
             'category_id' => BlogCategory::all()->random()->id,
             'user_id' => User::all()->random()->id,

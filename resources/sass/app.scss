@@ -1,8 +1,10 @@
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css2?family=Lato');
+@import "variables";
 @import "admin/style";
 @import "includes/like-button";
 @import "includes/notifications";
 @import "includes/toggle-switch";
+@import "includes/dashboard-tabs";
 
 body, html {
     box-sizing: border-box;

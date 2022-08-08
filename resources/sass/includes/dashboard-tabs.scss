@@ -1,0 +1,31 @@
+.input {
+    opacity: 0;
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+}
+
+.tabs-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+}
+.tab-content{
+    width: 100%;
+    display: none;
+}
+.tab {
+    cursor: pointer;
+    text-decoration: inherit;
+}
+#tab-1-1:checked ~ .tab-content-1-1 {display: block;}
+#tab-1-1:checked ~ div .tab-1-1 {color: $cyan;}
+
+#tab-1-2:checked ~ .tab-content-1-2 {display: block;}
+#tab-1-2:checked ~ div .tab-1-2 {color: $cyan;}
+
+#tab-2-1:checked ~ .tab-content-2-1 {display: block;}
+#tab-2-1:checked ~ div .tab-2-1 {color: $cyan;}
+
+#tab-2-2:checked ~ .tab-content-2-2 {display: block;}
+#tab-2-2:checked ~ div .tab-2-2 {color: #47a3ff;}

@@ -119,11 +119,16 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
+    /**
+     * Get posts, liked by this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function likedPosts()
     {
         return $this->belongsToMany(
             BlogPost::class,
-            'blog_users_to_liked_posts',
+            'blog_post_likes',
             'user_id',
             'post_id'
         );

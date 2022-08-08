@@ -1,10 +1,24 @@
 export default function () {
-    $('.stretched-link').hover(
-        function () {
-            $(this).parent().parent().css('background-color', '#e7f0f0')
+    const pages = [
+        {
+            page: 'dashboard',
+            classOfLink: '.stretched-link-dashboard',
+            parentToPaint: '.list-group-item'
         },
-        function () {
-            $(this).parent().parent().css('background-color', 'white')
-        }
-    )
+        {
+            page: 'posts.index',
+            classOfLink: '.stretched-link-post-card',
+            parentToPaint: '.card'
+        }];
+
+    pages.forEach(function (page) {
+        $(page.classOfLink).hover(
+            function () {
+                $(this).closest(page.parentToPaint).css('background-color', '#e7f0f0')
+            },
+            function () {
+                $(this).closest(page.parentToPaint).css('background-color', 'white')
+            }
+        )
+    })
 }

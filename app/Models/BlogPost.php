@@ -24,7 +24,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @method static \Database\Factories\BlogPostFactory factory(...$parameters)
+ * @method static \Database\Factories\BlogUserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost newQuery()
  * @method static \Illuminate\Database\Query\Builder|BlogPost onlyTrashed()
@@ -114,7 +114,7 @@ class BlogPost extends Model
     {
         return $this->belongsToMany(
             User::class,
-            'blog_post_user',
+            'blog_likes',
             'post_id',
             'user_id'
         );

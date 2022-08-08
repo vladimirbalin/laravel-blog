@@ -15,7 +15,7 @@
                             <li>Total users registered: {{ \App\Models\User::count() }}</li>
                             <li>Total blog posts: {{ \App\Models\BlogPost::count() }}</li>
                             <li>Total comments: {{ \App\Models\BlogComment::count() }}</li>
-                            <li>Total likes: {{ \Illuminate\Support\Facades\DB::table('blog_post_user')->count() }}</li>
+                            <li>Total likes: {{ \Illuminate\Support\Facades\DB::table('blog_likes')->count() }}</li>
                         </ul>
                             <a href="{{ route('home') }}" class="btn btn-outline-primary float-end m-2">
                                 Main site

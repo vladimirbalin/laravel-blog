@@ -3,8 +3,21 @@
 namespace App\Http\Controllers;
 
 
+use App\Repositories\BlogPostRepository;
+use App\Repositories\BlogUserRepository;
+
 class HomeController extends Controller
 {
+
+    private $blogPostRepository;
+    private $blogUserRepository;
+
+    public function __construct(BlogPostRepository $blogPostRepository,
+                                BlogUserRepository $blogUserRepository)
+    {
+        $this->blogPostRepository = $blogPostRepository;
+        $this->blogUserRepository = $blogUserRepository;
+    }
 
     /**
      * Show the application dashboard.
@@ -13,7 +26,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('web.home');
+        $topPostsLastMonth = $this->blogPostRepository->topByLikes(5, 1);
+        $topPostsLastYear = $this->blogPostRepository->topByLikes(5, 12);
+
+        $topAuthorsLastYear = $this->blogUserRepository->topByLikes(12);
+        $topAuthorsLastMonth = $this->blogUserRepository->topByLikes(1);
+
+        return view('web.home', compact(
+            'topPostsLastMonth', 'topPostsLastYear',
+            'topAuthorsLastMonth', 'topAuthorsLastYear'));
     }
 
     public function adminIndex()

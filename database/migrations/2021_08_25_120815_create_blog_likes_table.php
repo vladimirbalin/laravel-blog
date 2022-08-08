@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBlogPostUserTable extends Migration
+class CreateBlogLikesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateBlogPostUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('blog_post_user', function (Blueprint $table) {
+        Schema::create('blog_likes', function (Blueprint $table) {
             $table->bigInteger('post_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
 
