@@ -29,7 +29,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/blog';
+    protected $redirectTo = '/';
 
     /**
      * Get a validator for an incoming registration request.
@@ -74,14 +74,9 @@ class RegisterController extends Controller
 
         $request->user()->markEmailAsVerified();
 
-        return redirect('/')
+        return redirect()
+            ->route('home')
             ->with(['success' => 'You have successfully validated email']);
     }
 
-    public function registered()
-    {
-        return redirect()
-            ->route('home')
-            ->with(['success' => 'You have successfully registered!']);
-    }
 }
