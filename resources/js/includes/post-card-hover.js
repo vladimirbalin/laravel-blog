@@ -3,7 +3,7 @@ export default function () {
         {
             page: 'dashboard',
             classOfLink: '.stretched-link-dashboard',
-            parentToPaint: '.list-group-item'
+            parentToPaint: 'tr'
         },
         {
             page: 'posts.index',

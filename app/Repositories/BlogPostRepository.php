@@ -138,6 +138,9 @@ class BlogPostRepository extends Repository
             ->orderBy('created_at', 'DESC')
             ->limit($numberOfPosts)
             ->get()
-            ->toBase();
+            ->toBase()
+            ->each(
+                fn($author, $index) => $author->sequence_number = $index + 1
+            );
     }
 }

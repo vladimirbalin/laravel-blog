@@ -33,30 +33,50 @@
                             </div>
 
                             <div class="tab-content tab-content-2-1">
-                                <ul class="list-group list-group-flush">
+                                <table class="w-100">
+                                    <thead>
+                                    <tr style="background-color: #afc2e8">
+                                        <th>#</th>
+                                        <th>name</th>
+                                        <th>likes earned</th>
+                                    </tr>
+                                    </thead>
                                     @foreach($topAuthorsLastMonth as $author)
-                                        <li class="list-group-item">
-                                            <a href="{{ route('blog.profile.show', $author->id) }}"
-                                               class="stretched-link stretched-link-dashboard text-decoration-none">
-                                                {{ $author->name }} |
-                                                {{ $author->likes_count }} likes
-                                            </a>
-                                        </li>
+                                        <tr class="position-relative">
+                                            <td>{{$author->sequence_number}}</td>
+                                            <td>
+                                                <a href="{{ route('blog.profile.show', $author->id) }}"
+                                                   class="stretched-link stretched-link-dashboard text-decoration-none">
+                                                    {{ $author->name }}
+                                                </a>
+                                            </td>
+                                            <td>{{ $author->likes_count }}</td>
+                                        </tr>
                                     @endforeach
-                                </ul>
+                                </table>
                             </div>
                             <div class="tab-content tab-content-2-2">
-                                <ul class="list-group list-group-flush">
+                                <table class="w-100">
+                                    <thead>
+                                    <tr style="background-color: #afc2e8">
+                                        <th>#</th>
+                                        <th>name</th>
+                                        <th>likes earned</th>
+                                    </tr>
+                                    </thead>
                                     @foreach($topAuthorsLastYear as $author)
-                                        <li class="list-group-item">
-                                            <a href="{{ route('blog.profile.show', $author->id) }}"
-                                               class="stretched-link stretched-link-dashboard text-decoration-none">
-                                                {{ $author->name }} |
-                                                {{ $author->likes_count }} likes
-                                            </a>
-                                        </li>
+                                        <tr class="position-relative">
+                                            <td>{{ $author->sequence_number }}</td>
+                                            <td>
+                                                <a href="{{ route('blog.profile.show', $author->id) }}"
+                                                   class="stretched-link stretched-link-dashboard text-decoration-none">
+                                                    {{ $author->name }}
+                                                </a>
+                                            </td>
+                                            <td>{{ $author->likes_count }}</td>
+                                        </tr>
                                     @endforeach
-                                </ul>
+                                </table>
                             </div>
                         </div>
                         <div class="card flex-fill tabs-wrapper">
@@ -84,32 +104,54 @@
 
 
                             <div class="tab-content tab-content-1-1">
-                                <ul class="list-group list-group-flush">
+                                <table class="w-100">
+                                    <thead>
+                                    <tr style="background-color: #afc2e8">
+                                        <th>#</th>
+                                        <th>title</th>
+                                        <th>published at</th>
+                                        <th>likes</th>
+                                    </tr>
+                                    </thead>
                                     @foreach($topPostsLastMonth as $post)
-                                        <li class="list-group-item">
-                                            <a href="{{ route('blog.posts.show', $post->id) }}"
-                                               class="stretched-link stretched-link-dashboard text-decoration-none">
-                                                {{ \Illuminate\Support\Str::limit($post->title, 10, '...') }}
-                                                | {{ \Illuminate\Support\Carbon::create($post->created_at)->toFormattedDateString() }}
-                                                | {{ $post->count }} likes
-                                            </a>
-                                        </li>
+                                        <tr class="position-relative">
+                                            <td>{{ $post->sequence_number }}</td>
+                                            <td>
+                                                <a href="{{ route('blog.posts.show', $post->id) }}"
+                                                   class="stretched-link stretched-link-dashboard text-decoration-none">
+                                                    {{ \Illuminate\Support\Str::limit($post->title, 10, '...') }}
+                                                </a>
+                                            </td>
+                                            <td>{{ \Illuminate\Support\Carbon::create($post->created_at)->toFormattedDateString() }}</td>
+                                            <td>{{ $post->count }}</td>
+                                        </tr>
                                     @endforeach
-                                </ul>
+                                </table>
                             </div>
                             <div class="tab-content tab-content-1-2">
-                                <ul class="list-group list-group-flush">
+                                <table class="w-100">
+                                    <thead>
+                                    <tr style="background-color: #afc2e8">
+                                        <th>#</th>
+                                        <th>title</th>
+                                        <th>published at</th>
+                                        <th>likes</th>
+                                    </tr>
+                                    </thead>
                                     @foreach($topPostsLastYear as $post)
-                                        <li class="list-group-item">
-                                            <a href="{{ route('blog.posts.show', $post->id) }}"
-                                               class="stretched-link stretched-link-dashboard text-decoration-none">
-                                                {{ \Illuminate\Support\Str::limit($post->title, 10, '...') }}
-                                                | {{ \Illuminate\Support\Carbon::create($post->created_at)->toFormattedDateString() }}
-                                                | {{ $post->count }} likes
-                                            </a>
-                                        </li>
+                                        <tr class="position-relative">
+                                            <td>{{ $post->sequence_number }}</td>
+                                            <td>
+                                                <a href="{{ route('blog.posts.show', $post->id) }}"
+                                                   class="stretched-link stretched-link-dashboard text-decoration-none">
+                                                    {{ \Illuminate\Support\Str::limit($post->title, 10, '...') }}
+                                                </a>
+                                            </td>
+                                            <td>{{ \Illuminate\Support\Carbon::create($post->created_at)->toFormattedDateString() }}</td>
+                                            <td>{{ $post->count }}</td>
+                                        </tr>
                                     @endforeach
-                                </ul>
+                                </table>
                             </div>
 
                         </div>

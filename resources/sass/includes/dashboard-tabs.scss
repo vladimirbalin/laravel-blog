@@ -7,8 +7,8 @@
 
 .tabs-wrapper {
     display: flex;
-    flex-wrap: wrap;
     position: relative;
+    align-items: stretch;
 }
 .tab-content{
     width: 100%;

@@ -51,6 +51,9 @@ class BlogUserRepository extends Repository
             ->groupBy('id')
             ->orderBy('likes_count', 'DESC')
             ->get()
-            ->toBase();
+            ->toBase()
+            ->each(
+                fn($author, $index) => $author->sequence_number = $index + 1
+            );
     }
 }
