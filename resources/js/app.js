@@ -7,8 +7,8 @@ import cardHover from './includes/post-card-hover';
 
 
 $(document).ready(function () {
-    adminPublishButton('.is_published', 'post-id', 'is_published');
-    adminPublishButton('.status', 'comment-id', 'status');
+    adminPublishButton('post-id');
+    adminPublishButton('comment-id');
     likeBtn();
     cardHover();
 

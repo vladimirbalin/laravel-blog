@@ -22,7 +22,7 @@ class CreateBlogPostsTable extends Migration
             $table->text('excerpt')->nullable();
             $table->text('content_raw');
             $table->text('content_html');
-            $table->boolean('is_published')->default(false);
+            $table->tinyInteger('status')->default(0);
             $table->timestamp('published_at')->nullable();
 
             $table->timestamps();
@@ -30,7 +30,7 @@ class CreateBlogPostsTable extends Migration
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('blog_categories');
-            $table->index('is_published');
+            $table->index('status');
         });
     }
 

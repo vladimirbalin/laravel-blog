@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * App\Models\BlogPost
@@ -19,12 +20,21 @@ use Illuminate\Support\Carbon;
  * @property string|null $excerpt
  * @property string $content_raw
  * @property string $content_html
- * @property int $is_published
+ * @property int $status
  * @property string|null $published_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
- * @method static \Database\Factories\BlogUserFactory factory(...$parameters)
+ * @property-read \App\Models\BlogCategory $category
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read mixed $likes_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $likedUsers
+ * @property-read int|null $liked_users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogTag[] $tags
+ * @property-read int|null $tags_count
+ * @property-read \App\Models\User $user
+ * @method static \Database\Factories\BlogPostFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost newQuery()
  * @method static \Illuminate\Database\Query\Builder|BlogPost onlyTrashed()
@@ -36,27 +46,17 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost whereExcerpt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|BlogPost whereIsPublished($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost wherePublishedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BlogPost whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogPost whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|BlogPost withTrashed()
  * @method static \Illuminate\Database\Query\Builder|BlogPost withoutTrashed()
  * @mixin \Eloquent
- * @property-read \App\Models\BlogCategory $category
- * @property-read \App\Models\User $user
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $likedUsers
- * @property-read int|null $liked_users_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogComment[] $comments
- * @property-read int|null $comments_count
- * @property-read mixed $likes_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogTag[] $tags
- * @property-read int|null $tags_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $users
- * @property-read int|null $users_count
  */
+
 class BlogPost extends Model
 {
     use HasFactory, SoftDeletes;
@@ -71,13 +71,13 @@ class BlogPost extends Model
         'excerpt',
         'content_raw',
         'content_html',
-        'is_published',
+        'status',
         'user_id'
     ];
 
     protected $casts = [
         'category_id' => 'integer',
-        'is_published' => 'integer',
+        'status' => 'integer',
         'user_id' => 'integer'
     ];
 
@@ -126,7 +126,7 @@ class BlogPost extends Model
      * @return BlogPost
      * Updated model.
      */
-    public function toggleLike()
+    public function toggleLike(): BlogPost
     {
         if ($this->isLiked()) {
             return $this->dislike();
@@ -141,7 +141,7 @@ class BlogPost extends Model
      * @return BlogPost
      * Updated model with user, liked this post.
      */
-    public function like()
+    public function like(): BlogPost
     {
         $this->likedUsers()->attach(auth()->id());
 
@@ -150,14 +150,14 @@ class BlogPost extends Model
         return $this->load('likedUsers');
     }
 
-    public function dislike()
+    public function dislike(): BlogPost
     {
         $this->likedUsers()->detach(auth()->id());
 
         return $this->load('likedUsers');
     }
 
-    public function getLikesCountAttribute()
+    public function getLikesCountAttribute(): int
     {
         return $this->likedUsers->count();
     }
@@ -168,17 +168,17 @@ class BlogPost extends Model
      *
      * @return bool
      */
-    public function isLiked()
+    public function isLiked(): bool
     {
         return $this->likedUsers->contains(auth()->user());
     }
 
-    public function isAuthor()
+    public function isAuthor(): bool
     {
         return $this->user->id === auth()->id();
     }
 
-    public function getAuthorName()
+    public function getAuthorName(): string
     {
         return $this->user->name;
     }
@@ -190,28 +190,33 @@ class BlogPost extends Model
 
     public function limitedContent($limit)
     {
-        return \Illuminate\Support\Str::limit($this->content_html, $limit);
+        return Str::limit($this->content_html, $limit);
     }
 
-    public function getPublishedAtShortened()
+    public function getPublishedAtShortened(): ?string
     {
         return $this->published_at ?
             Carbon::parse($this->published_at)->format('d M H:m')
             : null;
     }
 
-    public function getCreatedAtShortened()
+    public function getCreatedAtShortened(): string
     {
         return Carbon::parse($this->created_at)->format('d M H:m');
     }
 
-    public function isPublished()
+    public function isPublished(): bool
     {
-        return $this->is_published === self::STATUS_PUBLISHED;
+        return $this->status === self::STATUS_PUBLISHED;
     }
 
-    public function isNotPublished()
+    public function isNotPublished(): bool
     {
-        return $this->is_published === self::STATUS_DRAFT;
+        return $this->status === self::STATUS_DRAFT;
+    }
+
+    public function updatePublishedAt()
+    {
+        $this->published_at = $this->isPublished() ? now() : null;
     }
 }

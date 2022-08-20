@@ -16,7 +16,7 @@ class CreateBlogCommentsTable extends Migration
         Schema::create('blog_comments', function (Blueprint $table) {
             $table->id();
             $table->text('content');
-            $table->boolean('status')->default(false);
+            $table->tinyInteger('status')->default(0);
             $table->bigInteger('post_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
 

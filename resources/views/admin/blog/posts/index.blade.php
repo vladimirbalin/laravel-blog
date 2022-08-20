@@ -17,9 +17,9 @@
             </thead>
             <tbody>
             @foreach($paginator as $post)
-                @php /** @var \App\Models\BlogCategory $post */ @endphp
+                @php /** @var \App\Models\BlogPost $post */ @endphp
                 <tr data-post-id="{{$post->id}}"
-                    @if(! $post->is_published) style="background-color: #ececec" @endif>
+                    @if($post->isNotPublished()) style="background-color: #ececec" @endif>
                     <td>{{ $post->id }}</td>
                     <td>{{ $post->user->name }}</td>
                     <td>{{ $post->category->title }}</td>
@@ -31,10 +31,10 @@
                     <td>
                         <label class="switch">
                             <input type="checkbox"
-                                   name="is_published"
-                                   class="pt-2 is_published"
+                                   name="status"
+                                   class="pt-2 status"
                                    data-route="{{ route('admin.blog.posts.ajax', $post->id) }}"
-                                   @if($post->is_published) checked="checked" @endif>
+                                   @if($post->isPublished()) checked="checked" @endif>
                             <span class="slider round"></span>
                         </label>
                     </td>

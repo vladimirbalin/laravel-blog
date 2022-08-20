@@ -97,13 +97,11 @@ class PostController extends BaseController
      */
     public function update(BlogPostUpdateRequest $request, BlogPost $post)
     {
-        $is_published = $request->is_published;
-
-        $post->is_published = $is_published;
-        if ($is_published && is_null($post->published_at)) {
+        $post->status = $request->status;
+        if ($post->isPublished() && is_null($post->published_at)) {
             $post->published_at = now();
         }
-        if (! $is_published) {
+        if ($post->isNotPublished()) {
             $post->published_at = null;
         }
         $result = $post->save();

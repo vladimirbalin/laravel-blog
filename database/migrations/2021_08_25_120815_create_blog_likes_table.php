@@ -29,6 +29,6 @@ class CreateBlogLikesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('blog_post_user');
+        Schema::dropIfExists('blog_likes');
     }
 }

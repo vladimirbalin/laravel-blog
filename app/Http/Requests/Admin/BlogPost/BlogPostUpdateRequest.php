@@ -22,7 +22,7 @@ class BlogPostUpdateRequest extends BaseRequest
             'excerpt' => 'max:500',
             'content_raw' => 'required|string|max:10000',
             'category_id' => 'required|integer|exists:blog_categories,id',
-            'is_published' => 'required'
+            'status' => 'required'
         ];
     }
 }

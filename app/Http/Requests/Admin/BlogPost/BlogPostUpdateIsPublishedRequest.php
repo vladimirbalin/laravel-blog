@@ -11,7 +11,7 @@ class BlogPostUpdateIsPublishedRequest extends BaseRequest
     public function rules()
     {
         return [
-            'is_published' => 'required'
+            'status' => 'required'
         ];
     }
 }

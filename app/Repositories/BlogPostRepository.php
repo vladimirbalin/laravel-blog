@@ -38,7 +38,7 @@ class BlogPostRepository extends Repository
 
     public function getAllWithPaginator($perPage)
     {
-        $columns = ['id', 'category_id', 'user_id', 'title', 'is_published', 'published_at'];
+        $columns = ['id', 'category_id', 'user_id', 'title', 'status', 'published_at'];
 
         $result = $this->start()
             ->select($columns)
@@ -68,7 +68,7 @@ class BlogPostRepository extends Repository
 
         $this->query = $this->start()
             ->select($columns)
-            ->where('is_published', '=', true);
+            ->where('status', '=', 1);
 
         return $this;
     }

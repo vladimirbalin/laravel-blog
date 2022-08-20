@@ -1,8 +1,8 @@
 import httpService from "../services/axiosWithCsrfFromMetaTag";
 import $ from "jquery";
 
-export default function adminPublishButton(btnClass, dataId, requestFieldName) {
-    $(btnClass).click(function (event) {
+export default function adminPublishButton(dataId) {
+    $('.status').click(function (event) {
         const $this = $(event.target);
         const route = $this.attr('data-route');
         const checked = $this.prop('checked') ? 1 : 0;
@@ -11,11 +11,11 @@ export default function adminPublishButton(btnClass, dataId, requestFieldName) {
 
         httpService.put(route, {
             id: id,
-            [requestFieldName]: checked
+            status: checked
         }).then(function (res) {
             const updatedPost = res.data;
 
-            if (updatedPost[requestFieldName] === 1) {
+            if (updatedPost.status === 1) {
                 $publishedAt.text(updatedPost.published_at);
             } else {
                 $publishedAt.text('Not published');

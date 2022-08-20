@@ -43,7 +43,7 @@ class BlogPostFactory extends Factory
             'excerpt' => $this->faker->text(rand(40, 100)),
             'content_raw' => $text,
             'content_html' => $text,
-            'is_published' => $isPublished,
+            'status' => $isPublished,
             'published_at' => $isPublished
                 ? Carbon::createFromFormat('Y-m-d H:i:s', $createdAt)->addDays('1')
                 : null,
