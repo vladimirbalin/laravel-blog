@@ -16,10 +16,23 @@ use Illuminate\Notifications\Notifiable;
  * @property \Illuminate\Support\Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
+ * @property int $is_admin
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $phone
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogComment[] $comments
+ * @property-read int|null $comments_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|User[] $followedUsers
+ * @property-read int|null $followed_users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|User[] $followers
+ * @property-read int|null $followers_count
+ * @property-read mixed $full_name
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogPost[] $likedPosts
+ * @property-read int|null $liked_posts_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogPost[] $posts
+ * @property-read int|null $posts_count
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -28,27 +41,15 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereIsAdmin($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogComment[] $comments
- * @property-read int|null $comments_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogPost[] $posts
- * @property-read int|null $posts_count
- * @property int $is_admin
- * @property string|null $phone
- * @property-read \Illuminate\Database\Eloquent\Collection|User[] $followedByUsers
- * @property-read int|null $followed_by_users_count
- * @property-read \Illuminate\Database\Eloquent\Collection|User[] $followedUsers
- * @property-read int|null $followed_users_count
- * @property-read mixed $full_name
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogPost[] $likedPosts
- * @property-read int|null $liked_posts_count
- * @method static \Illuminate\Database\Eloquent\Builder|User whereIsAdmin($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User wherePhone($value)
  */
+
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
@@ -168,5 +169,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isNotFollow($user)
     {
         return !$this->isFollow($user);
+    }
+
+    public function getLastFiveUnreadNotifications()
+    {
+        return auth()->user()
+            ->unreadNotifications()
+            ->limit(5)
+            ->get();
     }
 }

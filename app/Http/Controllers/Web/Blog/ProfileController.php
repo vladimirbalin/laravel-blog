@@ -58,30 +58,14 @@ class ProfileController extends Controller
         return back()->withErrors(["You cant unfollow user, whom you are not following"]);
     }
 
-    public function notifications()
-    {
-        return [
-            'lastFive' => $this->getLastFiveUnreadNotifications(),
-            'count' => auth()->user()->unreadNotifications()->count()
-        ];
-    }
-
-    public function getLastFiveUnreadNotifications()
-    {
-        return auth()->user()
-            ->unreadNotifications()
-            ->limit(5)
-            ->get();
-    }
-
-    public function markAsReadAllNotifications()
-    {
-        auth()->user()->unreadNotifications()->get()->markAsRead();
-        return back();
-    }
-
     public function emailConfirmPage()
     {
         return view('web.blog.profile.confirmation');
+    }
+
+    public function markAllNotificationsAsRead()
+    {
+        auth()->user()->unreadNotifications()->get()->markAsRead();
+        return back();
     }
 }

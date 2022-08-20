@@ -82,24 +82,15 @@ Route::name('blog.')
             Route::delete('/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])
                 ->name('profile.unfollow');
 
-            // api:
-            //notifications
-            Route::get('/notifications', [ProfileController::class, 'notifications'])
-                ->name('notifications')
-                ->withoutMiddleware('email');
 
-            Route::patch('/notifications/mark-as-read', [ProfileController::class, 'markAsReadAllNotifications'])
+            Route::patch('/notifications/mark-as-read', [ProfileController::class, 'markAllNotificationsAsRead'])
                 ->name('notifications.read');
-
-            //like-dislike
-            Route::match(['patch', 'put'], '/posts/like/{post}', [PostController::class, 'like'])
-                ->name('posts.like');
         });
     });
 
 //admin part
 Route::name('admin.blog.')
-    ->domain('admin.'.config('app.url'))
+    ->domain('admin.' . config('app.url'))
     ->prefix('/blog')
     ->group(function () {
         Route::group(['middleware' => 'auth:admin'], function () {
@@ -117,11 +108,7 @@ Route::name('admin.blog.')
             Route::resource('tags', TagController::class)
                 ->only(['create', 'store', 'index', 'edit', 'update', 'destroy'])
                 ->names('tags');
-            Route::match(['patch', 'put'], '/comments/ajax/{comment}', [AdminCommentController::class, 'ajax'])
-                ->name('comments.ajax');
-            Route::match(['patch', 'put'], '/posts/ajax/{post}', [AdminPostController::class, 'ajax'])
-                ->name('posts.ajax');
-            Route::patch('/posts/restore/{post}', [AdminPostController::class, 'restore'])
+            Route::patch('/posts/{post}/restore', [AdminPostController::class, 'postRestore'])
                 ->name('posts.restore');
         });
 

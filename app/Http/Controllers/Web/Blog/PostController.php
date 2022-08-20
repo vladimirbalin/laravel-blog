@@ -165,13 +165,4 @@ class PostController extends BaseController
             ->with(['success' => 'Post successfully removed!']);
     }
 
-    public function like(Request $request, BlogPost $post)
-    {
-        if ($request->ajax()) {
-            $post = $post->toggleLike();
-            return ['success' => true, 'count' => $post->likesCount];
-        }
-
-        throw new BadRequestException('You can only make ajax requests to this route');
-    }
 }

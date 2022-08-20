@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\AdminApiController;
+use App\Http\Controllers\Api\WebApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::name('blog.')
+    ->domain(config('app.url'))
+    ->prefix('/blog')
+    ->group(function () {
+        Route::get('/notifications', [WebApiController::class, 'notifications'])
+            ->name('notifications')
+            ->withoutMiddleware('email');
+
+        Route::match(['patch', 'put'], '/posts/like/{post}', [WebApiController::class, 'toggleLike'])
+            ->name('posts.like');
+    });
+
+Route::name('admin.blog.')
+    ->domain('admin.' . config('app.url'))
+    ->prefix('/blog')
+    ->group(function () {
+        Route::group(['middleware' => 'auth:admin'], function () {
+            Route::match(['patch', 'put'], '/comments/{comment}', [AdminApiController::class, 'togglePublishComment'])
+                ->name('comments.ajax');
+            Route::match(['patch', 'put'], '/posts/{post}', [AdminApiController::class, 'togglePublishPost'])
+                ->name('posts.ajax');
+        });
+    });

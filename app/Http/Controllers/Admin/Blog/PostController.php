@@ -117,23 +117,6 @@ class PostController extends BaseController
         }
     }
 
-    public function ajax(BlogPostUpdateIsPublishedRequest $request, BlogPost $post)
-    {
-        if (!$request->ajax()) {
-            throw new BadRequestException('You can only make ajax requests to this route');
-        }
-        $is_published = $request->is_published;
-
-        $post->is_published = $is_published;
-        $post->published_at = $is_published == 1 ? now() : null;
-        $post->save();
-
-        return [
-            'is_published' => $post->is_published,
-            'published_at' => $post->getPublishedAtShortened()
-        ];
-    }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -155,7 +138,14 @@ class PostController extends BaseController
         }
     }
 
-    public function restore($id)
+    /**
+     * Restore the specified post
+     *
+     * @param $id
+     * @return RedirectResponse
+     */
+
+    public function postRestore($id)
     {
         $result = BlogPost::withTrashed()
             ->where(['id' => $id])
@@ -163,12 +153,11 @@ class PostController extends BaseController
 
         if ($result) {
             return redirect()
-                ->route('admin.blog.posts.index')
-                ->with(['success' => "Post with id [$id] restored successfully"]);
+                ->back()
+                ->with(["success" => "Post with id [$id] restored successfully"]);
         } else {
             return back()
-                ->withErrors(['msg' => 'Restore failed']);
+                ->withErrors(["msg" => "Restore failed"]);
         }
-
     }
 }

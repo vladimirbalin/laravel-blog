@@ -11,8 +11,10 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property string $title
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogPost[] $posts
+ * @property-read int|null $posts_count
  * @method static \Database\Factories\BlogTagFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogTag newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|BlogTag newQuery()
@@ -22,9 +24,8 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|BlogTag whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BlogTag whereUpdatedAt($value)
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BlogPost[] $posts
- * @property-read int|null $posts_count
  */
+
 class BlogTag extends Model
 {
     use HasFactory;

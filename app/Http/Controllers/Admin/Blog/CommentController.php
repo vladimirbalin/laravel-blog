@@ -74,30 +74,4 @@ class CommentController extends Controller
             ->with(['success' => 'Comment deleted']);
     }
 
-    /**
-     * Returns array with status key as 1 if published comment
-     * or 0 to unpublished, published_at key as "d M H:m" formatted time
-     * or null if not published
-     *
-     * @param \App\Http\Requests\Admin\BlogComment\BlogCommentUpdateIsPublishedRequest $request
-     * @param BlogComment $comment
-     * @return array
-     */
-    public function ajax(BlogCommentUpdateIsPublishedRequest $request,
-                         BlogComment                         $comment)
-    {
-        if (!$request->ajax()) {
-            throw new BadRequestException('You can only make ajax requests to this route');
-        }
-
-        $status = $request->input('status');
-        $comment->status = $status;
-        $comment->published_at = $status == 1 ? now() : null;
-        $comment->save();
-
-        return [
-            'status' => $comment->status,
-            'published_at' => $comment->getPublishedAtShortened()
-        ];
-    }
 }
