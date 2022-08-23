@@ -9,13 +9,6 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class WebApiController extends Controller
 {
-    public function notifications()
-    {
-        return [
-            'lastFive' => auth()->user()->getLastFiveUnreadNotifications(),
-            'count' => auth()->user()->unreadNotifications()->count()
-        ];
-    }
 
     public function toggleLike(Request $request, BlogPost $post)
     {

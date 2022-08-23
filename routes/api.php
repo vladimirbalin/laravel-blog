@@ -19,9 +19,6 @@ Route::name('blog.')
     ->domain(config('app.url'))
     ->prefix('/blog')
     ->group(function () {
-        Route::get('/notifications', [WebApiController::class, 'notifications'])
-            ->name('notifications')
-            ->withoutMiddleware('email');
 
         Route::match(['patch', 'put'], '/posts/like/{post}', [WebApiController::class, 'toggleLike'])
             ->name('posts.like');

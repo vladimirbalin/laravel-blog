@@ -63,6 +63,14 @@ class ProfileController extends Controller
         return view('web.blog.profile.confirmation');
     }
 
+    public function notifications()
+    {
+        return [
+            'lastFive' => auth()->user()->getLastFiveUnreadNotifications(),
+            'count' => auth()->user()->unreadNotifications()->count()
+        ];
+    }
+
     public function markAllNotificationsAsRead()
     {
         auth()->user()->unreadNotifications()->get()->markAsRead();

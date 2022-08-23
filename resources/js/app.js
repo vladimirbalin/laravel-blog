@@ -13,7 +13,7 @@ $(document).ready(function () {
     cardHover();
 
     if (window.Laravel && window.Laravel.userId) {
-        axios.get('/api/blog/notifications')
+        axios.get('/blog/notifications')
             .then(res => {
                 let count = res.data.count,
                     databaseNotifications = res.data.lastFive,

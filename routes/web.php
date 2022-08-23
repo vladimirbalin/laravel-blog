@@ -82,6 +82,9 @@ Route::name('blog.')
             Route::delete('/profile/unfollow/{user}', [ProfileController::class, 'unfollow'])
                 ->name('profile.unfollow');
 
+            Route::get('/notifications', [ProfileController::class, 'notifications'])
+                ->name('notifications')
+                ->withoutMiddleware('email');
 
             Route::patch('/notifications/mark-as-read', [ProfileController::class, 'markAllNotificationsAsRead'])
                 ->name('notifications.read');
