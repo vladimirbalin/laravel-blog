@@ -29,10 +29,10 @@ class BlogPostRepository extends Repository
         return $result;
     }
 
-    public function getExactPost($id)
+    public function getExactPost($slug)
     {
         $result = $this->start()
-            ->find($id);
+            ->firstWhere(['slug' => $slug]);
         return $result;
     }
 
@@ -64,7 +64,7 @@ class BlogPostRepository extends Repository
 
     public function allPublishedQuery()
     {
-        $columns = ['id', 'category_id', 'user_id', 'content_html', 'title', 'published_at'];
+        $columns = ['id', 'category_id', 'slug', 'user_id', 'content_html', 'title', 'published_at'];
 
         $this->query = $this->start()
             ->select($columns)

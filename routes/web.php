@@ -53,7 +53,11 @@ Route::name('blog.')
 
             //posts resource
             Route::resource('/posts', PostController::class)
-                ->names('posts');
+                ->names('posts')
+                ->except('show');
+
+            Route::get('/posts/{slug}', [PostController::class, 'show'])
+                ->name('posts.show');
 
             //comments
             Route::match(['delete'], '/comments/delete/{comment}', [CommentController::class, 'destroy'])

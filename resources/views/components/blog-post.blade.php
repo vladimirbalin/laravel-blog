@@ -1,10 +1,10 @@
 @php /** @var \App\Models\BlogPost $post */ @endphp
 
-<div class="card-group d-flex">
+<div class="card-group d-flex w-100">
     <div class="card card-bigger">
         <div class="card-body">
             <a class="d-block text-decoration-none stretched-link stretched-link-post-card"
-               href="{{ route('blog.posts.show', $post->id) }}">
+               href="{{ route('blog.posts.show', $post->slug) }}">
                 <h5 class="card-title">{{ $post->id }}. {{$post->title}}</h5>
             </a>
             <p class="card-text"><small>{{ $post->category->title }}</small></p>
