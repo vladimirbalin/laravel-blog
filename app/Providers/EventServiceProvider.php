@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\BlogComment;
 use App\Models\BlogPost;
+use App\Observers\BlogCommentObserver;
 use App\Observers\BlogPostObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -35,5 +37,6 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         BlogPost::observe(BlogPostObserver::class);
+        BlogComment::observe(BlogCommentObserver::class);
     }
 }

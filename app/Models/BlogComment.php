@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * App\Models\BlogComment
@@ -102,5 +101,11 @@ class BlogComment extends Model
     public function updatePublishedAt()
     {
         $this->published_at = $this->isPublished() ? now() : null;
+    }
+
+    public function publish()
+    {
+        $this->status = self::STATUS_PUBLISHED;
+        $this->published_at = now();
     }
 }

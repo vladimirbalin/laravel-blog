@@ -56,7 +56,6 @@ use Illuminate\Support\Str;
  * @method static \Illuminate\Database\Query\Builder|BlogPost withoutTrashed()
  * @mixin \Eloquent
  */
-
 class BlogPost extends Model
 {
     use HasFactory, SoftDeletes;
@@ -218,5 +217,11 @@ class BlogPost extends Model
     public function updatePublishedAt()
     {
         $this->published_at = $this->isPublished() ? now() : null;
+    }
+
+    public function publish()
+    {
+        $this->status = self::STATUS_PUBLISHED;
+        $this->published_at = now();
     }
 }

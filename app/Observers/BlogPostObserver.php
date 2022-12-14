@@ -14,7 +14,7 @@ class BlogPostObserver
         if ( Auth::user() && Auth::user()->isAdmin() ) {
             $this->setSlugFromTitle($blogPost);
         }
-//      TODO::markdown
+        $blogPost->publish();
         $this->setHtmlFromRaw($blogPost);
         $this->setPublishedAtFromNow($blogPost);
         $this->setUserId($blogPost);
