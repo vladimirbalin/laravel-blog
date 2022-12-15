@@ -121,7 +121,7 @@
                                                 <td>
                                                     <a href="{{ route('blog.posts.show', $post->slug) }}"
                                                        class="stretched-link stretched-link-dashboard text-decoration-none">
-                                                        {{ \Illuminate\Support\Str::limit($post->title, 10, '...') }}
+                                                        {{ \Illuminate\Support\Str::limit($post->title, 15, '...') }}
                                                     </a>
                                                 </td>
                                                 <td>{{ \Illuminate\Support\Carbon::create($post->created_at)->toFormattedDateString() }}</td>
@@ -146,7 +146,7 @@
                                                 <td>
                                                     <a href="{{ route('blog.posts.show', $post->slug) }}"
                                                        class="stretched-link stretched-link-dashboard text-decoration-none">
-                                                        {{ \Illuminate\Support\Str::limit($post->title, 10, '...') }}
+                                                        {{ \Illuminate\Support\Str::limit($post->title, 15, '...') }}
                                                     </a>
                                                 </td>
                                                 <td>{{ \Illuminate\Support\Carbon::create($post->created_at)->toFormattedDateString() }}</td>
@@ -166,7 +166,7 @@
                         <li class="me-2">Posts:
                             <span class="fw-bold">
                                 {{ \App\Models\BlogPost::all()
-                                                    ->where('is_published', \App\Models\BlogPost::STATUS_PUBLISHED)
+                                                    ->where('status', \App\Models\BlogPost::STATUS_PUBLISHED)
                                                     ->count()
                                 }}
                             </span>

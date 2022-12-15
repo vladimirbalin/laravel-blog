@@ -40,7 +40,7 @@ class BlogPostRepository extends Repository
         return $result;
     }
 
-    public function getAllWithPaginator($perPage): array|Collection
+    public function getAllWithPaginator($perPage)
     {
         $columns = ['id', 'category_id', 'user_id', 'title', 'status', 'published_at'];
         $result = $this
@@ -66,7 +66,7 @@ class BlogPostRepository extends Repository
         $paginator = $this
             ->query
             ->with(['user:id,name', 'category:id,title,slug', 'likedUsers'])
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('published_at', 'DESC')
             ->paginate($perPage);
 
         return $paginator;
