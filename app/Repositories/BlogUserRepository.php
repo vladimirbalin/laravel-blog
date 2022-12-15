@@ -1,19 +1,14 @@
 <?php
 
-
 namespace App\Repositories;
 
-
-use App\Models\BlogCategory;
 use App\Models\User as Model;
-use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class BlogUserRepository extends Repository
 {
-    private $query;
-
     /**
      * @return string
      */
@@ -22,38 +17,58 @@ class BlogUserRepository extends Repository
         return Model::class;
     }
 
-    public function getAll()
+    /**
+     * Get authors who have most likes
+     *
+     * @param $usersCount
+     * Amount of authors to get
+     * @param $subMonths
+     * Amount of months before now
+     *
+     * @return array
+     */
+    public function topByLikes($usersCount, $subMonths): array
     {
-        $result = $this->start()
-            ->all();
+        $minusMonthsDateTime = Carbon::now()
+            ->subMonths($subMonths)
+            ->toDateTimeString();
 
-        return $result;
+        $users = DB::select('SELECT query_in.id,
+                                    query_in.name,
+                                    SUM(query_in.count) AS likes_count
+                               FROM (
+                                      SELECT users.id   AS id,
+                                             users.name AS name,
+                                             count(*)   AS count
+                                      FROM users
+                                               INNER JOIN blog_posts ON users.id = blog_posts.user_id
+                                               INNER JOIN blog_likes ON blog_posts.id = blog_likes.post_id
+                                      WHERE blog_posts.created_at > "' . $minusMonthsDateTime . '"
+                                      GROUP BY post_id,
+                                               users.name,
+                                               users.id
+                                    ) AS query_in
+                            GROUP BY id
+                            ORDER BY likes_count DESC
+                            LIMIT ' . $usersCount);
+        $sequence_number = 1;
+        foreach ($users as $user) {
+            $user->sequence_number = $sequence_number++;
+        }
+
+        return $users;
     }
 
     /**
-     * Get total likes to each user(author)
-     *
-     * @return \Illuminate\Support\Collection
+     * Get all posts
+     * @return Collection
      */
-    public function topByLikes($subMonths)
+    public function getAll(): Collection
     {
-        $minusMonths = Carbon::now()->subMonths($subMonths);
+        $result = $this
+            ->start()
+            ->all();
 
-        return DB::query()->fromSub(function ($query) use ($minusMonths) {
-            $query->from('users')
-                ->join('blog_posts', 'users.id', '=', 'blog_posts.user_id')
-                ->join('blog_likes', 'blog_posts.id', '=', 'blog_likes.post_id')
-                ->where('blog_posts.created_at', '>', $minusMonths)
-                ->selectRaw('users.id as id, users.name as name, count(*) as count')
-                ->groupBy('post_id', 'users.name', 'users.id');
-        }, 'query_in')
-            ->selectRaw('query_in.id, query_in.name, SUM(query_in.count) as likes_count')
-            ->groupBy('id')
-            ->orderBy('likes_count', 'DESC')
-            ->get()
-            ->toBase()
-            ->each(
-                fn($author, $index) => $author->sequence_number = $index + 1
-            );
+        return $result;
     }
 }

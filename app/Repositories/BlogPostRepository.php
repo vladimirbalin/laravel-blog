@@ -1,11 +1,12 @@
 <?php
 
-
 namespace App\Repositories;
-
 
 use App\Models\BlogCategory;
 use App\Models\BlogPost as Model;
+use \Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -21,9 +22,10 @@ class BlogPostRepository extends Repository
         return Model::class;
     }
 
-    public function getAll()
+    public function getAll(): array|Collection
     {
-        $result = $this->start()
+        $result = $this
+            ->start()
             ->all();
 
         return $result;
@@ -38,11 +40,11 @@ class BlogPostRepository extends Repository
         return $result;
     }
 
-    public function getAllWithPaginator($perPage)
+    public function getAllWithPaginator($perPage): array|Collection
     {
         $columns = ['id', 'category_id', 'user_id', 'title', 'status', 'published_at'];
-
-        $result = $this->start()
+        $result = $this
+            ->start()
             ->select($columns)
             ->with(['user:id,name', 'category:id,title'])
             ->latest('id')
@@ -51,7 +53,11 @@ class BlogPostRepository extends Repository
         return $result;
     }
 
-    public function getAllPublishedWithPaginatorByCategorySortedBy($sortedBy = '', $category = '', $perPage = 5)
+    public function getAllPublishedWithPaginatorByCategorySortedBy(
+        $sortedBy = '',
+        $category = '',
+        $perPage = 5
+    ): LengthAwarePaginator
     {
         $this->allPublishedQuery()
             ->sortedBy($sortedBy)
@@ -69,8 +75,8 @@ class BlogPostRepository extends Repository
     public function allPublishedQuery()
     {
         $columns = ['id', 'category_id', 'slug', 'user_id', 'content_html', 'title', 'published_at'];
-
-        $this->query = $this->start()
+        $this->query = $this
+            ->start()
             ->select($columns)
             ->where('status', '=', 1);
 
@@ -124,27 +130,43 @@ class BlogPostRepository extends Repository
     /**
      * Get posts, ordered by likes in descending order
      *
-     * @param $numberOfPosts
+     * @param $postsCount
+     * Amount of posts to get
      * @param $subMonths
-     * @return \Illuminate\Support\Collection
+     * Amount of months before now
+     *
+     * @return array
      */
-    public function topByLikes($numberOfPosts, $subMonths)
+    public function topByLikes($postsCount, $subMonths): array
     {
-        $minusMonthsDate = Carbon::now()->subMonths($subMonths);
+        $minusMonthsDateTime = Carbon::now()
+            ->subMonths($subMonths)
+            ->toDateTimeString();
 
-        return DB::table('blog_likes')
-            ->join('blog_posts', 'blog_likes.post_id', '=', 'blog_posts.id')
-            ->join('users', 'blog_posts.user_id', '=', 'users.id')
-            ->select(DB::raw('users.name as author, blog_posts.created_at, title, post_id as id, COUNT(*) as count'))
-            ->where('blog_posts.created_at', '>', $minusMonthsDate)
-            ->groupBy(['blog_likes.post_id', 'users.name'])
-            ->orderBy('count', 'DESC')
-            ->orderBy('created_at', 'DESC')
-            ->limit($numberOfPosts)
-            ->get()
-            ->toBase()
-            ->each(
-                fn($author, $index) => $author->sequence_number = $index + 1
-            );
+        $posts = DB::select('SELECT users.name                                  AS author,
+                                    bp.created_at,
+                                    bp.title,
+                                    bp.id                                       AS id,
+                                    bp.slug                                     AS slug,
+                                    IF(ISNULL(blog_likes.post_id), 0, COUNT(*)) AS count
+                               FROM blog_likes
+                         RIGHT JOIN blog_posts as bp ON blog_likes.post_id = bp.id
+                         INNER JOIN users ON bp.user_id = users.id
+                              WHERE bp.created_at > "' . $minusMonthsDateTime . '"
+                           GROUP BY blog_likes.post_id,
+                                    users.name,
+                                    bp.created_at,
+                                    bp.title,
+                                    bp.id,
+                                    slug
+                           ORDER BY count DESC,
+                                    created_at DESC
+                              LIMIT ' . $postsCount);
+        $sequence = 1;
+        foreach ($posts as $post) {
+            $post->sequence_number = $sequence++;
+        }
+
+        return $posts;
     }
 }

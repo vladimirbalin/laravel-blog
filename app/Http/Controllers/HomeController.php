@@ -26,15 +26,22 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $topPostsLastMonth = $this->blogPostRepository->topByLikes(5, 1);
-        $topPostsLastYear = $this->blogPostRepository->topByLikes(5, 12);
+        $topPostsLastMonth = $this->blogPostRepository
+            ->topByLikes(10, 1);
+        $topPostsLastYear = $this->blogPostRepository
+            ->topByLikes(10, 12);
 
-        $topAuthorsLastYear = $this->blogUserRepository->topByLikes(12);
-        $topAuthorsLastMonth = $this->blogUserRepository->topByLikes(1);
+        $topAuthorsLastMonth = $this->blogUserRepository
+            ->topByLikes(10, 1);
+        $topAuthorsLastYear = $this->blogUserRepository
+            ->topByLikes(10,12);
 
         return view('web.home', compact(
-            'topPostsLastMonth', 'topPostsLastYear',
-            'topAuthorsLastMonth', 'topAuthorsLastYear'));
+                'topPostsLastMonth',
+                'topPostsLastYear',
+                'topAuthorsLastMonth',
+                'topAuthorsLastYear')
+        );
     }
 
     public function adminIndex()
