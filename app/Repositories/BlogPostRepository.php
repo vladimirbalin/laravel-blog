@@ -57,8 +57,10 @@ class BlogPostRepository extends Repository
             ->sortedBy($sortedBy)
             ->byCategory($category);
 
-        $paginator = $this->query
+        $paginator = $this
+            ->query
             ->with(['user:id,name', 'category:id,title,slug', 'likedUsers'])
+            ->orderBy('created_at', 'DESC')
             ->paginate($perPage);
 
         return $paginator;

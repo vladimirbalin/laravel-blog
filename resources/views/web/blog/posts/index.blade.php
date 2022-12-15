@@ -53,7 +53,7 @@
                             @break
                         @default
                             <x-sort-link baseRouteName="blog.posts.index"
-                                         sortBy="-published_at">
+                                         sortBy="published_at">
                                 Published at
                             </x-sort-link>
                     @endswitch
