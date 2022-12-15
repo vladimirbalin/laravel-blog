@@ -119,7 +119,7 @@
                                             <tr class="position-relative">
                                                 <td>{{ $post->sequence_number }}</td>
                                                 <td>
-                                                    <a href="{{ route('blog.posts.show', $post->id) }}"
+                                                    <a href="{{ route('blog.posts.show', $post->slug) }}"
                                                        class="stretched-link stretched-link-dashboard text-decoration-none">
                                                         {{ \Illuminate\Support\Str::limit($post->title, 10, '...') }}
                                                     </a>
@@ -144,7 +144,7 @@
                                             <tr class="position-relative">
                                                 <td>{{ $post->sequence_number }}</td>
                                                 <td>
-                                                    <a href="{{ route('blog.posts.show', $post->id) }}"
+                                                    <a href="{{ route('blog.posts.show', $post->slug) }}"
                                                        class="stretched-link stretched-link-dashboard text-decoration-none">
                                                         {{ \Illuminate\Support\Str::limit($post->title, 10, '...') }}
                                                     </a>

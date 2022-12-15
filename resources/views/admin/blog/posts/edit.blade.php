@@ -72,9 +72,9 @@
                                             @if($post->exists)
                                                 <div class="my-3">
                                                     <label class="switch">
-                                                        <input type="hidden" name="is_published" value="0">
+                                                        <input type="hidden" name="status" value="0">
                                                         <input type="checkbox"
-                                                               name="is_published"
+                                                               name="status"
                                                                value="1"
                                                                data-route="{{ route('admin.blog.posts.ajax', $post->id) }}"
                                                                @if($post->is_published) checked="checked" @endif>

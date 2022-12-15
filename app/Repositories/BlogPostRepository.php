@@ -29,10 +29,12 @@ class BlogPostRepository extends Repository
         return $result;
     }
 
-    public function getExactPost($slug)
+    public function getExactPostBySlug($slug): EloquentModel
     {
-        $result = $this->start()
-            ->firstWhere(['slug' => $slug]);
+        $result = $this
+            ->start()
+            ->firstWhere('slug', $slug);
+
         return $result;
     }
 

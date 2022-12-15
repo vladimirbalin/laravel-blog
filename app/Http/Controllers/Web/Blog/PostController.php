@@ -90,17 +90,24 @@ class PostController extends BaseController
     /**
      * Display the specified resource.
      *
-     * @param int $postId
+     * @param string $slug
      * @return View
      */
-    public function show($postId)
+    public function show(string $slug)
     {
-        $post = $this->blogPostRepository->getExactPost($postId);
-        $comments = $this->blogCommentRepository->getAllPublishedByPost($postId);
+        $post = $this
+            ->blogPostRepository
+            ->getExactPostBySlug($slug);
+        $comments = $this
+            ->blogCommentRepository
+            ->getAllPublishedByPost($post->id);
 
         return view(
             'web.blog.posts.show',
-            compact('post', 'comments')
+            compact(
+                'post',
+                'comments'
+            )
         );
     }
 
