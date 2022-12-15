@@ -214,14 +214,16 @@ class BlogPost extends Model
         return $this->status === self::STATUS_DRAFT;
     }
 
-    public function updatePublishedAt()
-    {
-        $this->published_at = $this->isPublished() ? now() : null;
-    }
-
     public function publish()
     {
-        $this->status = self::STATUS_PUBLISHED;
+        if ($this->isNotPublished()) {
+            $this->status = self::STATUS_PUBLISHED;
+            $this->updatePublishedAt();
+        }
+    }
+
+    public function updatePublishedAt()
+    {
         $this->published_at = now();
     }
 }

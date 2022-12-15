@@ -31,18 +31,25 @@ class DatabaseSeeder extends Seeder
     public function createPostsWithRandomLikes($numberOfPosts): void
     {
         BlogPost::factory($numberOfPosts)
-            ->create()
+            ->createQuietly()
             ->each(function ($post) {
                 $usersCount = User::count();
-                $likedUserIds = User::all()->random(rand(0, $usersCount))->pluck('id')->toArray();
+                $likedUserIds = User::all()
+                    ->random(rand(0, $usersCount))
+                    ->pluck('id')
+                    ->toArray();
                 $likedUserIds = Arr::where($likedUserIds, function ($value) use ($post) {
                     return $value !== $post->user_id;
                 });
-                $post->likedUsers()->attach($likedUserIds);
+                $post->likedUsers()
+                    ->attach($likedUserIds);
             });
     }
 
-    public function createUsersWithSubscriptions($numberOfUsers, $numberOfSubscriptionsEach): void
+    public function createUsersWithSubscriptions(
+        $numberOfUsers,
+        $numberOfSubscriptionsEach
+    ): void
     {
         if ($numberOfSubscriptionsEach > $numberOfUsers) {
             throw new InvalidParameterException(
@@ -52,10 +59,13 @@ class DatabaseSeeder extends Seeder
         User::factory($numberOfUsers)
             ->create()
             ->each(function ($user) use ($numberOfSubscriptionsEach) {
-                $subscriptions = User::all()->except($user->id)->random($numberOfSubscriptionsEach);
+                $subscriptions = User::all()
+                    ->except($user->id)
+                    ->random($numberOfSubscriptionsEach);
 
                 foreach ($subscriptions as $subscribedUser) {
-                    $user->followedUsers()->attach($subscribedUser->id);
+                    $user->followedUsers()
+                        ->attach($subscribedUser->id);
                 }
             });
     }
@@ -81,6 +91,6 @@ class DatabaseSeeder extends Seeder
 
     public function createComments()
     {
-        BlogComment::factory(random_int(100, 300) )->create();
+        BlogComment::factory(random_int(100, 300))->create();
     }
 }
