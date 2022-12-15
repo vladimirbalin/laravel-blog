@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\Blog;
 
 use App\Http\Controllers\Admin\BaseController;
 use App\Http\Requests\Admin\BlogPost\BlogPostCreateRequest;
-use App\Http\Requests\Admin\BlogPost\BlogPostUpdateIsPublishedRequest;
 use App\Http\Requests\Admin\BlogPost\BlogPostUpdateRequest;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
@@ -12,18 +11,14 @@ use App\Repositories\BlogPostRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Arr;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class PostController extends BaseController
 {
-    private $postRepository;
-    private $categoryRepository;
-
-    public function __construct()
+    public function __construct(
+        private BlogPostRepository     $postRepository,
+        private BlogCategoryRepository $categoryRepository
+    )
     {
-        parent::__construct();
-        $this->postRepository = app(BlogPostRepository::class);
-        $this->categoryRepository = app(BlogCategoryRepository::class);
     }
 
     /**

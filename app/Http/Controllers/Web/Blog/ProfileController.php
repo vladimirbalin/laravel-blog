@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-
     public function show(User $profile)
     {
         return view('web.blog.profile.index', compact('profile'));

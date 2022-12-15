@@ -5,24 +5,20 @@ namespace App\Http\Controllers;
 
 use App\Repositories\BlogPostRepository;
 use App\Repositories\BlogUserRepository;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-
-    private $blogPostRepository;
-    private $blogUserRepository;
-
-    public function __construct(BlogPostRepository $blogPostRepository,
-                                BlogUserRepository $blogUserRepository)
+    public function __construct(
+        private BlogPostRepository $blogPostRepository,
+        private BlogUserRepository $blogUserRepository)
     {
-        $this->blogPostRepository = $blogPostRepository;
-        $this->blogUserRepository = $blogUserRepository;
     }
 
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return View
      */
     public function index()
     {
@@ -34,7 +30,7 @@ class HomeController extends Controller
         $topAuthorsLastMonth = $this->blogUserRepository
             ->topByLikes(10, 1);
         $topAuthorsLastYear = $this->blogUserRepository
-            ->topByLikes(10,12);
+            ->topByLikes(10, 12);
 
         return view('web.home', compact(
                 'topPostsLastMonth',

@@ -11,11 +11,10 @@ use App\Http\Requests\Admin\BlogComment\BlogCommentUpdateIsPublishedRequest;
 
 class CommentController extends Controller
 {
-    private $blogCommentRepository;
-
-    public function __construct(BlogCommentRepository $blogCommentRepository)
+    public function __construct(
+        private BlogCommentRepository $blogCommentRepository
+    )
     {
-        $this->blogCommentRepository = $blogCommentRepository;
     }
 
     public function index()
@@ -49,7 +48,7 @@ class CommentController extends Controller
         if ($status && is_null($comment->published_at)) {
             $comment->published_at = now();
         }
-        if (! $status) {
+        if (!$status) {
             $comment->published_at = null;
         }
         $result = $comment->save();

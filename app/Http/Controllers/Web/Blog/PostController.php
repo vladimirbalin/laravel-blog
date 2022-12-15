@@ -12,21 +12,14 @@ use App\Repositories\BlogPostRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class PostController extends BaseController
 {
-    private $blogPostRepository;
-    private $blogCategoryRepository;
-    private $blogCommentRepository;
-
-    public function __construct(BlogPostRepository     $blogPostRepository,
-                                BlogCategoryRepository $blogCategoryRepository,
-                                BlogCommentRepository  $blogCommentRepository)
+    public function __construct(
+        private BlogPostRepository     $blogPostRepository,
+        private BlogCategoryRepository $blogCategoryRepository,
+        private BlogCommentRepository  $blogCommentRepository)
     {
-        $this->blogPostRepository = $blogPostRepository;
-        $this->blogCategoryRepository = $blogCategoryRepository;
-        $this->blogCommentRepository = $blogCommentRepository;
     }
 
     /**
@@ -47,8 +40,10 @@ class PostController extends BaseController
         $categoryDropdown = $this->blogCategoryRepository->getDropDownList();
 
         return view('web.blog.posts.index',
-            compact('paginator',
-                'categoryDropdown')
+            compact(
+                'paginator',
+                'categoryDropdown'
+            )
         );
     }
 
@@ -63,7 +58,10 @@ class PostController extends BaseController
 
         return view(
             'web.blog.posts.edit',
-            compact('post', 'categoryList')
+            compact(
+                'post',
+                'categoryList'
+            )
         );
     }
 
@@ -71,20 +69,15 @@ class PostController extends BaseController
      * Store a newly created resource in storage.
      *
      * @param BlogPostCreateRequest $request
-     * @return View|RedirectResponse
+     * @return RedirectResponse
      */
     public function store(BlogPostCreateRequest $request)
     {
-        $result = BlogPost::create($request->input());
+        BlogPost::create($request->input());
 
-        if (!$result) {
-            return back()
-                ->withErrors(['msg' => 'Creation failed'])
-                ->withInput();
-        }
-
-        return back()
-            ->with(['success' => 'Post created']);
+        return redirect()
+            ->route('blog.posts.index')
+            ->with(['success' => 'Post was successfully created']);
     }
 
     /**
@@ -127,7 +120,10 @@ class PostController extends BaseController
 
         return view(
             'web.blog.posts.edit',
-            compact('post', 'categoryList')
+            compact(
+                'post',
+                'categoryList'
+            )
         );
     }
 

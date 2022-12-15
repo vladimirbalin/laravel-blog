@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class Repository
 {
-    protected $model;
+    protected Model $model;
 
     public function __construct()
     {
@@ -18,7 +18,7 @@ abstract class Repository
      */
     abstract protected function getModelClass();
 
-    public function start()
+    public function start(): Model
     {
         return clone $this->model;
     }

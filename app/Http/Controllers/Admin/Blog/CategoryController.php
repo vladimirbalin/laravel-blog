@@ -12,14 +12,12 @@ use Illuminate\Http\RedirectResponse;
 
 class CategoryController extends BaseController
 {
-    protected $repository;
     protected $perPage = 10;
 
-    public function __construct()
+    public function __construct(
+        protected BlogCategoryRepository $blogCategoryRepository
+    )
     {
-        parent::__construct();
-
-        $this->repository = app(BlogCategoryRepository::class);
     }
 
     /**
@@ -29,7 +27,7 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $paginator = $this->repository->getAllWithPagination($this->perPage);
+        $paginator = $this->blogCategoryRepository->getAllWithPagination($this->perPage);
 
         return view('admin.blog.categories.index',
             compact('paginator'));
@@ -43,10 +41,14 @@ class CategoryController extends BaseController
     public function create()
     {
         $category = new BlogCategory;
-        $dropDownListCategories = $this->repository->getDropDownList();
+        $dropDownListCategories = $this->blogCategoryRepository->getDropDownList();
 
         return view('admin.blog.categories.create',
-            compact('category', 'dropDownListCategories'));
+            compact(
+                'category',
+                'dropDownListCategories'
+            )
+        );
     }
 
     /**
@@ -62,12 +64,15 @@ class CategoryController extends BaseController
         $result = $category->fill($request->input())->save();
         if ($result) {
             $paginator = BlogCategory::paginate($this->perPage);
-            return redirect()->route('admin.blog.categories.index')
+            return redirect()
+                ->route('admin.blog.categories.index')
                 ->setTargetUrl('?page=' . $paginator->lastPage())
                 ->with('success', 'Category successfully saved.');
         }
 
-        return back()->withInput()->withErrors(['msg' => 'Save fail']);
+        return back()
+            ->withInput()
+            ->withErrors(['msg' => 'Save fail']);
     }
 
     /**
@@ -78,10 +83,15 @@ class CategoryController extends BaseController
      */
     public function edit(BlogCategory $category)
     {
-        $dropDownListCategories = $this->repository->getDropDownList();
+        $dropDownListCategories = $this
+            ->blogCategoryRepository
+            ->getDropDownList();
 
         return view('admin.blog.categories.edit',
-            compact('category', 'dropDownListCategories'));
+            compact(
+                'category',
+                'dropDownListCategories')
+        );
     }
 
     /**
@@ -99,7 +109,9 @@ class CategoryController extends BaseController
             return back()
                 ->with(['success' => 'Saved successfully']);
         } else {
-            return back()->withInput()->withErrors(['msg' => 'Save fail']);
+            return back()
+                ->withInput()
+                ->withErrors(['msg' => 'Save fail']);
         }
     }
 
