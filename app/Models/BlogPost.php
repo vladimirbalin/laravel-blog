@@ -192,11 +192,17 @@ class BlogPost extends Model
         return Str::limit($this->content_html, $limit);
     }
 
-    public function getPublishedAtShortened(): ?string
+    /**
+     * Returns shortened published_at field string
+     * if post has it, false if not.
+     *
+     * @return string|false
+     */
+    public function getPublishedAtShortened(): string|false
     {
-        return $this->published_at ?
-            Carbon::parse($this->published_at)->format('d M H:i')
-            : null;
+        return Carbon
+            ::parse($this->published_at)
+            ->format('d M H:i');
     }
 
     public function getCreatedAtShortened(): string
@@ -224,7 +230,7 @@ class BlogPost extends Model
 
     public function updatePublishedAt()
     {
-        if (! $this->published_at) {
+        if (!$this->published_at) {
             $this->published_at = now();
         }
     }

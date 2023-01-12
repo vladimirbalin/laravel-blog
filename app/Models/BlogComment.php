@@ -71,15 +71,15 @@ class BlogComment extends Model
 
     /**
      * Returns shortened published_at field string
-     * if comment is published, null if not.
+     * if comment has it, false if not.
      *
-     * @return string|null
+     * @return string|false
      */
-    public function getPublishedAtShortened(): ?string
+    public function getPublishedAtShortened(): string|false
     {
-        return $this->isPublished() ?
-            Carbon::parse($this->published_at)->format('d M H:i')
-            : null;
+        return Carbon
+            ::parse($this->published_at)
+            ->format('d M H:i');
     }
 
     public function getCreatedAtShortened(): string
@@ -107,7 +107,7 @@ class BlogComment extends Model
 
     public function updatePublishedAt()
     {
-        if (! $this->published_at) {
+        if (!$this->published_at) {
             $this->published_at = now();
         }
     }
