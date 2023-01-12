@@ -28,9 +28,10 @@ class PostController extends BaseController
      * @param Request $request
      * @return View
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
-        $paginator = $this->blogPostRepository
+        $paginator = $this
+            ->blogPostRepository
             ->getAllPublishedWithPaginatorByCategorySortedBy(
                 $request->get('sort'),
                 $request->get('category')

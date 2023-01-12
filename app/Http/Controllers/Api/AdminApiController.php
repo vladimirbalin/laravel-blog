@@ -20,13 +20,15 @@ class AdminApiController extends Controller
      * @param BlogComment $comment
      * @return array
      */
-    public function togglePublishComment(BlogCommentUpdateIsPublishedRequest $request,
-                                         BlogComment                         $comment): array
+    public function togglePublishComment(
+        BlogCommentUpdateIsPublishedRequest $request,
+        BlogComment                         $comment
+    ): array
     {
-        $this->isAjax($request);
+        $this->ajaxGuard($request);
 
         $comment->status = $request->input('status');
-        $comment->updatePublishedAt();
+        $comment->tapPublishedAt();
 
         $comment->save();
 
@@ -44,13 +46,15 @@ class AdminApiController extends Controller
      * @param BlogPost $post
      * @return array
      */
-    public function togglePublishPost(BlogPostUpdateIsPublishedRequest $request,
-                                      BlogPost                         $post): array
+    public function togglePublishPost(
+        BlogPostUpdateIsPublishedRequest $request,
+        BlogPost                         $post
+    ): array
     {
-        $this->isAjax($request);
+        $this->ajaxGuard($request);
 
         $post->status = $request->input('status');
-        $post->updatePublishedAt();
+        $post->tapPublishedAt();
 
         $post->save();
 
@@ -60,9 +64,14 @@ class AdminApiController extends Controller
         ];
     }
 
-    private function isAjax(Request $request)
+    /**
+     * @throws BadRequestException
+     * @param Request $request
+     * @return void
+     */
+    private function ajaxGuard(Request $request): void
     {
-        if (!$request->ajax()) {
+        if (! $request->ajax()) {
             throw new BadRequestException('You can only make ajax requests to this route');
         }
     }
