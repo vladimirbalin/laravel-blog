@@ -224,6 +224,8 @@ class BlogPost extends Model
 
     public function updatePublishedAt()
     {
-        $this->published_at = now();
+        if (! $this->published_at) {
+            $this->published_at = now();
+        }
     }
 }

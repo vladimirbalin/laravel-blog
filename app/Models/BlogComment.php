@@ -36,7 +36,6 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|BlogComment whereUserId($value)
  * @mixin \Eloquent
  */
-
 class BlogComment extends Model
 {
     use HasFactory;
@@ -98,14 +97,18 @@ class BlogComment extends Model
         return $this->status === self::STATUS_DRAFT;
     }
 
-    public function updatePublishedAt()
-    {
-        $this->published_at = $this->isPublished() ? now() : null;
-    }
-
     public function publish()
     {
-        $this->status = self::STATUS_PUBLISHED;
-        $this->published_at = now();
+        if ($this->isNotPublished()) {
+            $this->status = self::STATUS_PUBLISHED;
+            $this->updatePublishedAt();
+        }
+    }
+
+    public function updatePublishedAt()
+    {
+        if (! $this->published_at) {
+            $this->published_at = now();
+        }
     }
 }
