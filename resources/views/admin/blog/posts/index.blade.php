@@ -38,7 +38,7 @@
                             <span class="slider round"></span>
                         </label>
                     </td>
-                    <td class="published_at">{{ $post->getPublishedAtShortened() ?? 'Not published' }}</td>
+                    <td class="published_at">{{ $post->getPublishedAtShortened() ?: 'Not published' }}</td>
                     <td>
                         <a href="{{ route('admin.blog.posts.edit', $post->id) }}"
                            class="btn btn-outline-dark btn-sm mx-1">
