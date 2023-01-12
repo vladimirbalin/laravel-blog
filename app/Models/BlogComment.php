@@ -79,13 +79,13 @@ class BlogComment extends Model
     public function getPublishedAtShortened(): ?string
     {
         return $this->isPublished() ?
-            Carbon::parse($this->published_at)->format('d M H:m')
+            Carbon::parse($this->published_at)->format('d M H:i')
             : null;
     }
 
     public function getCreatedAtShortened(): string
     {
-        return Carbon::parse($this->created_at)->format('d M H:m');
+        return Carbon::parse($this->created_at)->format('d M H:i');
     }
 
     public function isPublished(): bool

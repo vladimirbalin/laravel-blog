@@ -14,7 +14,7 @@ class AdminApiController extends Controller
 {
     /**
      * Returns array with status key as 1 if comment is published or 0 if unpublished,
-     * published_at key as "d M H:m" formatted time or null if not published
+     * published_at key as "d M H:i" formatted time or null if not published
      *
      * @param BlogCommentUpdateIsPublishedRequest $request
      * @param BlogComment $comment
@@ -38,7 +38,7 @@ class AdminApiController extends Controller
 
     /**
      * Returns array with status key as 1 if post is published or 0 if unpublished
-     * published_at key as "d M H:m" formatted time or null if not published
+     * published_at key as "d M H:i" formatted time or null if not published
      *
      * @param BlogPostUpdateIsPublishedRequest $request
      * @param BlogPost $post
