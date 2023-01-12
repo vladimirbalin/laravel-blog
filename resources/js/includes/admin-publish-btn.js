@@ -17,8 +17,6 @@ export default function adminPublishButton(dataId) {
 
             if (updatedPost.status === 1) {
                 $publishedAt.text(updatedPost.published_at);
-            } else {
-                $publishedAt.text('Not published');
             }
         }).catch(function (e) {
             console.log(e)
