@@ -78,7 +78,7 @@ class BlogComment extends Model
      */
     public function getPublishedAtShortened(): string|null
     {
-        if (!$this->publishedAtIsNull()) {
+        if ($this->publishedAtIsNull()) {
             return null;
         }
 
