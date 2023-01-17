@@ -3,13 +3,17 @@
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\Blog\CategoryController;
 use App\Http\Controllers\Admin\Blog\CommentController as AdminCommentController;
-use App\Http\Controllers\Admin\Blog\TagController;
 use App\Http\Controllers\Admin\Blog\PostController as AdminPostController;
+use App\Http\Controllers\Admin\Blog\TagController;
+use App\Http\Controllers\Admin\Dashboard\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Web\Auth\LoginController;
 use App\Http\Controllers\Web\Auth\RegisterController;
 use App\Http\Controllers\Web\Blog\CommentController;
 use App\Http\Controllers\Web\Blog\PostController;
 use App\Http\Controllers\Web\Blog\ProfileController;
+use App\Http\Controllers\Web\Dashboard\DashboardController;
+use App\Http\Controllers\Web\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,11 +30,12 @@ use Illuminate\Support\Facades\Route;
 //domains split
 Route::domain(config('app.url'))
     ->middleware(['auth', 'email'])
-    ->get('/', [App\Http\Controllers\HomeController::class, 'index'])
+    ->get('/', HomeController::class)
     ->name('home');
+
 Route::domain('admin.' . config('app.url'))
     ->middleware('auth:admin')
-    ->get('/', [App\Http\Controllers\HomeController::class, 'adminIndex'])
+    ->get('/', AdminHomeController::class)
     ->name('admin.home');
 
 //web part
@@ -39,10 +44,14 @@ Route::name('blog.')
     ->prefix('/blog')
     ->group(function () {
         Route::group(['middleware' => ['guest']], function () {
-            Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-            Route::post('/login', [LoginController::class, 'login'])->name('login-post');
-            Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-            Route::post('/register', [RegisterController::class, 'register'])->name('register-post');
+            Route::get('/login', [LoginController::class, 'showLoginForm'])
+                ->name('login');
+            Route::post('/login', [LoginController::class, 'login'])
+                ->name('login-post');
+            Route::get('/register', [RegisterController::class, 'showRegistrationForm'])
+                ->name('register');
+            Route::post('/register', [RegisterController::class, 'register'])
+                ->name('register-post');
         });
 
         Route::delete('/logout', [LoginController::class, 'logout'])
@@ -51,18 +60,31 @@ Route::name('blog.')
 
         Route::group(['middleware' => ['auth', 'email']], function () {
 
+            //dashboard
+            Route::get('/dashboard', [DashboardController::class, 'index'])
+                ->name('dashboard');
+
             //posts resource
             Route::resource('/posts', PostController::class)
                 ->names('posts')
-                ->except('show');
+                ->except(['show']);
 
             Route::get('/posts/{slug}', [PostController::class, 'show'])
                 ->name('posts.show');
 
             //comments
-            Route::match(['delete'], '/comments/delete/{comment}', [CommentController::class, 'destroy'])
+            Route::match(
+                ['delete'],
+                '/comments/delete/{comment}',
+                [CommentController::class, 'destroy']
+            )
                 ->name('comments.delete');
-            Route::match(['post'], '/comments/store', [CommentController::class, 'store'])
+
+            Route::match(
+                ['post'],
+                '/comments/store',
+                [CommentController::class, 'store']
+            )
                 ->name('comments.store');
 
             //profile
@@ -101,6 +123,8 @@ Route::name('admin.blog.')
     ->prefix('/blog')
     ->group(function () {
         Route::group(['middleware' => 'auth:admin'], function () {
+            Route::get('/dashboard', AdminDashboardController::class)
+                ->name('dashboard');
             Route::post('/logout', [AdminLoginController::class, 'logout'])
                 ->name('logout');
             Route::resource('categories', CategoryController::class)

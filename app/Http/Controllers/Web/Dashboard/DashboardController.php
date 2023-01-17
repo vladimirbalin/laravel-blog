@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web\Dashboard;
 
-
+use App\Http\Controllers\Controller;
 use App\Repositories\BlogPostRepository;
 use App\Repositories\BlogUserRepository;
 use Illuminate\View\View;
 
-class HomeController extends Controller
+class DashboardController extends Controller
 {
     public function __construct(
         private BlogPostRepository $blogPostRepository,
@@ -32,17 +32,11 @@ class HomeController extends Controller
         $topAuthorsLastYear = $this->blogUserRepository
             ->topByLikes(10, 12);
 
-        return view('web.home', compact(
+        return view('web.dashboard', compact(
                 'topPostsLastMonth',
                 'topPostsLastYear',
                 'topAuthorsLastMonth',
                 'topAuthorsLastYear')
         );
-    }
-
-    public function adminIndex()
-    {
-        return view('admin.home');
-
     }
 }
