@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class BlogPostRepository extends Repository
 {
@@ -31,7 +32,7 @@ class BlogPostRepository extends Repository
         return $result;
     }
 
-    public function getExactPostBySlug($slug): EloquentModel
+    public function getExactPostBySlug($slug): Model
     {
         $result = $this
             ->start()
@@ -105,12 +106,18 @@ class BlogPostRepository extends Repository
             return $this;
         }
 
-        $startedWithMinus = substr($sortedBy, 0, 1) === '-';
+        $startedWithMinus = str_starts_with($sortedBy, '-');
         if ($startedWithMinus) {
-            $sortedBy = substr($sortedBy, 1);
+            $sortedBy = mb_substr($sortedBy, 1);
         }
 
-        if (!isset($this->start()->first()->$sortedBy)) {
+        if (
+            ! Schema::hasColumn(
+                $this->start()->getTable(),
+                $sortedBy
+            ) &&
+            ! isset($this->start()->first()->$sortedBy)
+        ) {
             throw new \InvalidArgumentException('Cannot sort by this field');
         }
 

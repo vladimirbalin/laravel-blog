@@ -16,7 +16,7 @@ abstract class Repository
     /**
      * @return Model
      */
-    abstract protected function getModelClass();
+    abstract protected function getModelClass(): string;
 
     public function start(): Model
     {

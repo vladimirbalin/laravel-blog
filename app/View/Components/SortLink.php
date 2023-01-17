@@ -2,25 +2,23 @@
 
 namespace App\View\Components;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\Component;
+use Illuminate\View\View;
 
 class SortLink extends Component
 {
-    public $baseRouteName;
-    public $sortBy;
-
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($baseRouteName,
-                                $sortBy)
+    public function __construct(
+        public $baseRouteName,
+        public $sortBy
+    )
     {
-        $this->baseRouteName = $baseRouteName;
-        $this->sortBy = $sortBy;
     }
 
     /**
@@ -28,12 +26,10 @@ class SortLink extends Component
      *
      * @param $value
      * @return bool
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function isActive($value)
+    public function isActive($value): bool
     {
-        $requestSort = request()->get('sort');
+        $requestSort = Request::get('sort');
         list($requestSort, $value) = $this->stripMinuses($requestSort, $value);
         return $requestSort === $value;
     }
@@ -51,9 +47,9 @@ class SortLink extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return View
      */
-    public function render()
+    public function render(): View
     {
         return view('components.sort-link');
     }
