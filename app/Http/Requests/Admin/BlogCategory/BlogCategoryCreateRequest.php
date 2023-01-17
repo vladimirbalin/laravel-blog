@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Admin\BlogCategory;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
@@ -14,7 +13,7 @@ class BlogCategoryCreateRequest extends BlogCategoryBaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'title' => 'required|min:5|max:200',

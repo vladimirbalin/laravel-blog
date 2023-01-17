@@ -149,7 +149,6 @@ class PostController extends BaseController
      * @param $id
      * @return RedirectResponse
      */
-
     public function postRestore($id): RedirectResponse
     {
         $result = BlogPost

@@ -2,21 +2,20 @@
 
 namespace App\Http\Requests\Web\BlogPost;
 
-
 use App\Http\Requests\Web\BaseRequests\BlogPostBaseRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rule;
 
 class BlogPostCreateRequest extends BlogPostBaseRequest
 {
-    public function attributes()
+    public function attributes(): array
     {
         return [
             'content_raw' => 'post'
         ];
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'title' => [

@@ -14,7 +14,7 @@ class BlogCategoryUpdateRequest extends BlogCategoryBaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'title' => 'required|min:5|max:200',

@@ -13,7 +13,7 @@ class BlogPostUpdateRequest extends BaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'title' => 'required|min:5|max:255',

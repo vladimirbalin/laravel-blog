@@ -34,14 +34,16 @@ class DatabaseSeeder extends Seeder
             ->createQuietly()
             ->each(function ($post) {
                 $usersCount = User::count();
-                $likedUserIds = User::all()
+                $likedUserIds = User
+                    ::all()
                     ->random(rand(0, $usersCount))
                     ->pluck('id')
                     ->toArray();
                 $likedUserIds = Arr::where($likedUserIds, function ($value) use ($post) {
                     return $value !== $post->user_id;
                 });
-                $post->likedUsers()
+                $post
+                    ->likedUsers()
                     ->attach($likedUserIds);
             });
     }
@@ -59,12 +61,14 @@ class DatabaseSeeder extends Seeder
         User::factory($numberOfUsers)
             ->create()
             ->each(function ($user) use ($numberOfSubscriptionsEach) {
-                $subscriptions = User::all()
+                $subscriptions = User
+                    ::all()
                     ->except($user->id)
                     ->random($numberOfSubscriptionsEach);
 
                 foreach ($subscriptions as $subscribedUser) {
-                    $user->followedUsers()
+                    $user
+                        ->followedUsers()
                         ->attach($subscribedUser->id);
                 }
             });

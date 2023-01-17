@@ -2,7 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Models\BlogComment;
 use App\Models\BlogComment as Model;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class BlogCommentRepository extends Repository
 {
@@ -22,7 +24,7 @@ class BlogCommentRepository extends Repository
         return $result;
     }
 
-    public function getAllWithPaginator(int $perPage)
+    public function getAllWithPaginator(int $perPage): Paginator
     {
         $result = $this->start()
             ->with('user', 'post')
@@ -64,7 +66,7 @@ class BlogCommentRepository extends Repository
      * @param $commentId
      * @return mixed
      */
-    public function getExactComment($commentId)
+    public function getExactComment($commentId): BlogComment
     {
         $result = $this->start()
             ->find($commentId);

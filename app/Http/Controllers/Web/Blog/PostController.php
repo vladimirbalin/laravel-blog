@@ -53,16 +53,15 @@ class PostController extends BaseController
      *
      * @return View
      */
-    public function create(BlogPost $post)
+    public function create(BlogPost $post): View
     {
-        $categoryList = $this->blogCategoryRepository->getDropDownList();
+        $categoryList = $this
+            ->blogCategoryRepository
+            ->getDropDownList();
 
         return view(
             'web.blog.posts.edit',
-            compact(
-                'post',
-                'categoryList'
-            )
+            compact('post', 'categoryList')
         );
     }
 
@@ -72,9 +71,9 @@ class PostController extends BaseController
      * @param BlogPostCreateRequest $request
      * @return RedirectResponse
      */
-    public function store(BlogPostCreateRequest $request)
+    public function store(BlogPostCreateRequest $request): RedirectResponse
     {
-        BlogPost::create($request->input());
+        BlogPost::create($request->all());
 
         return redirect()
             ->route('blog.posts.index')
@@ -82,16 +81,17 @@ class PostController extends BaseController
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified BlogPost page.
      *
      * @param string $slug
      * @return View
      */
-    public function show(string $slug)
+    public function show(string $slug): View
     {
         $post = $this
             ->blogPostRepository
             ->getExactPostBySlug($slug);
+
         $comments = $this
             ->blogCommentRepository
             ->getAllPublishedByPost($post->id);
@@ -111,11 +111,13 @@ class PostController extends BaseController
      * @param BlogPost $post
      * @return View
      */
-    public function edit(BlogPost $post)
+    public function edit(BlogPost $post): View
     {
-        $categoryList = $this->blogCategoryRepository->getDropDownList();
+        $categoryList = $this
+            ->blogCategoryRepository
+            ->getDropDownList();
 
-        if (!$post->isAuthor()) {
+        if (! $post->isAuthor()) {
             abort(401);
         }
 
@@ -135,15 +137,12 @@ class PostController extends BaseController
      * @param BlogPost $post
      * @return RedirectResponse
      */
-    public function update(BlogPostUpdateRequest $request, BlogPost $post)
+    public function update(
+        BlogPostUpdateRequest $request,
+        BlogPost $post
+    ): RedirectResponse
     {
-        $result = $post->update($request->all());
-
-        if (!$result) {
-            return back()
-                ->withInput()
-                ->withErrors(['msg' => 'Save fail']);
-        }
+        $post->update($request->all());
 
         return back()->with(['success' => 'Successfully saved']);
     }
@@ -154,15 +153,9 @@ class PostController extends BaseController
      * @param BlogPost $post
      * @return RedirectResponse
      */
-    public function destroy(BlogPost $post)
+    public function destroy(BlogPost $post): RedirectResponse
     {
-        $result = $post->delete();
-
-        if (!$result) {
-            return back()
-                ->withInput()
-                ->withErrors(['msg' => 'Save fail']);
-        }
+        $post->delete();
 
         return redirect()
             ->route('blog.posts.index')

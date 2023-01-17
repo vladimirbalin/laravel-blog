@@ -23,7 +23,7 @@ class BlogPostLikedListener
      * @param BlogPostLikedEvent $event
      * @return void
      */
-    public function handle(BlogPostLikedEvent $event)
+    public function handle(BlogPostLikedEvent $event): void
     {
         $postAuthor = $event->post->user;
         $postAuthor->notify(new BlogPostLikedNotification($event->post, $event->user));

@@ -12,7 +12,7 @@ class BlogCommentRequest extends BaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'content' => 'required|string|max:10000',

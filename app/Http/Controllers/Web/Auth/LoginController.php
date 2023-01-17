@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\View\View;
 
 class LoginController extends Controller
 {
@@ -20,12 +21,12 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    public function showLoginForm()
+    public function showLoginForm(): View
     {
         return view('web.auth.login');
     }
 
-    public function redirectPath()
+    public function redirectPath(): string
     {
         return route('home');
     }

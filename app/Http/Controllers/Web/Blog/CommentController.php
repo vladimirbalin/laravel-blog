@@ -5,28 +5,20 @@ namespace App\Http\Controllers\Web\Blog;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\BlogCommentRequest;
 use App\Models\BlogComment;
-use Illuminate\Support\Arr;
+use Illuminate\Http\RedirectResponse;
 
 class CommentController extends Controller
 {
-    public function destroy(BlogComment $comment)
+    public function destroy(BlogComment $comment): RedirectResponse
     {
-        $result = $comment->delete();
-
-        if (! $result) {
-            return back()->withErrors(['Cannot delete this comment']);
-        }
+        $comment->delete();
 
         return back()->with(['success' => 'Comment successfully deleted']);
     }
 
-    public function store(BlogCommentRequest $request)
+    public function store(BlogCommentRequest $request): RedirectResponse
     {
-        $result = BlogComment::create($request->input());
-
-        if (! $result) {
-            return back()->withErrors(['Creation fail'])->withInput();
-        }
+        BlogComment::create($request->all());
 
         return back()->with(['success' => 'Comment successfully published now']);
     }

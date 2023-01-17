@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 class BlogPostUpdateRequest extends BlogPostBaseRequest
 {
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'title' => 'required|min:5|max:255',

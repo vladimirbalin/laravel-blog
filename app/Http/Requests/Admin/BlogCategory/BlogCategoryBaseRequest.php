@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Requests\Admin\BlogCategory;
-
 
 use App\Http\Requests\Admin\BaseRequests\BaseRequest;
 use Illuminate\Support\Str;
@@ -10,7 +8,7 @@ use Illuminate\Support\Str;
 class BlogCategoryBaseRequest extends BaseRequest
 {
 
-    public function messages()
+    public function messages(): array
     {
         return [
           'slug.unique' => 'Please change or enter the unique slug.'

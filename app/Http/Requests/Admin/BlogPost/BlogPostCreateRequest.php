@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Http\Requests\Admin\BlogPost;
-
 
 use App\Http\Requests\Admin\BaseRequests\BaseRequest;
 use Illuminate\Support\Facades\Route;
@@ -15,7 +13,7 @@ class BlogPostCreateRequest extends BaseRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'title' => 'required|min:5|max:255',

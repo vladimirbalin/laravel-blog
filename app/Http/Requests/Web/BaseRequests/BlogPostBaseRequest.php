@@ -14,8 +14,9 @@ class BlogPostBaseRequest extends BaseRequest
     protected function setSlugFromTitle()
     {
         $titleShouldBeConverted =
-            $this->exists(['slug', 'title']) &&
-            $this->isNotFilled('slug') && $this->filled('title');
+            $this->exists(['slug', 'title'])
+            && $this->isNotFilled('slug')
+            && $this->filled('title');
 
         if ($titleShouldBeConverted) {
             $this->merge([

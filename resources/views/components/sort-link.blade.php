@@ -2,8 +2,7 @@
    href="{{ route($baseRouteName, \Arr::collapse([
                                                     request()->query(),
                                                      ['sort' => $sortBy]
-                                                 ]
-                                    ))
+                                                 ]))
         }}">
     {{ $slot }}
 </a>
