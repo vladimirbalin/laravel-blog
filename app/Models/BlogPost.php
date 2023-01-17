@@ -5,6 +5,9 @@ namespace App\Models;
 use App\Events\BlogPostLikedEvent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -84,22 +87,22 @@ class BlogPost extends Model
         'likes_count'
     ];
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(BlogCategory::class);
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function comments()
+    public function comments(): HasMany
     {
         return $this->hasMany(BlogComment::class, 'post_id');
     }
 
-    public function tags()
+    public function tags(): BelongsToMany
     {
         return $this->belongsToMany(
             BlogTag::class,
@@ -109,7 +112,7 @@ class BlogPost extends Model
         );
     }
 
-    public function likedUsers()
+    public function likedUsers(): BelongsToMany
     {
         return $this->belongsToMany(
             User::class,
@@ -142,23 +145,36 @@ class BlogPost extends Model
      */
     public function like(): BlogPost
     {
-        $this->likedUsers()->attach(auth()->id());
+        $this
+            ->likedUsers()
+            ->attach(
+                auth()->id()
+            );
 
-        event(new BlogPostLikedEvent($this, auth()->user()));
+        event(new BlogPostLikedEvent(
+            $this,
+            auth()->user()
+        ));
 
         return $this->load('likedUsers');
     }
 
     public function dislike(): BlogPost
     {
-        $this->likedUsers()->detach(auth()->id());
+        $this
+            ->likedUsers()
+            ->detach(
+                auth()->id()
+            );
 
         return $this->load('likedUsers');
     }
 
     public function getLikesCountAttribute(): int
     {
-        return $this->likedUsers->count();
+        return $this
+            ->likedUsers
+            ->count();
     }
 
     /**
@@ -169,7 +185,11 @@ class BlogPost extends Model
      */
     public function isLiked(): bool
     {
-        return $this->likedUsers->contains(auth()->user());
+        return $this
+            ->likedUsers
+            ->contains(
+                auth()->user()
+            );
     }
 
     public function isAuthor(): bool
@@ -182,12 +202,18 @@ class BlogPost extends Model
         return $this->user->name;
     }
 
-    public function whenPublished()
+    public function whenPublished(): string|null
     {
-        return Carbon::parse($this->published_at)->diffForHumans();
+        if (!$this->published_at) {
+            return null;
+        }
+
+        return Carbon
+            ::parse($this->published_at)
+            ->diffForHumans();
     }
 
-    public function limitedContent($limit)
+    public function limitedContent($limit): string
     {
         return Str::limit($this->content_html, $limit);
     }
@@ -200,7 +226,7 @@ class BlogPost extends Model
      */
     public function getPublishedAtShortened(): string|null
     {
-        if (! $this->published_at) {
+        if (!$this->published_at) {
             return null;
         }
 
@@ -211,7 +237,9 @@ class BlogPost extends Model
 
     public function getCreatedAtShortened(): string
     {
-        return Carbon::parse($this->created_at)->format('d M H:i');
+        return Carbon
+            ::parse($this->created_at)
+            ->format('d M H:i');
     }
 
     public function isPublished(): bool
@@ -224,18 +252,24 @@ class BlogPost extends Model
         return $this->status === self::STATUS_DRAFT;
     }
 
-    public function publish()
+    public function publish(): void
     {
-        if ($this->isNotPublished()) {
-            $this->status = self::STATUS_PUBLISHED;
-            $this->updatePublishedAt();
-        }
+        $this->status = self::STATUS_PUBLISHED;
+        $this->setPublishedAtNow();
     }
 
-    public function updatePublishedAt()
+    public function setPublishedAtNow(): void
     {
-        if (!$this->published_at) {
-            $this->published_at = now();
-        }
+        $this->published_at = now();
+    }
+
+    public function neverPublishedBefore(): bool
+    {
+        return $this->publishedAtIsNull();
+    }
+
+    public function publishedAtIsNull(): bool
+    {
+        return $this->published_at === null;
     }
 }

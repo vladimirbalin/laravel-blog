@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\BlogTagRequest;
 use App\Models\BlogTag;
 use App\Repositories\BlogTagRepository;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class TagController extends Controller
 {
@@ -15,11 +17,16 @@ class TagController extends Controller
     {
     }
 
-    public function index()
+    public function index(): View
     {
-        $tags = $this->blogTagRepository->getAll();
+        $tags = $this
+            ->blogTagRepository
+            ->getAll();
 
-        return view('admin.blog.tags.index', compact('tags'));
+        return view(
+            'admin.blog.tags.index',
+            compact('tags')
+        );
     }
 
     public function create()
@@ -27,23 +34,31 @@ class TagController extends Controller
         //
     }
 
-    public function edit(BlogTag $tag)
+    public function edit(BlogTag $tag): View
     {
         return view('admin.blog.tags.edit', compact('tag'));
     }
 
-    public function store(BlogTagRequest $request)
+    public function store(BlogTagRequest $request): RedirectResponse
     {
         BlogTag::create($request->all());
 
-        return redirect()->route('admin.blog.tags.index')->with(['success' => 'created']);
+        return redirect()
+            ->route('admin.blog.tags.index')
+            ->with(['success' => 'created']);
     }
 
-    public function update(BlogTagRequest $request, BlogTag $tag)
+    public function update(
+        BlogTagRequest $request,
+        BlogTag $tag
+    ): RedirectResponse
     {
         $tag->update($request->all());
 
-        return redirect()->route('admin.blog.tags.index')->with(['success' => 'saved']);
+        return redirect()
+            ->route('admin.blog.tags.index')
+            ->with(['success' => 'saved']
+            );
     }
 
     public function destroy($id)

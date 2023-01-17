@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -32,7 +33,7 @@ class BlogTag extends Model
 
     protected $fillable = ['title'];
 
-    public function posts()
+    public function posts(): BelongsToMany
     {
         return $this->belongsToMany(
             BlogPost::class,
@@ -42,13 +43,24 @@ class BlogTag extends Model
         );
     }
 
-    public function getCreatedAtShortened()
+    public function getCreatedAtShortened(): string|null
     {
-        return Carbon::parse($this->created_at)->format('M d Y H:m');
+        if (! $this->created_at){
+            return null;
+        }
+
+        return Carbon
+            ::parse($this->created_at)
+            ->format('M d Y H:m');
     }
 
-    public function getUpdatedAtShortened()
+    public function getUpdatedAtShortened(): string|null
     {
-        return Carbon::parse($this->updated_at)->format('M d Y H:m');
+        if (! $this->updated_at){
+            return null;
+        }
+        return Carbon
+            ::parse($this->updated_at)
+            ->format('M d Y H:m');
     }
 }

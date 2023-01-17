@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Blog;
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use App\Http\Controllers\Controller;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use App\Models\BlogComment;
 use App\Repositories\BlogCommentRepository;
 use App\Http\Requests\Admin\BlogComment\BlogCommentUpdate;
-use App\Http\Requests\Admin\BlogComment\BlogCommentUpdateIsPublishedRequest;
 
 class CommentController extends Controller
 {
@@ -17,54 +17,72 @@ class CommentController extends Controller
     {
     }
 
-    public function index()
+    /**
+     * Shows all comments page
+     *
+     * @return View
+     */
+    public function index(): View
     {
         $commentsPerPage = 12;
-        $comments = $this->blogCommentRepository->getAllWithPaginator($commentsPerPage);
+        $comments = $this
+            ->blogCommentRepository
+            ->getAllWithPaginator($commentsPerPage);
 
-        return view('admin.blog.comments.index', compact('comments'));
+        return view(
+            'admin.blog.comments.index',
+            compact('comments')
+        );
     }
 
-    public function edit(BlogComment $comment)
+    /**
+     * Shows edit comment form
+     *
+     * @param BlogComment $comment
+     * @return View
+     */
+    public function edit(BlogComment $comment): View
     {
-        return view('admin.blog.comments.edit', compact('comment'));
+        return view(
+            'admin.blog.comments.edit',
+            compact('comment')
+        );
     }
 
     /**
      * Update the specified resource in storage.
-     * Update published_at only when prev published_at is null
-     * and current is_published is 1
      *
      * @param BlogCommentUpdate $request
-     * @param $commentId
-     * @return \Illuminate\Http\RedirectResponse
+     * @param int $commentId
+     * @return RedirectResponse
+     *
      */
-    public function update(BlogCommentUpdate $request, $commentId)
+    public function update(
+        BlogCommentUpdate $request,
+        int               $commentId
+    ): RedirectResponse
     {
-        $comment = $this->blogCommentRepository->getExactComment($commentId);
+        $comment = $this
+            ->blogCommentRepository
+            ->getExactComment($commentId);
 
-        $status = $request->input('status');
-        $comment->status = $status;
-        if ($status && is_null($comment->published_at)) {
-            $comment->published_at = now();
-        }
-        if (!$status) {
-            $comment->published_at = null;
-        }
-        $result = $comment->save();
+        $comment->fill($request->safe()->toArray());
 
-        if ($result) {
-            return redirect()
-                ->route('admin.blog.comments.edit', compact('comment'))
-                ->with(['success' => 'Comment updated']);
-        } else {
-            return back()
-                ->withInput()
-                ->withErrors(['msg' => 'Save fail']);
+        if (
+            $comment->isPublished() &&
+            $comment->neverPublishedBefore()
+        ) {
+            $comment->publish();
         }
+
+        $comment->save();
+
+        return redirect()
+            ->route('admin.blog.comments.edit', compact('comment'))
+            ->with(['success' => 'Comment updated successfully!']);
     }
 
-    public function destroy(BlogComment $comment)
+    public function destroy(BlogComment $comment): RedirectResponse
     {
         $comment->delete();
 

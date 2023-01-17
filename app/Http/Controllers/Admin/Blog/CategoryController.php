@@ -9,6 +9,7 @@ use App\Models\BlogCategory;
 use App\Repositories\BlogCategoryRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\ValidationException;
 
 class CategoryController extends BaseController
 {
@@ -25,12 +26,16 @@ class CategoryController extends BaseController
      *
      * @return View
      */
-    public function index()
+    public function index(): View
     {
-        $paginator = $this->blogCategoryRepository->getAllWithPagination($this->perPage);
+        $paginator = $this
+            ->blogCategoryRepository
+            ->getAllWithPagination($this->perPage);
 
-        return view('admin.blog.categories.index',
-            compact('paginator'));
+        return view(
+            'admin.blog.categories.index',
+            compact('paginator')
+        );
     }
 
     /**
@@ -38,16 +43,16 @@ class CategoryController extends BaseController
      *
      * @return View
      */
-    public function create()
+    public function create(): View
     {
         $category = new BlogCategory;
-        $dropDownListCategories = $this->blogCategoryRepository->getDropDownList();
+        $dropDownListCategories = $this
+            ->blogCategoryRepository
+            ->getDropDownList();
 
-        return view('admin.blog.categories.create',
-            compact(
-                'category',
-                'dropDownListCategories'
-            )
+        return view(
+            'admin.blog.categories.create',
+            compact('category', 'dropDownListCategories')
         );
     }
 
@@ -56,32 +61,34 @@ class CategoryController extends BaseController
      *
      * @param BlogCategoryCreateRequest $request
      * @return RedirectResponse
+     *
+     * @throws ValidationException
      */
-    public function store(BlogCategoryCreateRequest $request)
+    public function store(
+        BlogCategoryCreateRequest $request
+    ): RedirectResponse
     {
         $category = new BlogCategory;
 
-        $result = $category->fill($request->input())->save();
-        if ($result) {
-            $paginator = BlogCategory::paginate($this->perPage);
-            return redirect()
-                ->route('admin.blog.categories.index')
-                ->setTargetUrl('?page=' . $paginator->lastPage())
-                ->with('success', 'Category successfully saved.');
-        }
+        $category
+            ->fill($request->all())
+            ->save();
 
-        return back()
-            ->withInput()
-            ->withErrors(['msg' => 'Save fail']);
+        $paginator = BlogCategory::paginate($this->perPage);
+
+        return redirect()
+            ->route('admin.blog.categories.index')
+            ->setTargetUrl('?page=' . $paginator->lastPage())
+            ->with('success', 'Category successfully saved.');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param $id
+     * @param BlogCategory $category
      * @return View
      */
-    public function edit(BlogCategory $category)
+    public function edit(BlogCategory $category): View
     {
         $dropDownListCategories = $this
             ->blogCategoryRepository
@@ -90,7 +97,8 @@ class CategoryController extends BaseController
         return view('admin.blog.categories.edit',
             compact(
                 'category',
-                'dropDownListCategories')
+                'dropDownListCategories'
+            )
         );
     }
 
@@ -100,19 +108,19 @@ class CategoryController extends BaseController
      * @param BlogCategoryUpdateRequest $request
      * @param BlogCategory $category
      * @return RedirectResponse
+     *
+     * @throws ValidationException
      */
-    public function update(BlogCategoryUpdateRequest $request, BlogCategory $category)
+    public function update(
+        BlogCategoryUpdateRequest $request,
+        BlogCategory              $category
+    ): RedirectResponse
     {
-        $result = $category->fill($request->input())->save();
+        $category->fill(
+            $request->all()
+        )->save();
 
-        if ($result) {
-            return back()
-                ->with(['success' => 'Saved successfully']);
-        } else {
-            return back()
-                ->withInput()
-                ->withErrors(['msg' => 'Save fail']);
-        }
+        return back()->with(['success' => 'Saved successfully']);
     }
 
 }

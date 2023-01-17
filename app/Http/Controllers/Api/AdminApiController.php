@@ -13,8 +13,7 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 class AdminApiController extends Controller
 {
     /**
-     * Returns array with status key as 1 if comment is published or 0 if unpublished,
-     * published_at key as "d M H:i" formatted time or null if not published
+     * Returns BlogComment array with status key as 1 if comment is published or 0 if not
      *
      * @param BlogCommentUpdateIsPublishedRequest $request
      * @param BlogComment $comment
@@ -28,7 +27,13 @@ class AdminApiController extends Controller
         $this->ajaxGuard($request);
 
         $comment->status = $request->input('status');
-        $comment->tapPublishedAt();
+
+        if (
+            $comment->isPublished() &&
+            $comment->neverPublishedBefore()
+        ) {
+            $comment->publish();
+        }
 
         $comment->save();
 
@@ -39,8 +44,7 @@ class AdminApiController extends Controller
     }
 
     /**
-     * Returns array with status key as 1 if post is published or 0 if unpublished
-     * published_at key as "d M H:i" formatted time or null if not published
+     * Returns BlogPost array with status key as 1 if post is published or 0 if not
      *
      * @param BlogPostUpdateIsPublishedRequest $request
      * @param BlogPost $post
@@ -54,7 +58,13 @@ class AdminApiController extends Controller
         $this->ajaxGuard($request);
 
         $post->status = $request->input('status');
-        $post->tapPublishedAt();
+
+        if (
+            $post->isPublished() &&
+            $post->neverPublishedBefore()
+        ) {
+            $post->publish();
+        }
 
         $post->save();
 
@@ -65,9 +75,9 @@ class AdminApiController extends Controller
     }
 
     /**
-     * @throws BadRequestException
      * @param Request $request
      * @return void
+     * @throws BadRequestException
      */
     private function ajaxGuard(Request $request): void
     {

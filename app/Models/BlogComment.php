@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -49,12 +50,12 @@ class BlogComment extends Model
         'status' => 'integer'
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function post()
+    public function post(): BelongsTo
     {
         return $this->belongsTo(BlogPost::class);
     }
@@ -77,7 +78,7 @@ class BlogComment extends Model
      */
     public function getPublishedAtShortened(): string|null
     {
-        if (! $this->published_at) {
+        if (!$this->publishedAtIsNull()) {
             return null;
         }
 
@@ -86,9 +87,17 @@ class BlogComment extends Model
             ->format('d M H:i');
     }
 
-    public function getCreatedAtShortened(): string
+    /**
+     * @return string|null
+     */
+    public function getCreatedAtShortened(): string|null
     {
-        return Carbon::parse($this->created_at)->format('d M H:i');
+        if (!$this->created_at) {
+            return null;
+        }
+        return Carbon
+            ::parse($this->created_at)
+            ->format('d M H:i');
     }
 
     public function isPublished(): bool
@@ -101,18 +110,24 @@ class BlogComment extends Model
         return $this->status === self::STATUS_DRAFT;
     }
 
-    public function publish()
+    public function publish(): void
     {
-        if ($this->isNotPublished()) {
-            $this->status = self::STATUS_PUBLISHED;
-            $this->updatePublishedAt();
-        }
+        $this->status = self::STATUS_PUBLISHED;
+        $this->setPublishedAtNow();
     }
 
-    public function updatePublishedAt()
+    public function setPublishedAtNow(): void
     {
-        if (!$this->published_at) {
-            $this->published_at = now();
-        }
+        $this->published_at = now();
+    }
+
+    public function neverPublishedBefore(): bool
+    {
+        return $this->publishedAtIsNull();
+    }
+
+    public function publishedAtIsNull(): bool
+    {
+        return $this->published_at === null;
     }
 }

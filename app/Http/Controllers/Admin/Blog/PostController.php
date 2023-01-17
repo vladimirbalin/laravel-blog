@@ -10,7 +10,8 @@ use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Arr;
+use Symfony\Component\Translation\Exception\NotFoundResourceException;
+use Throwable;
 
 class PostController extends BaseController
 {
@@ -22,50 +23,58 @@ class PostController extends BaseController
     }
 
     /**
-     * Display a listing of the resource.
+     * Show all posts page
      *
      * @return View
      */
-    public function index()
+    public function index(): View
     {
         $postsPerPage = 12;
-        $paginator = $this->postRepository->getAllWithPaginator($postsPerPage);
+        $paginator = $this
+            ->postRepository
+            ->getAllWithPaginator($postsPerPage);
 
-        return view('admin.blog.posts.index', compact('paginator'));
+        return view(
+            'admin.blog.posts.index',
+            compact('paginator')
+        );
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param BlogPost $post
      * @return View
      */
-    public function create(BlogPost $post)
+    public function create(BlogPost $post): View
     {
-        $categoryList = $this->categoryRepository->getDropDownList();
+        $categoryList = $this
+            ->categoryRepository
+            ->getDropDownList();
 
-        return view('admin.blog.posts.edit', compact('post', 'categoryList'));
+        return view(
+            'admin.blog.posts.edit',
+            compact('post', 'categoryList')
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param BlogPostCreateRequest $request
-     * @return View|RedirectResponse
+     * @return RedirectResponse
      */
-    public function store(BlogPostCreateRequest $request)
+    public function store(
+        BlogPostCreateRequest $request
+    ): RedirectResponse
     {
-        $attributes = Arr::collapse([$request->all()]);
-        $result = (new BlogPost())->create($attributes);
+        $post = new BlogPost();
+        $post->fill($request->all());
+        $post->save();
 
-        if ($result) {
-            return redirect()
-                ->route('admin.blog.posts.index')
-                ->with(['success' => 'Saved successfully']);
-        } else {
-            return back()
-                ->withErrors(['Save fail'])
-                ->withInput();
-        }
+        return redirect()
+            ->route('admin.blog.posts.index')
+            ->with(['success' => 'Saved successfully']);
     }
 
     /**
@@ -74,63 +83,64 @@ class PostController extends BaseController
      * @param BlogPost $post
      * @return View
      */
-    public function edit(BlogPost $post)
+    public function edit(BlogPost $post): View
     {
-        $categoryList = $this->categoryRepository->getDropDownList();
+        $categoryList = $this
+            ->categoryRepository
+            ->getDropDownList();
 
-        return view('admin.blog.posts.edit', compact('post', 'categoryList'));
+        return view(
+            'admin.blog.posts.edit',
+            compact('post', 'categoryList')
+        );
     }
 
     /**
      * Update the specified resource in storage.
-     * Update published_at only when prev published_at is null
-     * and current is_published is 1
      *
      * @param BlogPostUpdateRequest $request
      * @param BlogPost $post
      * @return RedirectResponse
      */
-    public function update(BlogPostUpdateRequest $request, BlogPost $post)
+    public function update(
+        BlogPostUpdateRequest $request,
+        BlogPost              $post
+    ): RedirectResponse
     {
-        $post->fill($request->toArray());
-        if ($post->isPublished() && is_null($post->published_at)) {
-            $post->published_at = now();
-        }
-        if ($post->isNotPublished()) {
-            $post->published_at = null;
-        }
-        $result = $post->save();
+        $post->fill($request->all());
 
-        if ($result) {
-            return redirect()
-                ->route('admin.blog.posts.edit', compact('post'))
-                ->with(['success' => 'Successfully saved']);
-        } else {
-            return back()
-                ->withInput()
-                ->withErrors(['msg' => 'Save fail']);
+        if (
+            $post->isPublished() &&
+            $post->neverPublishedBefore()
+        ) {
+            $post->publish();
         }
+
+        $post->save();
+
+        return redirect()
+            ->route('admin.blog.posts.edit', compact('post'))
+            ->with(['success' => 'Post saved successfully!']);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param $id
+     * @param BlogPost $post
      * @return RedirectResponse
+     *
+     * @throws Throwable
      */
-    public function destroy($id)
+    public function destroy(BlogPost $post): RedirectResponse
     {
-        $result = BlogPost::destroy($id);
+        $post->deleteOrFail();
 
-        if ($result) {
-            return redirect()
-                ->route('admin.blog.posts.index')
-                ->with(['toRestore' => "Post with id [$id] deleted successfully",
-                    'post_id' => $id]);
-        } else {
-            return back()
-                ->withErrors(['msg' => 'Delete failed']);
-        }
+        return redirect()
+            ->route('admin.blog.posts.index')
+            ->with([
+                'toRestore' => "Post with id [$post->id] deleted successfully",
+                'post_id' => $post->id
+            ]);
     }
 
     /**
@@ -140,19 +150,19 @@ class PostController extends BaseController
      * @return RedirectResponse
      */
 
-    public function postRestore($id)
+    public function postRestore($id): RedirectResponse
     {
-        $result = BlogPost::withTrashed()
-            ->where(['id' => $id])
+        $result = BlogPost
+            ::withTrashed()
+            ->find($id)
             ->restore();
 
-        if ($result) {
-            return redirect()
-                ->back()
-                ->with(["success" => "Post with id [$id] restored successfully"]);
-        } else {
-            return back()
-                ->withErrors(["msg" => "Restore failed"]);
+        if (! $result) {
+            throw new NotFoundResourceException("Cannot restore post with id: $id");
         }
+
+        return redirect()
+            ->back()
+            ->with(["success" => "Post with id [$id] restored successfully"]);
     }
 }

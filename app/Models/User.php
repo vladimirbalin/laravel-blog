@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -85,22 +87,22 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function getFullNameAttribute()
+    public function getFullNameAttribute(): string
     {
         return $this->name;
     }
 
-    public function posts()
+    public function posts(): HasMany
     {
         return $this->hasMany(BlogPost::class);
     }
 
-    public function comments()
+    public function comments(): HasMany
     {
         return $this->hasMany(BlogComment::class);
     }
 
-    public function followedUsers()
+    public function followedUsers(): BelongsToMany
     {
         return $this->belongsToMany(
             User::class,
@@ -110,7 +112,7 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
-    public function followers()
+    public function followers(): BelongsToMany
     {
         return $this->belongsToMany(
             User::class,
@@ -125,7 +127,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function likedPosts()
+    public function likedPosts(): BelongsToMany
     {
         return $this->belongsToMany(
             BlogPost::class,
@@ -135,12 +137,12 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->is_admin == true;
     }
 
-    public function followUser($user)
+    public function followUser($user): User
     {
         $id = $user instanceof User ? $user->{$user->primaryKey} : $user;
         $this->followedUsers()->attach(User::find($id));
@@ -148,32 +150,43 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this;
     }
 
-    public function unfollowUser($user)
+    public function unfollowUser($user): User
     {
-        $id = $user instanceof User ? $user->{$user->primaryKey} : $user;
-        $this->followedUsers()->detach(User::find($id));
+        $id = $user instanceof User
+            ? $user->{$user->primaryKey}
+            : $user;
+        $this
+            ->followedUsers()
+            ->detach(
+                User::find($id)
+            );
 
         return $this;
     }
 
-    public function isFollow($user)
+    public function isFollow($user): bool
     {
-        $id = $user instanceof User ?
-            $user->{$user->primaryKey} :
-            $user;
-        $check = $this->followedUsers->keyBy('id')->has($id);
+        $id = $user instanceof User
+            ? $user->{$user->primaryKey}
+            : $user;
 
-        return $check;
+        $isFollow = $this
+            ->followedUsers
+            ->keyBy('id')
+            ->has($id);
+
+        return $isFollow;
     }
 
-    public function isNotFollow($user)
+    public function isNotFollow($user): bool
     {
-        return !$this->isFollow($user);
+        return ! $this->isFollow($user);
     }
 
     public function getLastFiveUnreadNotifications()
     {
-        return auth()->user()
+        return auth()
+            ->user()
             ->unreadNotifications()
             ->limit(5)
             ->get();
