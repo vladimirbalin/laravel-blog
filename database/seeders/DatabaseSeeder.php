@@ -95,6 +95,6 @@ class DatabaseSeeder extends Seeder
 
     public function createComments()
     {
-        BlogComment::factory(random_int(100, 300))->create();
+        BlogComment::factory(random_int(100, 300))->createQuietly();
     }
 }
