@@ -1,0 +1,24 @@
+on:
+  push:
+    tags:
+      - '!refs/tags/*'
+    branches:
+      - '*'
+jobs:
+  pull_and_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: pull, generate api json
+        uses: appleboy/ssh-action@master
+        with:
+          username: root
+          host: ${{ secrets.SSH_HOST }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            /root/stophp.sh &&
+            cd ${{ vars.WORKING_DIRECTORY }} &&
+            git pull &&
+            composer install &&
+            npm install &&
+            npm run build &&
+            /root/starthp.sh
