@@ -18,7 +18,5 @@ jobs:
             /root/stophp.sh &&
             cd ${{ vars.WORKING_DIRECTORY }} &&
             git pull &&
-            composer install &&
-            npm install &&
-            npm run build &&
+            npm run prod &&
             /root/starthp.sh
