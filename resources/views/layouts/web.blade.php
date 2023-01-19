@@ -40,13 +40,26 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item flex-row">
-                        <a class="nav-link {{ request()->routeIs('home') ? 'active' : ''}}"
-                           href="{{ url('/') }}">{{ __('Dashboard') }}
+                        <a class="
+                               nav-link
+                               @if(request()->routeIs('blog.posts.index'))
+                                    active
+                               @endif
+                           "
+                           href="{{ route('blog.posts.index') }}">
+                            {{ __('Posts') }}
                         </a>
                     </li>
                     <li class="nav-item flex-row">
-                        <a class="nav-link {{ request()->routeIs('blog.posts.index') ? 'active' : ''}}"
-                           href="{{ route('blog.posts.index') }}">{{ __('Posts') }}</a>
+                        <a class="
+                               nav-link
+                               @if(request()->routeIs('blog.dashboard'))
+                                    active
+                               @endif
+                           "
+                           href="{{ route('blog.dashboard') }}">
+                            {{ __('Dashboard') }}
+                        </a>
                     </li>
                 </ul>
                 <!-- Right Side Of Navbar -->
@@ -66,10 +79,12 @@
                         @endif
                     @else
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-coreui-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-coreui-toggle="dropdown"
+                               aria-expanded="false">
                                 <img src="{{ asset('images/no-notifications.png') }}" width="20px"
                                      alt="no-notifications icon">
-                                <span id="quantity-sum" class="top-0 start-100 translate-middle badge rounded-pill bg-danger"></span>
+                                <span id="quantity-sum"
+                                      class="top-0 start-100 translate-middle badge rounded-pill bg-danger"></span>
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationsMenu"
