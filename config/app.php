@@ -230,5 +230,5 @@ return [
 
     ],
 
-    'domain' => env('domain', '')
+    'domain' => env('APP_DOMAIN', '')
 ];
