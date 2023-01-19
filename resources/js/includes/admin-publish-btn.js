@@ -1,4 +1,3 @@
-import httpService from "../services/http-service";
 import $ from "jquery";
 
 export default function adminPublishButton(dataId) {
@@ -9,7 +8,7 @@ export default function adminPublishButton(dataId) {
         const id = $this.closest('tr').data(dataId);
         const $publishedAt = $this.closest('td').siblings('.published_at');
 
-        httpService.put(route, {
+        axios.put(route, {
             id: id,
             status: checked
         }).then(function (res) {
