@@ -1,4 +1,4 @@
-import httpService from "../services/axiosWithCsrfFromMetaTag";
+import httpService from "../services/http-service";
 import $ from "jquery";
 
 export default function adminPublishButton(dataId) {

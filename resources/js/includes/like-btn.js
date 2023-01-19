@@ -1,4 +1,4 @@
-import httpService from "../services/axiosWithCsrfFromMetaTag";
+import httpService from "../services/http-service";
 
 export default function likeBtn() {
     $('.like').click(function (event) {

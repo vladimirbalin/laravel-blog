@@ -1,3 +1,4 @@
+import httpService from "./services/http-service";
 require('./bootstrap');
 
 import adminPublishButton from "./includes/admin-publish-btn";
@@ -13,7 +14,7 @@ $(document).ready(function () {
     cardHover();
 
     if (window.Laravel && window.Laravel.userId) {
-        axios.get('/blog/notifications')
+        httpService.get('/blog/notifications')
             .then(res => {
                 let count = res.data.count,
                     databaseNotifications = res.data.lastFive,
