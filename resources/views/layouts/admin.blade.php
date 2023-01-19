@@ -25,7 +25,7 @@
     <ul class="sidebar-nav" data-coreui="navigation" data-simplebar>
 
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.home') }}">
+            <a class="nav-link" href="{{ route('admin.blog.dashboard') }}">
                 Dashboard
             </a>
         </li>
