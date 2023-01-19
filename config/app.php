@@ -230,4 +230,23 @@ return [
 
     ],
 
+    'domain' => env('domain', function () {
+        $appUrl = env('app_url');
+
+        $startsWithHttps = str_starts_with($appUrl, 'https://');
+        $startsWithHttp = str_starts_with($appUrl, 'http://');
+        $endsWithSlash = str_ends_with($appUrl, '/');
+
+        if ($startsWithHttp || $startsWithHttps) {
+            $appUrl = str_replace('https://', '', $appUrl);
+            $appUrl = str_replace('http://', '', $appUrl);
+        }
+
+        if ($endsWithSlash) {
+            $appUrl = mb_substr($appUrl, 0, mb_strlen($appUrl) - 1);
+        }
+
+        return $appUrl;
+    })
+
 ];
