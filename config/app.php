@@ -216,7 +216,7 @@ return [
         'Password' => Illuminate\Support\Facades\Password::class,
         'Queue' => Illuminate\Support\Facades\Queue::class,
         'Redirect' => Illuminate\Support\Facades\Redirect::class,
-         'Redis' => Illuminate\Support\Facades\Redis::class,
+        'Redis' => Illuminate\Support\Facades\Redis::class,
         'Request' => Illuminate\Support\Facades\Request::class,
         'Response' => Illuminate\Support\Facades\Response::class,
         'Route' => Illuminate\Support\Facades\Route::class,
@@ -230,23 +230,5 @@ return [
 
     ],
 
-    'domain' => env('domain', function () {
-        $appUrl = env('app_url');
-
-        $startsWithHttps = str_starts_with($appUrl, 'https://');
-        $startsWithHttp = str_starts_with($appUrl, 'http://');
-        $endsWithSlash = str_ends_with($appUrl, '/');
-
-        if ($startsWithHttp || $startsWithHttps) {
-            $appUrl = str_replace('https://', '', $appUrl);
-            $appUrl = str_replace('http://', '', $appUrl);
-        }
-
-        if ($endsWithSlash) {
-            $appUrl = mb_substr($appUrl, 0, mb_strlen($appUrl) - 1);
-        }
-
-        return $appUrl;
-    })
-
+    'domain' => env('domain', '')
 ];
